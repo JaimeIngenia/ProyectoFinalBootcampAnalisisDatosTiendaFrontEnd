@@ -5,29 +5,29 @@ import { FormLabel } from 'app/components/FormLabel';
 import { Input } from './components/Input';
 import { RepoItem } from './RepoItem';
 import { TextButton } from './components/TextButton';
-import {
-  selectUsername,
-  selectRepos,
-  selectLoading,
-  selectError,
-} from './slice/selectors';
+// import {
+//   selectUsername,
+//   selectRepos,
+//   selectLoading,
+//   selectError,
+// } from './slice/selectors';
 import { LoadingIndicator } from 'app/components/LoadingIndicator';
 import { RepoErrorType } from './slice/types';
-import { useGithubRepoFormSlice } from './slice';
+// import { useGithubRepoFormSlice } from './slice';
 
 export function GithubRepoForm() {
-  const { actions } = useGithubRepoFormSlice();
+  // const { actions } = useGithubRepoFormSlice();
 
-  const username = useSelector(selectUsername);
-  const repos = useSelector(selectRepos);
-  const isLoading = useSelector(selectLoading);
-  const error = useSelector(selectError);
+  // const username = useSelector(selectUsername);
+  // const repos = useSelector(selectRepos);
+  // const isLoading = useSelector(selectLoading);
+  // const error = useSelector(selectError);
 
   const dispatch = useDispatch();
 
   const onChangeUsername = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(actions.changeUsername(evt.currentTarget.value));
-    dispatch(actions.loadRepos());
+    // dispatch(actions.changeUsername(evt.currentTarget.value));
+    // dispatch(actions.loadRepos());
   };
 
   const useEffectOnMount = (effect: React.EffectCallback) => {
@@ -37,9 +37,9 @@ export function GithubRepoForm() {
 
   useEffectOnMount(() => {
     // When initial state username is not null, submit the form to load repos
-    if (username && username.trim().length > 0) {
-      dispatch(actions.loadRepos());
-    }
+    // if (username && username.trim().length > 0) {
+    //   dispatch(actions.loadRepos());
+    // }
   });
 
   const onSubmitForm = (evt?: React.FormEvent<HTMLFormElement>) => {
@@ -57,13 +57,13 @@ export function GithubRepoForm() {
           <Input
             type="text"
             placeholder="Type any Github username"
-            value={username}
+            // value={username}
             onChange={onChangeUsername}
           />
-          {isLoading && <LoadingIndicator small />}
+          {/* {isLoading && <LoadingIndicator small />} */}
         </InputWrapper>
       </FormGroup>
-      {repos?.length > 0 ? (
+      {/* {repos?.length > 0 ? (
         <List>
           {repos.map(repo => (
             <RepoItem
@@ -76,7 +76,7 @@ export function GithubRepoForm() {
         </List>
       ) : error ? (
         <ErrorText>{repoErrorText(error)}</ErrorText>
-      ) : null}
+      ) : null} */}
     </Wrapper>
   );
 }
