@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { fetchRolesSuccess, getAllSkillsByRoleIdFailed } from './index';
+import { actions } from './index';
 import { Role } from './types';
 import { getAllRoles } from 'app/api/roles';
 import { LOAD_ROLES_LIST } from './sagaActions';
@@ -7,9 +7,9 @@ import { LOAD_ROLES_LIST } from './sagaActions';
 function* fetchRolesSaga() {
   try {
     const roles: Role[] = yield call(getAllRoles);
-    yield put(fetchRolesSuccess(roles));
+    yield put(actions.fetchRolesSuccess(roles));
   } catch (error) {
-    yield put(getAllSkillsByRoleIdFailed(error));
+    yield put(actions.getAllSkillsByRoleIdFailed(error));
   }
 }
 

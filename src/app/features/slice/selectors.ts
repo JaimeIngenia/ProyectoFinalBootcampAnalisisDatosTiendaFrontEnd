@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { initialState } from 'styles/theme/slice';
 
 import { RootState } from 'types';
+import { initialState } from '.';
 
 const selectSlice = (state: RootState) => state.roles || initialState;
 

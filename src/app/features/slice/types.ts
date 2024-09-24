@@ -1,5 +1,3 @@
-export interface State {}
-
 export interface ProdctGeneralSelects {
   roles: Role[];
   rolesLoading: LoadingState;

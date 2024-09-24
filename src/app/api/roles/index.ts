@@ -2,6 +2,7 @@ import { Role } from 'app/features/slice/types';
 import axios from 'axios';
 
 export async function getAllRoles(): Promise<Role[]> {
+  debugger; // Jaime debugger 1
   try {
     const response = await axios.get<Role[]>(
       'https://localhost:7029/api/Rol/GetAllRoles',

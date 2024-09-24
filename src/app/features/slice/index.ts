@@ -1,15 +1,11 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
-import { ProdctGeneralSelects, ResponseState, Role, State } from './types';
+import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
+import { Saga } from './saga';
+import { ProdctGeneralSelects, ResponseState, Role } from './types';
+import { ProdctGeneralSelects_empty } from './emptyTypes';
 
-const initialState: ProdctGeneralSelects = {
-  roles: [],
-  rolesLoading: {
-    state: ResponseState.Waiting,
-    status: false,
-    message: '',
-  },
-};
+export const initialState: ProdctGeneralSelects = ProdctGeneralSelects_empty;
 
 const slice = createSlice({
   name: 'roles',
@@ -33,6 +29,11 @@ const slice = createSlice({
   },
 });
 
-export const { fetchRolesSuccess, getAllSkillsByRoleIdFailed } = slice.actions;
+// export const { actions: Actions } = slice;
+export const { actions } = slice;
 
-export default slice.reducer;
+export const useSlice = () => {
+  useInjectReducer({ key: slice.name, reducer: slice.reducer });
+  useInjectSaga({ key: slice.name, saga: Saga });
+  return { actions: slice.actions };
+};
