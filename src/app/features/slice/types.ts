@@ -1,16 +1,18 @@
 export interface ProdctGeneralSelects {
-  roles: Role[];
+  roles: Entity[];
   rolesLoading: LoadingState;
+  categorias: Entity[];
+  categoriasLoading: LoadingState;
 }
 
-export interface Role {
+export interface Entity {
   id: number;
   nombre: string;
 }
 
 export interface LoadingState {
   state: ResponseState;
-  status: boolean;
+  status?: boolean;
   message?: string;
 }
 

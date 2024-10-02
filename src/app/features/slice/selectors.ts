@@ -5,9 +5,26 @@ import { initialState } from '.';
 
 const selectSlice = (state: RootState) => state.roles || initialState;
 
-export const select = createSelector([selectSlice], state => state.roles);
+//Roles
 
-export const selectLoading = createSelector(
+export const rolesSelector = createSelector(
+  [selectSlice],
+  state => state.roles,
+);
+
+export const rolesSelectorLoading = createSelector(
   [selectSlice],
   state => state.rolesLoading,
+);
+
+// Categorías
+
+export const categoriasSelector = createSelector(
+  [selectSlice],
+  state => state.categorias,
+);
+
+export const categoriasSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.categoriasLoading,
 );

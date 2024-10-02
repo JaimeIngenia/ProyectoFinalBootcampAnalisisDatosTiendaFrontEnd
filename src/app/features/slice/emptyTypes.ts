@@ -7,4 +7,10 @@ export const ProdctGeneralSelects_empty = {
     status: false,
     message: '',
   },
+  categorias: [],
+  categoriasLoading: {
+    state: ResponseState.Waiting,
+    status: false,
+    message: '',
+  },
 };
