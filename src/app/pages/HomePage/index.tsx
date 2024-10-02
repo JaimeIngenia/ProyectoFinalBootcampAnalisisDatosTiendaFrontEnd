@@ -15,6 +15,7 @@ import {
 } from 'app/features/slice/sagaActions';
 import CustomSelect from 'app/features/customSelect';
 import { agregarPuntoAlFinal } from 'app/utils';
+import SideBarMenuPage from 'app/features/sideBarMenuPage';
 
 export function HomePage() {
   const { actions } = useSlice();
@@ -136,6 +137,8 @@ export function HomePage() {
           label="Categoría"
         />
       </Spin> */}
+
+      <SideBarMenuPage />
     </>
   );
 }

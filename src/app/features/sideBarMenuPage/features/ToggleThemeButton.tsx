@@ -1,10 +1,9 @@
 import React from 'react';
-// import styles from "./styles/ToggleThemeButton.module.css";
 import styles from '../styles/ToggleThemeButton.module.css';
-//import { HiOutlineSun, HiOutlineMoon } from "@ant-design/icons";
-import sun from '../../../assets/sun.svg';
-import moon from '../../../assets/moon.svg';
+import sun from '../../../../assets/sun.svg';
+import moon from '../../../../assets/moon.svg';
 import { Button } from 'antd';
+import PropTypes from 'prop-types'; // Importar PropTypes
 
 const ToggleThemeButton = ({ darkTheme, toggleTheme }) => {
   return (
@@ -18,6 +17,11 @@ const ToggleThemeButton = ({ darkTheme, toggleTheme }) => {
       </Button>
     </div>
   );
+};
+
+ToggleThemeButton.propTypes = {
+  darkTheme: PropTypes.bool.isRequired, // darkTheme es un booleano y es obligatorio
+  toggleTheme: PropTypes.func.isRequired, // toggleTheme es una función y es obligatoria
 };
 
 export default ToggleThemeButton;

@@ -15,6 +15,7 @@ module.exports = {
   plugins: ['prettier'], // Activa Prettier como plugin
   rules: {
     'prettier/prettier': ['error', prettierOptions], // Aplica las reglas de Prettier como errores
+    'react/react-in-jsx-scope': 'off', // Desactiva la advertencia de React en el scope
   },
   overrides: [
     {

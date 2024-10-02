@@ -2,13 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 import styles from './styles/SideBarMenuPage.module.css';
 // Nuevas importaciones
-import { Button, Layout, theme } from 'antd';
+import { Button, Layout } from 'antd';
 import { Logo } from './features/Logo';
 import MenuList from './features/MenuList';
 import ToggleThemeButton from './features/ToggleThemeButton';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 //redux
-import { counterSlice } from '../../store/slices/counter/counterSlice';
+// import { counterSlice } from '../../store/slices/counter/counterSlice';
 
 const { Header, Sider } = Layout;
 

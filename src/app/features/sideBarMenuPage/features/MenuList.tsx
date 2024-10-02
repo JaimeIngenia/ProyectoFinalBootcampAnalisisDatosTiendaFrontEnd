@@ -1,24 +1,23 @@
+import {
+  AreaChartOutlined,
+  BarsOutlined,
+  HomeOutlined,
+  PoweroffOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Menu, Modal } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import { AppstoreOutlined } from '@ant-design/icons';
-import { AreaChartOutlined, PoweroffOutlined } from '@ant-design/icons';
-import { BarsOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-// import style from "./styles/MenuList.module.css";
-import style from '../styles/MenuList.module.css';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import style from '../styles/MenuList.module.css';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const MenuList = ({ darkTheme }) => {
   const themeColors = {
-    background: darkTheme ? '#11342F' : '#ffffff', // Fondo verde oscuro para dark, blanco para light
-    text: darkTheme ? '#ffffff' : '#333333', // Texto blanco para dark, oscuro para light
-    // background: darkTheme ? '#008000' : '#ffffff', // Fondo verde oscuro para dark, blanco para light
-    // text: darkTheme ? '#ffffff' : '#333333', // Texto blanco para dark, oscuro para light
+    background: darkTheme ? '#11342F' : '#ffffff',
+    text: darkTheme ? '#ffffff' : '#333333',
   };
 
-  //***************
-  // LoOut
-  //***************
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogoutClick = () => {
@@ -35,11 +34,6 @@ const MenuList = ({ darkTheme }) => {
         color: themeColors.text,
       }}
     >
-      {/* <Menu.Item key="/pokemon" icon={<HomeOutlined />}>
-          <Link to={"/pokemon"}>
-            Pokemon
-          </Link>
-        </Menu.Item> */}
       <Menu.Item key="/" icon={<HomeOutlined />}>
         <Link to={'/'}>Home</Link>
       </Menu.Item>
@@ -65,12 +59,6 @@ const MenuList = ({ darkTheme }) => {
       <Menu.Item key="/usuario" icon={<UserOutlined />}>
         <Link to={'/user'}>Usuario</Link>
       </Menu.Item>
-      {/* 
-        <Menu.Item key="/logout" icon={<PoweroffOutlined />}>
-          <Link to={"/logout"}>
-            Logout
-          </Link>
-        </Menu.Item> */}
 
       <Menu.Item
         key="/logout"
@@ -90,6 +78,10 @@ const MenuList = ({ darkTheme }) => {
       </Modal>
     </Menu>
   );
+};
+
+MenuList.propTypes = {
+  darkTheme: PropTypes.bool.isRequired, // Especifica que darkTheme es booleano y es obligatorio
 };
 
 export default MenuList;
