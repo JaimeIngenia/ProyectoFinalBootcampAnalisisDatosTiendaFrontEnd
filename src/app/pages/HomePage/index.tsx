@@ -137,8 +137,6 @@ export function HomePage() {
           label="Categoría"
         />
       </Spin> */}
-
-      <SideBarMenuPage />
     </>
   );
 }

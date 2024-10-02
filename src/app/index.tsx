@@ -7,12 +7,21 @@ import { GlobalStyle } from 'styles/global-styles';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
+import SideBarMenuPage from './features/sideBarMenuPage';
 
 export function App() {
   const { i18n } = useTranslation();
   return (
     <BrowserRouter>
-      <Helmet
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <SideBarMenuPage />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+
+      {/* <Helmet
         titleTemplate="%s - React Boilerplate"
         defaultTitle="React Boilerplate"
         htmlAttributes={{ lang: i18n.language }}
@@ -24,7 +33,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <GlobalStyle />
+      <GlobalStyle /> */}
     </BrowserRouter>
   );
 }
