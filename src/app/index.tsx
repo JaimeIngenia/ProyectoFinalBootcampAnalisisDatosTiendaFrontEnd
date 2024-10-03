@@ -8,9 +8,12 @@ import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
 import SideBarMenuPage from './features/sideBarMenuPage';
+import { useState } from 'react';
 
 export function App() {
   const { i18n } = useTranslation();
+  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
+
   return (
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'row' }}>

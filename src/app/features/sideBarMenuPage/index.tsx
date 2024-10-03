@@ -53,16 +53,21 @@ const SideBarMenuPage = () => {
       <Header
         style={{
           padding: 0,
-          background: themeColors.background,
+          // background: themeColors.background,
+          background: 'white',
           color: themeColors.text,
-          height: '100vh',
         }}
+        className={styles.header}
       >
         <Button
           type="text"
-          className="toggle"
+          // className="toggle"
+          className={`${styles.toggleButton} ${
+            collapsed ? styles.collapsedButton : ''
+          }`}
           onClick={() => setCollapsed(!collapsed)}
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          style={{ border: 'solid red 3px' }}
         />
       </Header>
     </Layout>

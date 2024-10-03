@@ -122,21 +122,31 @@ export function HomePage() {
 
   return (
     <>
-      <h1>Home Page</h1>
-      {/* <Spin spinning={loadingSpinRoles}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100vh',
+          border: 'solid red 3px',
+        }}
+      >
+        <h1>Home Page</h1>
+        {/* <Spin spinning={loadingSpinRoles}>
         <CustomSelect
           list={roleListState}
           onChange={handleSelectRoleChange}
           label="Roles"
         />
-      </Spin>
-      <Spin spinning={loadingSpinCategorias}>
+        </Spin>
+        <Spin spinning={loadingSpinCategorias}>
         <CustomSelect
-          list={categoriaListState}
-          onChange={handleSelectCategoriaChange}
-          label="Categoría"
+        list={categoriaListState}
+        onChange={handleSelectCategoriaChange}
+        label="Categoría"
         />
-      </Spin> */}
+        </Spin> */}
+      </div>
     </>
   );
 }
