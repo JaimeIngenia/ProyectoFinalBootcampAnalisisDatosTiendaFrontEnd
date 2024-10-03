@@ -1,32 +1,11 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-.container__app {
-  display: flex;
-  border: solid rgb(0, 255, 89) 3px;
-  flex-direction: row;
-}
-
 .sidebar {
   color: #fff;
 }
-.toggle {
-  margin-left: 15px;
-}
-.eje {
-  border: solid red 3px;
-  border: solid red 3px;
-}
-
-/* Estilo para el Header */
 
 .header {
   transition: all 0.3s ease-in-out;
   position: relative;
-  height: 10vh; /* Mantiene su altura fija */
+  height: 10vh;
 }
 
 .toggleButton {

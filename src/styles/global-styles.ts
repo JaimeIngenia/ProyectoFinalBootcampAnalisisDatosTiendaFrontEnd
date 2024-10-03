@@ -5,10 +5,11 @@ export const GlobalStyle = createGlobalStyle`
   body {
     height: 100%;
     width: 100%;
+    font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
   }
 
   body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', sans-serif; /* Aseguramos que el body use Roboto */
   }
 
   #root {
@@ -18,12 +19,12 @@ export const GlobalStyle = createGlobalStyle`
 
   p,
   label {
-    font-family: Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
     line-height: 1.5em;
   }
 
   input, select {
-    font-family: inherit;
+    font-family: 'Roboto', sans-serif; /* Aseguramos que los inputs también usen Roboto */
     font-size: inherit;
   }
 `;

@@ -1,25 +1,25 @@
 import React from 'react';
 import { useState } from 'react';
 import styles from './styles/SideBarMenuPage.module.css';
-// Nuevas importaciones
 import { Button, Layout } from 'antd';
 import { Logo } from './features/Logo';
 import MenuList from './features/MenuList';
 import ToggleThemeButton from './features/ToggleThemeButton';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 //redux
 // import { counterSlice } from '../../store/slices/counter/counterSlice';
 
 const { Header, Sider } = Layout;
 
-const SideBarMenuPage = () => {
+const SideBarMenuPage = ({ backgroundCustom }) => {
   const darkThemeColors = {
-    background: '#11342F', // verde oscuro para dark
-    text: '#ffffff', // blanco para el texto en dark
+    background: backgroundCustom, // color oscuro para dark
+    text: '#ffffff', // color para el texto en dark
   };
 
   const lightThemeColors = {
-    background: '#ffffff', // blanco para light
+    background: '#ffffff', // color para light
     text: '#333333', // color de texto para light
   };
 
@@ -46,14 +46,13 @@ const SideBarMenuPage = () => {
         }}
       >
         <Logo />
-        <MenuList darkTheme={darkTheme} />
+        <MenuList darkTheme={darkTheme} backgroundCustom={backgroundCustom} />
         <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
 
       <Header
         style={{
           padding: 0,
-          // background: themeColors.background,
           background: 'white',
           color: themeColors.text,
         }}
@@ -61,17 +60,19 @@ const SideBarMenuPage = () => {
       >
         <Button
           type="text"
-          // className="toggle"
           className={`${styles.toggleButton} ${
             collapsed ? styles.collapsedButton : ''
           }`}
           onClick={() => setCollapsed(!collapsed)}
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          style={{ border: 'solid red 3px' }}
         />
       </Header>
     </Layout>
   );
+};
+
+SideBarMenuPage.propTypes = {
+  backgroundCustom: PropTypes.string.isRequired,
 };
 
 export default SideBarMenuPage;

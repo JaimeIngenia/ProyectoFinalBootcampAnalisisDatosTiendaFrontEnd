@@ -12,9 +12,9 @@ import style from '../styles/MenuList.module.css';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const MenuList = ({ darkTheme }) => {
+const MenuList = ({ darkTheme, backgroundCustom }) => {
   const themeColors = {
-    background: darkTheme ? '#11342F' : '#ffffff',
+    background: darkTheme ? backgroundCustom : '#ffffff',
     text: darkTheme ? '#ffffff' : '#333333',
   };
 
@@ -81,7 +81,8 @@ const MenuList = ({ darkTheme }) => {
 };
 
 MenuList.propTypes = {
-  darkTheme: PropTypes.bool.isRequired, // Especifica que darkTheme es booleano y es obligatorio
+  darkTheme: PropTypes.bool.isRequired,
+  backgroundCustom: PropTypes.string.isRequired,
 };
 
 export default MenuList;
