@@ -42,7 +42,7 @@ export function ListaProductos() {
   return (
     <>
       <GeneralContainer>
-        <h1>ListaProductos</h1>
+        <h1>ListaProductos de la tienda</h1>
 
         <div style={{ display: 'flex', border: 'solid red 3px' }}>
           <Table
