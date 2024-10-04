@@ -4,6 +4,7 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { ProdctGeneralSelects, ResponseState, Entity } from './types';
 import { ProdctGeneralSelects_empty } from './emptyTypes';
+import { ProductEntity } from 'app/api/products/types';
 
 export const initialState: ProdctGeneralSelects = ProdctGeneralSelects_empty;
 
@@ -14,14 +15,14 @@ const slice = createSlice({
     //Roles
     fetchRolesSuccess(state, action: PayloadAction<Entity[]>) {
       state.roles = action.payload;
-      state.rolesLoading = {
+      state.loadingStates.rolesLoading = {
         state: ResponseState.Finished,
         status: true,
       };
     },
 
     getAllSkillsByRoleIdFailed(state, action: PayloadAction<any>) {
-      state.rolesLoading = {
+      state.loadingStates.rolesLoading = {
         state: ResponseState.Finished,
         status: false,
         message: action.payload,
@@ -29,7 +30,7 @@ const slice = createSlice({
     },
 
     loadRoles(state, actions: PayloadAction<ResponseState>) {
-      state.rolesLoading = {
+      state.loadingStates.rolesLoading = {
         state: actions.payload,
       };
     },
@@ -37,14 +38,14 @@ const slice = createSlice({
     //Categorias
     fetchCategoriaSuccess(state, action: PayloadAction<Entity[]>) {
       state.categorias = action.payload;
-      state.categoriasLoading = {
+      state.loadingStates.categoriasLoading = {
         state: ResponseState.Finished,
         status: true,
       };
     },
 
     getAllcategoriasFailed(state, action: PayloadAction<any>) {
-      state.categoriasLoading = {
+      state.loadingStates.categoriasLoading = {
         state: ResponseState.Finished,
         status: false,
         message: action.payload,
@@ -52,7 +53,30 @@ const slice = createSlice({
     },
 
     loadCategorias(state, actions: PayloadAction<ResponseState>) {
-      state.categoriasLoading = {
+      state.loadingStates.categoriasLoading = {
+        state: actions.payload,
+      };
+    },
+
+    // Products
+    reducerProductsSuccess(state, action: PayloadAction<ProductEntity[]>) {
+      state.productos = action.payload;
+      state.loadingStates.productosLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerProductsFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.productosLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadProducts(state, actions: PayloadAction<ResponseState>) {
+      state.loadingStates.productosLoading = {
         state: actions.payload,
       };
     },
