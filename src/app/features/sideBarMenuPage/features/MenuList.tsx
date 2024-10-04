@@ -43,8 +43,8 @@ const MenuList = ({ darkTheme, backgroundCustom }) => {
       </Menu.Item>
 
       <Menu.SubMenu key="Sensores" icon={<BarsOutlined />} title="Sensores">
-        <Menu.Item key="temperatura&humedad">
-          <Link to={'/temperaturaHumedad'}>Temp y Humedad</Link>
+        <Menu.Item key="listaProductos">
+          <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
 
         <Menu.Item key="humedad">

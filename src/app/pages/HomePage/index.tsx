@@ -16,6 +16,7 @@ import {
 import CustomSelect from 'app/features/customSelect';
 import { agregarPuntoAlFinal } from 'app/utils';
 import SideBarMenuPage from 'app/features/sideBarMenuPage';
+import { GeneralContainer } from 'app/components/containers';
 
 export function HomePage() {
   const { actions } = useSlice();
@@ -122,14 +123,14 @@ export function HomePage() {
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          height: '100vh',
-          border: 'solid red 3px',
-        }}
+      <GeneralContainer
+      // style={{
+      //   display: 'flex',
+      //   flexDirection: 'column',
+      //   width: '100%',
+      //   height: '100vh',
+      //   border: 'solid red 3px',
+      // }}
       >
         <h1>Home Page</h1>
         {/* <Spin spinning={loadingSpinRoles}>
@@ -146,7 +147,7 @@ export function HomePage() {
         label="Categoría"
         />
         </Spin> */}
-      </div>
+      </GeneralContainer>
     </>
   );
 }

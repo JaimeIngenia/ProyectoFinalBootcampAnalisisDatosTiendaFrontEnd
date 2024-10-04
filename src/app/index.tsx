@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import SideBarMenuPage from './features/sideBarMenuPage';
 import { useState } from 'react';
+import { ListaProductos } from './pages/listaProductos';
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/listaProductos" element={<ListaProductos />} />
         </Routes>
       </div>
 
