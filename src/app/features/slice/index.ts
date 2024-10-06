@@ -14,27 +14,27 @@ const slice = createSlice({
   initialState,
   reducers: {
     //Roles
-    // fetchRolesSuccess(state, action: PayloadAction<Entity[]>) {
-    //   state.roles = action.payload;
-    //   state.loadingStates.rolesLoading = {
-    //     state: ResponseState.Finished,
-    //     status: true,
-    //   };
-    // },
+    fetchRolesSuccess(state, action: PayloadAction<Entity[]>) {
+      state.roles = action.payload;
+      state.loadingStates.rolesLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
 
-    // getAllSkillsByRoleIdFailed(state, action: PayloadAction<any>) {
-    //   state.loadingStates.rolesLoading = {
-    //     state: ResponseState.Finished,
-    //     status: false,
-    //     message: action.payload,
-    //   };
-    // },
+    getAllSkillsByRoleIdFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.rolesLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
 
-    // loadRoles(state, actions: PayloadAction<ResponseState>) {
-    //   state.loadingStates.rolesLoading = {
-    //     state: actions.payload,
-    //   };
-    // },
+    loadRoles(state, actions: PayloadAction<ResponseState>) {
+      state.loadingStates.rolesLoading = {
+        state: actions.payload,
+      };
+    },
 
     //Categorias
     fetchCategoriaSuccess(state, action: PayloadAction<Entity[]>) {

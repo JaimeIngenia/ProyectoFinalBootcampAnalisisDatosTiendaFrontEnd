@@ -1,0 +1,27 @@
+.container {
+  /* height: 75vh;
+    width: 100%; */
+  /* color: violet; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* border: dotted 3px blue; */
+}
+
+.sub__container {
+  height: 50vh;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* border: dotted blue 4px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* border: solid red 4px; */
+}

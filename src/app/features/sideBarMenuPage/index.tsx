@@ -7,30 +7,34 @@ import MenuList from './features/MenuList';
 import ToggleThemeButton from './features/ToggleThemeButton';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import { useGeneralContext } from 'app/context/GeneralContext';
 //redux
 // import { counterSlice } from '../../store/slices/counter/counterSlice';
 
 const { Header, Sider } = Layout;
 
-const SideBarMenuPage = ({ backgroundCustom }) => {
-  const darkThemeColors = {
-    background: backgroundCustom, // color oscuro para dark
-    text: '#ffffff', // color para el texto en dark
-  };
+const SideBarMenuPage = () => {
+  const { darkMode, toggleDarkMode, themeColors } = useGeneralContext();
 
-  const lightThemeColors = {
-    background: '#ffffff', // color para light
-    text: '#333333', // color de texto para light
-  };
+  // const darkThemeColors = {
+  //   background: backgroundCustom, // color oscuro para dark
+  //   text: '#ffffff', // color para el texto en dark
+  // };
 
-  const [darkTheme, setDarkTheme] = useState(true);
+  // const lightThemeColors = {
+  //   background: '#ffffff', // color para light
+  //   text: '#333333', // color de texto para light
+  // };
+
+  // const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
-  const toggleTheme = () => {
-    setDarkTheme(!darkTheme);
-  };
+  // const toggleTheme = () => {
+  //   setDarkTheme(!darkTheme);
+  // };
 
-  const themeColors = darkTheme ? darkThemeColors : lightThemeColors;
+  // const themeColors = darkTheme ? darkThemeColors : lightThemeColors;
+  // const themeColors = darkMode ? darkThemeColors : lightThemeColors;
 
   return (
     <Layout>
@@ -39,15 +43,19 @@ const SideBarMenuPage = ({ backgroundCustom }) => {
         collapsible
         trigger={null}
         className={styles.sidebar}
-        theme={darkTheme ? 'dark' : 'light'}
+        // theme={darkTheme ? 'dark' : 'light'}
+        theme={darkMode ? 'dark' : 'light'}
         style={{
           background: themeColors.background,
           color: themeColors.text,
         }}
       >
         <Logo />
-        <MenuList darkTheme={darkTheme} backgroundCustom={backgroundCustom} />
-        <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
+        {/* <MenuList darkTheme={darkMode} backgroundCustom={backgroundCustom} /> */}
+        <MenuList />
+        <ToggleThemeButton darkTheme={darkMode} toggleTheme={toggleDarkMode} />
+        {/* <MenuList darkTheme={darkTheme} backgroundCustom={backgroundCustom} />
+        <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} /> */}
       </Sider>
 
       <Header
@@ -69,10 +77,6 @@ const SideBarMenuPage = ({ backgroundCustom }) => {
       </Header>
     </Layout>
   );
-};
-
-SideBarMenuPage.propTypes = {
-  backgroundCustom: PropTypes.string.isRequired,
 };
 
 export default SideBarMenuPage;

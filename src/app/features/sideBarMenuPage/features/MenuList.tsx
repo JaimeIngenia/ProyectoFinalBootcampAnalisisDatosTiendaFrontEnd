@@ -11,12 +11,14 @@ import { useState } from 'react';
 import style from '../styles/MenuList.module.css';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useGeneralContext } from 'app/context/GeneralContext';
 
-const MenuList = ({ darkTheme, backgroundCustom }) => {
-  const themeColors = {
-    background: darkTheme ? backgroundCustom : '#ffffff',
-    text: darkTheme ? '#ffffff' : '#333333',
-  };
+const MenuList = () => {
+  const { darkMode, themeColors } = useGeneralContext();
+  // const themeColors = {
+  //   background: darkTheme ? backgroundCustom : '#ffffff',
+  //   text: darkTheme ? '#ffffff' : '#333333',
+  // };
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -26,7 +28,7 @@ const MenuList = ({ darkTheme, backgroundCustom }) => {
 
   return (
     <Menu
-      theme={darkTheme ? 'dark' : 'light'}
+      theme={darkMode ? 'dark' : 'light'}
       mode="inline"
       className={style.menu__bar}
       style={{
@@ -78,11 +80,6 @@ const MenuList = ({ darkTheme, backgroundCustom }) => {
       </Modal>
     </Menu>
   );
-};
-
-MenuList.propTypes = {
-  darkTheme: PropTypes.bool.isRequired,
-  backgroundCustom: PropTypes.string.isRequired,
 };
 
 export default MenuList;

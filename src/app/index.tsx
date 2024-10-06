@@ -12,7 +12,8 @@ export function App() {
   return (
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <SideBarMenuPage backgroundCustom="#000B2A" />
+        <SideBarMenuPage />
+        {/* <SideBarMenuPage backgroundCustom="#000B2A" /> */}
 
         <Routes>
           <Route path="/" element={<HomePage />} />
