@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 function CustomSelect({ list, onChange, label }) {
   return (
     <>
-      <h1>Soy Select de{label}</h1>
+      {/* <h1>Soy Select de{label}</h1> */}
       <Space style={{ width: '100%' }} direction="vertical">
         <Select
           onChange={onChange}
