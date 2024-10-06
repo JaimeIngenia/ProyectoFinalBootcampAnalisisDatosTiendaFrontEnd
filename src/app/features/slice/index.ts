@@ -2,38 +2,39 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
-import { ProdctGeneralSelects, ResponseState, Entity } from './types';
-import { ProdctGeneralSelects_empty } from './emptyTypes';
+import { GeneralStatesReduxSaga, ResponseState, Entity } from './types';
+import { GeneralStatesReduxSaga_empty } from './emptyTypes';
 import { ProductEntity } from 'app/api/products/types';
 
-export const initialState: ProdctGeneralSelects = ProdctGeneralSelects_empty;
+export const initialState: GeneralStatesReduxSaga =
+  GeneralStatesReduxSaga_empty;
 
 const slice = createSlice({
-  name: 'roles',
+  name: 'generalStates',
   initialState,
   reducers: {
     //Roles
-    fetchRolesSuccess(state, action: PayloadAction<Entity[]>) {
-      state.roles = action.payload;
-      state.loadingStates.rolesLoading = {
-        state: ResponseState.Finished,
-        status: true,
-      };
-    },
+    // fetchRolesSuccess(state, action: PayloadAction<Entity[]>) {
+    //   state.roles = action.payload;
+    //   state.loadingStates.rolesLoading = {
+    //     state: ResponseState.Finished,
+    //     status: true,
+    //   };
+    // },
 
-    getAllSkillsByRoleIdFailed(state, action: PayloadAction<any>) {
-      state.loadingStates.rolesLoading = {
-        state: ResponseState.Finished,
-        status: false,
-        message: action.payload,
-      };
-    },
+    // getAllSkillsByRoleIdFailed(state, action: PayloadAction<any>) {
+    //   state.loadingStates.rolesLoading = {
+    //     state: ResponseState.Finished,
+    //     status: false,
+    //     message: action.payload,
+    //   };
+    // },
 
-    loadRoles(state, actions: PayloadAction<ResponseState>) {
-      state.loadingStates.rolesLoading = {
-        state: actions.payload,
-      };
-    },
+    // loadRoles(state, actions: PayloadAction<ResponseState>) {
+    //   state.loadingStates.rolesLoading = {
+    //     state: actions.payload,
+    //   };
+    // },
 
     //Categorias
     fetchCategoriaSuccess(state, action: PayloadAction<Entity[]>) {

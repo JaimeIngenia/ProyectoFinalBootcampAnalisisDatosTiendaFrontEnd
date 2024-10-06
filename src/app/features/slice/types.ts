@@ -1,6 +1,6 @@
 import { ProductEntity } from 'app/api/products/types';
 
-export interface ProdctGeneralSelects {
+export interface GeneralStatesReduxSaga {
   roles: Entity[];
   // rolesLoading: LoadingState;
   categorias: Entity[];

@@ -26,6 +26,7 @@ import reportWebVitals from 'reportWebVitals';
 
 // Initialize languages
 import './locales/i18n';
+import { GeneralProvider } from 'app/context/GeneralContext';
 
 const store = configureAppStore();
 const root = ReactDOM.createRoot(
@@ -34,11 +35,13 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <Provider store={store}>
-    <HelmetProvider>
+    {/* <HelmetProvider> */}
+    <GeneralProvider>
       <React.StrictMode>
         <App />
       </React.StrictMode>
-    </HelmetProvider>
+    </GeneralProvider>
+    {/* </HelmetProvider> */}
   </Provider>,
 );
 

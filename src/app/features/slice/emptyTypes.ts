@@ -6,25 +6,13 @@ const defaultLoadingState: LoadingState = {
   message: '',
 };
 
-export const ProdctGeneralSelects_empty = {
+export const GeneralStatesReduxSaga_empty = {
   roles: [],
-  // rolesLoading: {
-  //   state: ResponseState.Waiting,
-  //   status: false,
-  //   message: '',
-  // },
+
   categorias: [],
-  // categoriasLoading: {
-  //   state: ResponseState.Waiting,
-  //   status: false,
-  //   message: '',
-  // },
+
   productos: [],
-  // productosLoading: {
-  //   state: ResponseState.Waiting,
-  //   status: false,
-  //   message: '',
-  // },
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,

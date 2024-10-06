@@ -47,8 +47,8 @@ const MenuList = ({ darkTheme, backgroundCustom }) => {
           <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
 
-        <Menu.Item key="humedad">
-          <Link to={'/humedad'}>Humedad</Link>
+        <Menu.Item key="agregarProductos">
+          <Link to={'/agregarProductos'}>Agregar Producto</Link>
         </Menu.Item>
 
         <Menu.Item key="riego">
