@@ -9,16 +9,11 @@ import { Menu, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import style from '../styles/MenuList.module.css';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useGeneralContext } from 'app/context/GeneralContext';
 
 const MenuList = () => {
   const { darkMode, themeColors } = useGeneralContext();
-  // const themeColors = {
-  //   background: darkTheme ? backgroundCustom : '#ffffff',
-  //   text: darkTheme ? '#ffffff' : '#333333',
-  // };
 
   const [modalVisible, setModalVisible] = useState(false);
 

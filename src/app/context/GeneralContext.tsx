@@ -5,13 +5,13 @@ import React, {
   ReactNode,
   useCallback,
 } from 'react';
+import { useSelector } from 'react-redux';
+import { useSlice } from 'app/features/slice';
+import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
 } from 'app/features/slice/selectors';
-import { useSelector } from 'react-redux';
-import { useSlice } from 'app/features/slice';
-import { GeneralContextType } from './type';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
   undefined,

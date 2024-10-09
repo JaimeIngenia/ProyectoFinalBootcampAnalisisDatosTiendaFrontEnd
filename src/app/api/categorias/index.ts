@@ -7,7 +7,6 @@ export async function getAllCategorias(): Promise<Entity[]> {
       'https://localhost:7029/api/Categoria/GetAllCategoria',
     );
     return response.data;
-    debugger;
   } catch (error) {
     console.error('Error fetching roles:', error);
     throw error;

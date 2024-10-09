@@ -2,15 +2,10 @@ import { ProductEntity } from 'app/api/products/types';
 
 export interface GeneralStatesReduxSaga {
   roles: Entity[];
-  // rolesLoading: LoadingState;
   categorias: Entity[];
-  // categoriasLoading: LoadingState;
   productos: ProductEntity[];
-  // productosLoading: LoadingState;
   loadingStates: LoadingStates;
 }
-
-// Estado de carga para roles, categorías, productos
 
 // Define una interfaz para centralizar los estados de carga
 export interface LoadingStates {
