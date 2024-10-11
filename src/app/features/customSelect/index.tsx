@@ -3,25 +3,27 @@ import { Select, Space } from 'antd';
 import PropTypes from 'prop-types';
 
 function CustomSelect({ list, onChange, label, name }) {
-  const handleSelectChange = value => {
-    // Pasamos tanto el valor seleccionado como el nombre del campo
-    onChange({ target: { name, value } });
+  // const handleSelectChange = selectedValue => {
+  //   onChange(selectedValue);
+  // };
+
+  const handleSelectChange = selectedValue => {
+    onChange({ target: { name, value: selectedValue } });
   };
+
   return (
     <>
-      {/* <h1>Soy Select de{label}</h1> */}
       <Space style={{ width: '100%' }} direction="vertical">
         <Select
           onChange={handleSelectChange}
           allowClear
           style={{ width: '100%' }}
-          placeholder="Please select"
-          // name={name}
+          placeholder={`Seleccione ${label}`}
         >
           {list.map(role => (
-            <option key={role.id} value={role.id}>
+            <Select.Option key={role.id} value={role.id}>
               {role.nombre}
-            </option>
+            </Select.Option>
           ))}
         </Select>
       </Space>

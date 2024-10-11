@@ -31,3 +31,8 @@ export enum ResponseState {
   Finished,
   Waiting,
 }
+
+export interface StateType {
+  state: any;
+  setState: Function;
+}
