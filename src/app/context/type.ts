@@ -12,4 +12,5 @@ export type GeneralContextType = {
     colorTextBase: string;
     colorTextLightSolid: string;
   };
+  productosSaveLoading: LoadingState;
 };

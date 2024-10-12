@@ -8,7 +8,7 @@ import {
   productosSelector,
   productosSelectorLoading,
 } from 'app/features/slice/selectors';
-import { ProductEntity } from 'app/api/products/types';
+import { ProductEntityGetAll } from 'app/api/products/types';
 import { ResponseState } from 'app/features/slice/types';
 import { LOAD_PRODUCTOS_LIST } from 'app/features/slice/sagaActions';
 import { Spin } from 'antd';
@@ -66,9 +66,9 @@ export function ListaProductos() {
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
 
-  const [productosListState, setProductosListState] = useState<ProductEntity[]>(
-    [],
-  );
+  const [productosListState, setProductosListState] = useState<
+    ProductEntityGetAll[]
+  >([]);
 
   useEffect(() => {
     if (firstCharge) {
@@ -87,7 +87,7 @@ export function ListaProductos() {
     } else if (loadingProductos?.state === ResponseState.Finished) {
       if (loadingProductos?.status) {
         if (productos && productos.length > 0) {
-          let dataList: Array<ProductEntity> = [];
+          let dataList: Array<ProductEntityGetAll> = [];
 
           productos?.forEach(r => {
             dataList.push({

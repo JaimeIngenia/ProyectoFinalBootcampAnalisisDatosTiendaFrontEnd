@@ -4,7 +4,8 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { GeneralStatesReduxSaga, ResponseState, Entity } from './types';
 import { GeneralStatesReduxSaga_empty } from './emptyTypes';
-import { ProductEntity } from 'app/api/products/types';
+import { ProductEntityGetAll } from 'app/api/products/types';
+import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -60,7 +61,10 @@ const slice = createSlice({
     },
 
     // Products
-    reducerProductsSuccess(state, action: PayloadAction<ProductEntity[]>) {
+    reducerProductsSuccess(
+      state,
+      action: PayloadAction<ProductEntityGetAll[]>,
+    ) {
       state.productos = action.payload;
       state.loadingStates.productosLoading = {
         state: ResponseState.Finished,
@@ -78,6 +82,28 @@ const slice = createSlice({
 
     loadProducts(state, actions: PayloadAction<ResponseState>) {
       state.loadingStates.productosLoading = {
+        state: actions.payload,
+      };
+    },
+    // Save Products
+    reducerSaveProductSuccess(state, action: PayloadAction<ProductEntitySave>) {
+      state.productosGuardados = action.payload;
+      state.loadingStates.productosSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerSaveProductFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.productosSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadSaveProducts(state, actions: PayloadAction<ResponseState>) {
+      state.loadingStates.productosSaveLoading = {
         state: actions.payload,
       };
     },

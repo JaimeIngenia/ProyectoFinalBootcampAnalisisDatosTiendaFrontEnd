@@ -20,7 +20,6 @@ import { useDispatch } from 'react-redux';
 import agregarProducto from '../../../assets/agregarProducto.svg';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
-import { ValidationErrors } from './utils/types';
 import { rulesForm } from './utils/rulesForm';
 
 const { Item } = Form;
@@ -31,7 +30,8 @@ export default function AgregarProducto() {
   const dispatch = useDispatch();
 
   //   Context
-  const { categorias, loadingCategorias, themeColors } = useGeneralContext();
+  const { categorias, loadingCategorias, themeColors, productosSaveLoading } =
+    useGeneralContext();
 
   // Manejo estados de carga
 
@@ -80,32 +80,42 @@ export default function AgregarProducto() {
   //Form
 
   // const saveProduct = async () => {
-  //   // Ejecutamos la validación
-  //   const validationErrors = formValidation(formData);
+  //   // Verifica si formRef.current no es null antes de acceder a sus métodos
+  //   if (!formRef.current) {
+  //     return;
+  //   }
+
+  //   // Obtenemos los valores del formulario
+  //   const formValues = formRef.current.getFieldsValue();
+
+  //   // Validar el formulario antes de hacer la solicitud
+  //   const validationErrors = formValidation(formValues);
   //   setErrors(validationErrors);
 
+  //   // Si hay errores, muestra el mensaje de error y no continua
   //   if (Object.keys(validationErrors).length > 0) {
   //     message.error('Por favor, completa todos los campos correctamente.');
   //     return;
   //   }
 
-  //   // Preparamos los datos a enviar, asegurándonos que precio sea un número
+  //   // Preparamos los datos a enviar
   //   const productData = {
-  //     ...formData,
-  //     precio: Number(formData.precio), // Convertir precio a número para la API
-  //     categoriaId: Number(formData.categoriaId), // Si también se espera un número para categoriaId
+  //     ...formValues,
+  //     precio: Number(formValues.precio), // Aseguramos que el precio sea un número
+  //     categoriaId: Number(formValues.categoriaId), // Convertimos categoriaId a número
   //   };
+  //   debugger;
+  //   const a = productData;
 
   //   try {
-  //     // Hacer la solicitud POST al backend
   //     const response = await fetch(
   //       'https://localhost:7029/api/Producto/SaveProducto',
   //       {
   //         method: 'POST',
   //         headers: {
-  //           'Content-Type': 'application/json', // Indicamos que estamos enviando JSON
+  //           'Content-Type': 'application/json',
   //         },
-  //         body: JSON.stringify(productData), // Convertimos el producto a JSON
+  //         body: JSON.stringify(productData),
   //       },
   //     );
 
@@ -115,31 +125,32 @@ export default function AgregarProducto() {
 
   //     const result = await response.json();
   //     console.log('Producto guardado:', result);
+
+  //     // Si el producto se guarda con éxito
   //     message.success('Producto guardado con éxito.');
+
+  //     // Resetear el formulario después de un guardado exitoso
+  //     formRef.current.resetFields();
+  //     setFormData({
+  //       nombre: '',
+  //       descripcion: '',
+  //       precio: 0,
+  //       categoriaId: 0,
+  //     });
   //   } catch (error) {
+  //     // Manejar errores en la solicitud
   //     console.error('Error al guardar el producto:', error);
   //     message.error('Error al guardar el producto.');
   //   }
   // };
 
-  const saveProduct = async () => {
-    // Verifica si formRef.current no es null antes de acceder a sus métodos
+  const saveProduct = () => {
     if (!formRef.current) {
       return;
     }
 
     // Obtenemos los valores del formulario
     const formValues = formRef.current.getFieldsValue();
-
-    // Validar el formulario antes de hacer la solicitud
-    const validationErrors = formValidation(formValues);
-    setErrors(validationErrors);
-
-    // Si hay errores, muestra el mensaje de error y no continua
-    if (Object.keys(validationErrors).length > 0) {
-      message.error('Por favor, completa todos los campos correctamente.');
-      return;
-    }
 
     // Preparamos los datos a enviar
     const productData = {
@@ -148,42 +159,43 @@ export default function AgregarProducto() {
       categoriaId: Number(formValues.categoriaId), // Convertimos categoriaId a número
     };
 
-    try {
-      const response = await fetch(
-        'https://localhost:7029/api/Producto/SaveProducto',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(productData),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Error en la solicitud');
-      }
-
-      const result = await response.json();
-      console.log('Producto guardado:', result);
-
-      // Si el producto se guarda con éxito
-      message.success('Producto guardado con éxito.');
-
-      // Resetear el formulario después de un guardado exitoso
-      formRef.current.resetFields();
-      setFormData({
-        nombre: '',
-        descripcion: '',
-        precio: 0,
-        categoriaId: 0,
-      });
-    } catch (error) {
-      // Manejar errores en la solicitud
-      console.error('Error al guardar el producto:', error);
-      message.error('Error al guardar el producto.');
-    }
+    // Dispatch de Redux para iniciar el guardado
+    dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
+    dispatch({
+      type: 'SAVE_PRODUCTOS',
+      payload: productData,
+    });
   };
+
+  // UseEffect para manejar los estados de carga
+  useEffect(() => {
+    if (productosSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando producto...');
+    } else if (productosSaveLoading.state === ResponseState.Finished) {
+      if (productosSaveLoading.status) {
+        // Si el producto se guarda con éxito
+        message.success('Producto guardado con éxito.');
+
+        // Verificar si formRef.current no es null antes de resetear el formulario
+        if (formRef.current) {
+          formRef.current.resetFields();
+          setFormData({
+            nombre: '',
+            descripcion: '',
+            precio: 0,
+            categoriaId: 0,
+          });
+        }
+      } else {
+        // Manejar errores en la solicitud
+        message.error(
+          `Error al guardar el producto: ${productosSaveLoading.message}`,
+        );
+      }
+      // Resetear el estado de carga después de que el proceso ha terminado
+      dispatch(actions.loadSaveProducts(ResponseState.Waiting));
+    }
+  }, [productosSaveLoading, dispatch]);
 
   const formRef = useRef<FormInstance>(null);
 
@@ -201,26 +213,6 @@ export default function AgregarProducto() {
     categoriaId: 0,
   });
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    console.log(formData);
-
-    // Validar formulario en cada cambio
-    // const validationErrors = formValidation({
-    //   ...formData,
-    //   [name]: value, // Actualizamos solo el campo modificado
-    // });
-
-    // setErrors(validationErrors);
-
-    // // Si hay errores, deshabilitar el botón
-    // setIsButtonDisabled(Object.keys(validationErrors).length > 0);
-  };
-
   useEffect(() => {
     if (formRef.current) {
       formRef.current.resetFields();
@@ -228,22 +220,20 @@ export default function AgregarProducto() {
     setReset(false);
   }, [reset]);
 
-  // Validar formulario en cada cambio del estado formData
   useEffect(() => {
-    debugger;
     const validationErrors = formValidation(formData);
     setErrors(validationErrors);
 
-    // Si hay errores, deshabilitar el botón
     setIsButtonDisabled(Object.keys(validationErrors).length > 0);
-    debugger;
-  }, [formData]); // Solo se ejecuta cuando formData cambie
+  }, [formData]);
 
-  const handleOnClick = ({ target }) => {
-    setErrors({
-      ...errors,
-      [target.name]: '',
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
+    // console.log(formData);
   };
 
   return (
@@ -290,7 +280,7 @@ export default function AgregarProducto() {
                       name="nombre"
                       // status={errors.nombre ? 'error' : ''}
                       value={formData.nombre}
-                      onClick={handleOnClick}
+                      // onClick={handleOnClick}
                     />
                   </Item>
                 </Col>
@@ -346,16 +336,24 @@ export default function AgregarProducto() {
                     <Spin spinning={loadingSpinCategorias}>
                       <CustomSelect
                         list={categoriaListState}
-                        // onChange={value => {
-                        //   if (formRef.current) {
-                        //     formRef.current.setFieldsValue({
-                        //       categoriaId: value,
-                        //     });
-                        //   }
-                        // }}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+                        // onChange={value =>
+                        //   setFormData({ ...formData, categoriaId: value })
+                        // }
+                        onChange={value => {
+                          // Actualizar el estado local
+                          setFormData({ ...formData, categoriaId: value });
+
+                          // Solo intentar actualizar el valor del formulario si formRef.current no es null
+                          if (formRef.current) {
+                            formRef.current.setFieldsValue({
+                              categoriaId: value,
+                            });
+                          }
+                        }}
                         label="Categoría"
                         name="categoriaId"
+                        value={formData.categoriaId}
                       />
                     </Spin>
                   </Form.Item>

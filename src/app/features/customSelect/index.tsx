@@ -2,11 +2,7 @@ import React from 'react';
 import { Select, Space } from 'antd';
 import PropTypes from 'prop-types';
 
-function CustomSelect({ list, onChange, label, name }) {
-  // const handleSelectChange = selectedValue => {
-  //   onChange(selectedValue);
-  // };
-
+function CustomSelect({ list, onChange, label, name, value }) {
   const handleSelectChange = selectedValue => {
     onChange({ target: { name, value: selectedValue } });
   };
@@ -15,7 +11,10 @@ function CustomSelect({ list, onChange, label, name }) {
     <>
       <Space style={{ width: '100%' }} direction="vertical">
         <Select
-          onChange={handleSelectChange}
+          // onChange={handleSelectChange}
+          value={value}
+          // onChange={selectedValue => onChange(selectedValue)}
+          onChange={onChange}
           allowClear
           style={{ width: '100%' }}
           placeholder={`Seleccione ${label}`}
@@ -31,17 +30,17 @@ function CustomSelect({ list, onChange, label, name }) {
   );
 }
 
-// Definir las PropTypes
 CustomSelect.propTypes = {
   list: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       nombre: PropTypes.string.isRequired,
     }),
-  ).isRequired, // list es un array de objetos con id y nombre
-  onChange: PropTypes.func.isRequired, // onChange debe ser una función
-  label: PropTypes.string.isRequired, // label es una cadena obligatoria
-  name: PropTypes.string.isRequired, // label es una cadena obligatoria
+  ).isRequired,
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 export default CustomSelect;

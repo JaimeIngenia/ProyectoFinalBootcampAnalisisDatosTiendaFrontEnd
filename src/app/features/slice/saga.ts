@@ -6,10 +6,11 @@ import {
   LOAD_CATEGORIAS_LIST,
   LOAD_PRODUCTOS_LIST,
   LOAD_ROLES_LIST,
+  SAVE_PRODUCTOS,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
-import { getAllProductos } from 'app/api/products';
-import { ProductEntity } from 'app/api/products/types';
+import { getAllProductos, saveProduct } from 'app/api/products';
+import { ProductEntityGetAll } from 'app/api/products/types';
 
 function* fetchRolesSaga() {
   try {
@@ -29,10 +30,19 @@ function* fetchCategoriasSaga() {
 }
 function* fetchProductsSaga() {
   try {
-    const productos: ProductEntity[] = yield call(getAllProductos);
+    const productos: ProductEntityGetAll[] = yield call(getAllProductos);
     yield put(actions.reducerProductsSuccess(productos));
   } catch (error) {
     yield put(actions.reducerProductsFailed(error));
+  }
+}
+
+function* fetchSaveProductSaga(action: any) {
+  try {
+    const savedProduct = yield call(saveProduct, action.payload);
+    yield put(actions.reducerSaveProductSuccess(savedProduct));
+  } catch (error) {
+    yield put(actions.reducerSaveProductFailure(error));
   }
 }
 
@@ -40,4 +50,5 @@ export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
   yield takeLatest(LOAD_PRODUCTOS_LIST, fetchProductsSaga);
+  yield takeLatest(SAVE_PRODUCTOS, fetchSaveProductSaga);
 }

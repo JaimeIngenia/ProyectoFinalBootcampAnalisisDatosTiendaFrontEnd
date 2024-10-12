@@ -40,3 +40,15 @@ export const productosSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.productosLoading,
 );
+
+// Productos Guardados
+
+export const productoSaveSelector = createSelector(
+  [selectSlice],
+  state => state.productosGuardados,
+);
+
+export const productoSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.productosSaveLoading,
+);

@@ -6,9 +6,9 @@ export interface ProductoFormValues {
   categoriaId: number; // Campo que vendrá del select
 }
 
-export interface ValidationErrors {
+export interface ProductEntitySave {
   nombre?: string;
   descripcion?: string;
-  precio?: string;
-  categoriaId?: string;
+  precio?: number;
+  categoriaId?: number;
 }

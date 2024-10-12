@@ -1,9 +1,11 @@
-import { ProductEntity } from 'app/api/products/types';
+import { ProductEntityGetAll } from 'app/api/products/types';
+import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export interface GeneralStatesReduxSaga {
   roles: Entity[];
   categorias: Entity[];
-  productos: ProductEntity[];
+  productos: ProductEntityGetAll[];
+  productosGuardados: ProductEntitySave;
   loadingStates: LoadingStates;
 }
 
@@ -12,6 +14,7 @@ export interface LoadingStates {
   rolesLoading: LoadingState; // Estado de carga para roles
   categoriasLoading: LoadingState; // Estado de carga para categorías
   productosLoading: LoadingState; // Estado de carga para productos
+  productosSaveLoading: LoadingState; // Estado de carga para productos
 }
 
 export interface Entity {

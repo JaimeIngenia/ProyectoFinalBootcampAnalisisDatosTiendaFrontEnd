@@ -11,6 +11,7 @@ import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
+  productoSaveSelectorLoading,
 } from 'app/features/slice/selectors';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
@@ -22,6 +23,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   // Usamos los selectores de Redux-Saga
   const categorias = useSelector(categoriasSelector);
   const loadingCategorias = useSelector(categoriasSelectorLoading);
+  const productosSaveLoading = useSelector(productoSaveSelectorLoading);
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const toggleDarkMode = useCallback(() => {
@@ -52,6 +54,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         darkMode,
         toggleDarkMode,
         themeColors,
+        productosSaveLoading,
       }}
     >
       {children}
