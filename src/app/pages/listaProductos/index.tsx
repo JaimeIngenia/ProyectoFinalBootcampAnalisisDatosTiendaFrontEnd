@@ -16,6 +16,7 @@ import {
   LOAD_PRODUCTOS_LIST,
 } from 'app/features/slice/sagaActions';
 import { Spin } from 'antd';
+import { notification } from 'antd';
 
 export function ListaProductos() {
   const columns = [
@@ -67,8 +68,11 @@ export function ListaProductos() {
   //Productos Selectors
   const productos = useSelector(productosSelector);
   const loadingProductos = useSelector(productosSelectorLoading);
+  const loadingDeleteProduct = useSelector(productosDeleteLoadingSelector);
 
   const [loadingSpinProductos, setLoadingSpinProductos] =
+    useState<boolean>(false);
+  const [loadingSpinDeleteProductos, setLoadingSpinDeleteProductos] =
     useState<boolean>(false);
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -115,23 +119,54 @@ export function ListaProductos() {
     }
   }, [productos, loadingProductos]);
 
+  useEffect(() => {
+    if (loadingDeleteProduct?.state === ResponseState.InProgress) {
+      debugger; // 2
+      setLoadingSpinDeleteProductos(true);
+    } else if (loadingDeleteProduct?.state === ResponseState.Finished) {
+      debugger; //3
+      setLoadingSpinDeleteProductos(false);
+      if (loadingDeleteProduct) setLoadingSpinDeleteProductos(false);
+      if (loadingDeleteProduct?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Eliminación completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingDeleteProduct?.message || 'Error en la eliminación.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadDeleteProducts(ResponseState.Waiting));
+    }
+  }, [loadingDeleteProduct, dispatch]);
+
   //Delete products
   const onDeleteProduct = record => {
     Modal.confirm({
       title: '¿Estás seguro de eliminar este producto?',
       onOk: () => {
+        dispatch(actions.loadDeleteProducts(ResponseState.InProgress));
         dispatch({
           type: DELETE_PRODUCT,
           payload: record.id,
         });
+        // Actualizar la lista de productos en el estado local
+        setProductosListState(prevState =>
+          prevState.filter(product => product.id !== record.id),
+        );
       },
+
       onCancel: () => {
         console.log('Eliminación cancelada');
       },
     });
   };
-
-  const deleteLoading = useSelector(productosDeleteLoadingSelector);
 
   return (
     <>
@@ -159,7 +194,7 @@ export function ListaProductos() {
             height: '80vh',
           }}
         >
-          <Spin spinning={loadingSpinProductos || deleteLoading.status}>
+          <Spin spinning={loadingSpinProductos || loadingSpinDeleteProductos}>
             <Table columns={columns} dataSource={productosListState}></Table>
           </Spin>
         </div>

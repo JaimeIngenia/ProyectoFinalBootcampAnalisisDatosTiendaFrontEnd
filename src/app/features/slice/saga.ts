@@ -47,22 +47,12 @@ function* fetchSaveProductSaga(action: any) {
   }
 }
 
-// function* fetchDeleteProductSaga(action: any) {
-//   try {
-//     yield call(deleteProduct, action.payload);
-//     yield put(actions.reducerDeleteProductSuccess(action.payload));
-//   } catch (error) {
-//     yield put(actions.reducerDeleteProductFailure(error));
-//   }
-// }
 function* fetchDeleteProductSaga(action: any) {
   try {
     yield call(deleteProduct, action.payload);
     yield put(actions.reducerDeleteProductSuccess(action.payload));
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message || error.message || 'Error desconocido';
-    yield put(actions.reducerDeleteProductFailure(errorMessage));
+  } catch (error) {
+    yield put(actions.reducerDeleteProductFailure(error));
   }
 }
 

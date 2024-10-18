@@ -118,23 +118,16 @@ const slice = createSlice({
       };
     },
 
-    // reducerDeleteProductFailure(state, action: PayloadAction<any>) {
-    //   state.loadingStates.productosDeleteLoading = {
-    //     state: ResponseState.Finished,
-    //     status: false,
-    //     message: action.payload,
-    //   };
-    // },
-
-    reducerDeleteProductFailure(state, action: PayloadAction<string>) {
+    reducerDeleteProductFailure(state, action: PayloadAction<any>) {
       state.loadingStates.productosDeleteLoading = {
         state: ResponseState.Finished,
         status: false,
-        message: action.payload, // Ahora es un string
+        message: action.payload,
       };
     },
 
     loadDeleteProducts(state, action: PayloadAction<ResponseState>) {
+      debugger;
       state.loadingStates.productosDeleteLoading = {
         state: action.payload,
       };
