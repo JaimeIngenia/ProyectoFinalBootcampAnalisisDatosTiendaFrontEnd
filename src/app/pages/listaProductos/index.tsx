@@ -1,16 +1,20 @@
 import { GeneralContainer } from 'app/components/containers';
 import React, { useEffect, useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Table } from 'antd';
+import { Modal, Table } from 'antd';
 import { useSlice } from 'app/features/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  productosDeleteLoadingSelector,
   productosSelector,
   productosSelectorLoading,
 } from 'app/features/slice/selectors';
 import { ProductEntityGetAll } from 'app/api/products/types';
 import { ResponseState } from 'app/features/slice/types';
-import { LOAD_PRODUCTOS_LIST } from 'app/features/slice/sagaActions';
+import {
+  DELETE_PRODUCT,
+  LOAD_PRODUCTOS_LIST,
+} from 'app/features/slice/sagaActions';
 import { Spin } from 'antd';
 
 export function ListaProductos() {
@@ -47,7 +51,10 @@ export function ListaProductos() {
         return (
           <>
             <EditOutlined />
-            <DeleteOutlined style={{ color: 'red', marginLeft: 12 }} />
+            <DeleteOutlined
+              onClick={() => onDeleteProduct(record)}
+              style={{ color: 'red', marginLeft: 12 }}
+            />
           </>
         );
       },
@@ -108,6 +115,24 @@ export function ListaProductos() {
     }
   }, [productos, loadingProductos]);
 
+  //Delete products
+  const onDeleteProduct = record => {
+    Modal.confirm({
+      title: '¿Estás seguro de eliminar este producto?',
+      onOk: () => {
+        dispatch({
+          type: DELETE_PRODUCT,
+          payload: record.id,
+        });
+      },
+      onCancel: () => {
+        console.log('Eliminación cancelada');
+      },
+    });
+  };
+
+  const deleteLoading = useSelector(productosDeleteLoadingSelector);
+
   return (
     <>
       <GeneralContainer>
@@ -134,7 +159,7 @@ export function ListaProductos() {
             height: '80vh',
           }}
         >
-          <Spin spinning={loadingSpinProductos}>
+          <Spin spinning={loadingSpinProductos || deleteLoading.status}>
             <Table columns={columns} dataSource={productosListState}></Table>
           </Spin>
         </div>

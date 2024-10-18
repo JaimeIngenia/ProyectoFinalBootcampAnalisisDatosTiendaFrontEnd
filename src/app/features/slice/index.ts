@@ -107,6 +107,38 @@ const slice = createSlice({
         state: actions.payload,
       };
     },
+    // Delete Products
+    reducerDeleteProductSuccess(state, action: PayloadAction<string>) {
+      state.productos = state.productos.filter(
+        producto => producto.id !== action.payload,
+      );
+      state.loadingStates.productosDeleteLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // reducerDeleteProductFailure(state, action: PayloadAction<any>) {
+    //   state.loadingStates.productosDeleteLoading = {
+    //     state: ResponseState.Finished,
+    //     status: false,
+    //     message: action.payload,
+    //   };
+    // },
+
+    reducerDeleteProductFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.productosDeleteLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload, // Ahora es un string
+      };
+    },
+
+    loadDeleteProducts(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.productosDeleteLoading = {
+        state: action.payload,
+      };
+    },
   },
 });
 

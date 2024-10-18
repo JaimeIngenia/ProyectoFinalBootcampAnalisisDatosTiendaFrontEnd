@@ -27,5 +27,6 @@ export const GeneralStatesReduxSaga_empty = {
     categoriasLoading: defaultLoadingState,
     productosLoading: defaultLoadingState,
     productosSaveLoading: defaultLoadingState,
+    productosDeleteLoading: defaultLoadingState,
   },
 };

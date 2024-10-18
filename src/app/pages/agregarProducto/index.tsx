@@ -1,29 +1,15 @@
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Form,
-  FormInstance,
-  Input,
-  message,
-  Row,
-  Spin,
-} from 'antd';
+import { ConfigProvider, Form, FormInstance, message } from 'antd';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
-import CustomSelect from 'app/features/customSelect';
 import { useSlice } from 'app/features/slice';
 import { LOAD_CATEGORIAS_LIST } from 'app/features/slice/sagaActions';
 import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import agregarProducto from '../../../assets/agregarProducto.svg';
+import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
-import { rulesForm } from './utils/rulesForm';
-import MainForm from './features/mainForm/MainForm';
-
-const { Item } = Form;
 
 export default function AgregarProducto() {
   //Genral flow redux

@@ -52,3 +52,9 @@ export const productoSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.productosSaveLoading,
 );
+
+// Delete Productos
+export const productosDeleteLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.productosDeleteLoading,
+);

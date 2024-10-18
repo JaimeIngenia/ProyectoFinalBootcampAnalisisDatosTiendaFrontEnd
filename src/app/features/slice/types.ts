@@ -15,6 +15,7 @@ export interface LoadingStates {
   categoriasLoading: LoadingState; // Estado de carga para categorías
   productosLoading: LoadingState; // Estado de carga para productos
   productosSaveLoading: LoadingState; // Estado de carga para productos
+  productosDeleteLoading: LoadingState;
 }
 
 export interface Entity {

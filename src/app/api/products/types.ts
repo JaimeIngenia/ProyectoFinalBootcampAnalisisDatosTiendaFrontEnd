@@ -1,5 +1,5 @@
 export interface ProductEntityGetAll {
-  id: number;
+  id: string;
   nombre: string;
   descripcion: string;
   precio: number;
