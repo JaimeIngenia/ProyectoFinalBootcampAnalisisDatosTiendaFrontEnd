@@ -111,9 +111,29 @@ export function ListaProductos() {
   return (
     <>
       <GeneralContainer>
-        <h1>ListaProductos de la tienda</h1>
+        <h1
+          style={{
+            height: '20vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            border: 'solid red 3px',
+          }}
+        >
+          ListaProductos de la tienda
+        </h1>
 
-        <div style={{ display: 'flex', border: 'solid red 3px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: 'solid blue 3px',
+            width: '100%',
+            height: '80vh',
+          }}
+        >
           <Spin spinning={loadingSpinProductos}>
             <Table columns={columns} dataSource={productosListState}></Table>
           </Spin>

@@ -21,6 +21,7 @@ import agregarProducto from '../../../assets/agregarProducto.svg';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
 import { rulesForm } from './utils/rulesForm';
+import MainForm from './features/mainForm/MainForm';
 
 const { Item } = Form;
 
@@ -172,132 +173,61 @@ export default function AgregarProducto() {
   return (
     <>
       <GeneralContainer>
-        <div
+        <h1
           style={{
+            height: '20vh',
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-            width: '50%',
-            marginBottom: '50px',
+            justifyContent: 'center',
+            textAlign: 'center',
+            border: 'solid red 3px',
           }}
         >
-          <img style={{ width: '50%' }} src={agregarProducto} alt="" />
-        </div>
-        <div className={styles.sub_container}>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: themeColors.colorPrimary,
-                colorTextBase: themeColors.colorTextBase,
-                colorTextLightSolid: themeColors.colorTextLightSolid,
-              },
+          Agregar producto a la tienda
+        </h1>
+        <div
+          style={{
+            height: '80vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '50%',
+              marginBottom: '50px',
+              height: '20vh',
             }}
           >
-            <Form
-              layout="vertical"
-              ref={formRef}
-              name="Formulario"
-              onFinish={saveProduct}
+            <img style={{ width: '50%' }} src={agregarProducto} alt="" />
+          </div>
+          <div className={styles.sub_container}>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: themeColors.colorPrimary,
+                  colorTextBase: themeColors.colorTextBase,
+                  colorTextLightSolid: themeColors.colorTextLightSolid,
+                },
+              }}
             >
-              <Row gutter={[16, 16]}>
-                {/* Campo Nombre */}
-                <Col xs={24} sm={12} md={12} lg={12}>
-                  <Item
-                    label="Nombre"
-                    name="nombre"
-                    rules={rulesForm.rulesNombre}
-                  >
-                    <Input
-                      placeholder="Nombre del Producto"
-                      onChange={handleChange}
-                      name="nombre"
-                      value={formData.nombre}
-                    />
-                  </Item>
-                </Col>
-
-                {/* Campo Descripción */}
-                <Col xs={24} sm={12} md={12} lg={12}>
-                  <Form.Item
-                    label="Descripción"
-                    name="descripcion"
-                    rules={rulesForm.rulesDescripcion}
-                  >
-                    <Input
-                      placeholder="Descripción del Producto"
-                      onChange={handleChange}
-                      name="descripcion"
-                      value={formData.descripcion}
-                    />
-                  </Form.Item>
-                </Col>
-
-                {/* Campo Precio */}
-                <Col xs={24} sm={12} md={12} lg={12}>
-                  <Form.Item
-                    required
-                    label="Precio"
-                    name="precio"
-                    rules={rulesForm.rulesPrecio}
-                  >
-                    <Input
-                      type="number"
-                      placeholder="Precio del Producto"
-                      onChange={handleChange}
-                      name="precio"
-                      value={formData.precio}
-                    />
-                  </Form.Item>
-                </Col>
-
-                {/* Select Categoría */}
-                <Col xs={24} sm={12} md={12} lg={12}>
-                  <Form.Item
-                    label="Categoría"
-                    name="categoriaId"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Por favor selecciona una categoría',
-                      },
-                    ]}
-                  >
-                    <Spin spinning={loadingSpinCategorias}>
-                      <CustomSelect
-                        list={categoriaListState}
-                        onChange={value => {
-                          // Actualizar el estado local
-                          setFormData({ ...formData, categoriaId: value });
-                          // Solo intentar actualizar el valor del formulario si formRef.current no es null
-                          if (formRef.current) {
-                            formRef.current.setFieldsValue({
-                              categoriaId: value,
-                            });
-                          }
-                        }}
-                        label="Categoría"
-                        name="categoriaId"
-                        value={formData.categoriaId}
-                      />
-                    </Spin>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col xs={24}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    disabled={isButtonDisabled}
-                    block
-                  >
-                    Agregar Producto
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </ConfigProvider>
+              <MainForm
+                formRef={formRef}
+                saveProduct={saveProduct}
+                handleChange={handleChange}
+                formData={formData}
+                setFormData={setFormData}
+                loadingSpinCategorias={loadingSpinCategorias}
+                categoriaListState={categoriaListState}
+                isButtonDisabled={isButtonDisabled}
+              />
+            </ConfigProvider>
+          </div>
         </div>
       </GeneralContainer>
     </>
