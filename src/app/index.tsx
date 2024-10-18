@@ -11,7 +11,12 @@ import AgregarProducto from './pages/agregarProducto';
 export function App() {
   return (
     <BrowserRouter>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
         <SideBarMenuPage />
         {/* <SideBarMenuPage backgroundCustom="#000B2A" /> */}
 

@@ -27,6 +27,7 @@ import reportWebVitals from 'reportWebVitals';
 // Initialize languages
 import './locales/i18n';
 import { GeneralProvider } from 'app/context/GeneralContext';
+import './styles.css';
 
 const store = configureAppStore();
 const root = ReactDOM.createRoot(

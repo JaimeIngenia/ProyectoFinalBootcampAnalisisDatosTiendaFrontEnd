@@ -43,6 +43,7 @@ const SideBarMenuPage = () => {
           padding: 0,
           background: 'white',
           color: themeColors.text,
+          height: '100vh',
         }}
         className={styles.header}
       >
