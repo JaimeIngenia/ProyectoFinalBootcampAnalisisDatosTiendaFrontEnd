@@ -4,7 +4,10 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { GeneralStatesReduxSaga, ResponseState, Entity } from './types';
 import { GeneralStatesReduxSaga_empty } from './emptyTypes';
-import { ProductEntityGetAll } from 'app/api/products/types';
+import {
+  ProductEntityGetAll,
+  ProductEntityGetById,
+} from 'app/api/products/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export const initialState: GeneralStatesReduxSaga =
@@ -127,8 +130,63 @@ const slice = createSlice({
     },
 
     loadDeleteProducts(state, action: PayloadAction<ResponseState>) {
-      debugger;
       state.loadingStates.productosDeleteLoading = {
+        state: action.payload,
+      };
+    },
+    // Update Products
+    reducerUpdateProductSuccess(
+      state,
+      action: PayloadAction<ProductEntityGetAll>,
+    ) {
+      const updatedProduct = action.payload;
+      state.productos = state.productos.map(producto =>
+        producto.id === updatedProduct.id ? updatedProduct : producto,
+      );
+
+      state.loadingStates.productosUpdateLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerUpdateProductFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.productosUpdateLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadUpdateProducts(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.productosUpdateLoading = {
+        state: action.payload,
+      };
+    },
+    // Get Product By ID
+
+    reducerGetProductByIdSuccess(
+      state,
+      action: PayloadAction<ProductEntityGetById>,
+    ) {
+      state.productoById = action.payload;
+
+      state.loadingStates.productosGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerGetProductByIdFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.productosGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadGetProductById(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.productosGetByIdLoading = {
         state: action.payload,
       };
     },

@@ -1,8 +1,18 @@
-import { ConfigProvider, Form, FormInstance, message } from 'antd';
+import {
+  ConfigProvider,
+  Form,
+  FormInstance,
+  message,
+  notification,
+} from 'antd';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
-import { LOAD_CATEGORIAS_LIST } from 'app/features/slice/sagaActions';
+import {
+  GET_PRODUCT_BY_ID,
+  LOAD_CATEGORIAS_LIST,
+  UPDATE_PRODUCT,
+} from 'app/features/slice/sagaActions';
 import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,24 +20,117 @@ import agregarProducto from '../../../assets/agregarProducto.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
+import { useParams } from 'react-router-dom';
+import {
+  ProductEntityGetAll,
+  ProductEntityGetById,
+} from 'app/api/products/types';
+import { productoById_Empty } from 'app/features/slice/emptyTypes';
 
 export default function AgregarProducto() {
+  // Obtén el ID de los parámetros de la URL
+  const { id } = useParams();
   //Genral flow redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
 
   //   Context
-  const { categorias, loadingCategorias, themeColors, productosSaveLoading } =
-    useGeneralContext();
+  const {
+    categorias,
+    loadingCategorias,
+    themeColors,
+    productosSaveLoading,
+    productoGetById,
+    loadingProductoGetById,
+    loadingUpdateProduct,
+  } = useGeneralContext();
 
   // Manejo estados de carga
 
   const [loadingSpinCategorias, setLoadingSpinCategorias] =
     useState<boolean>(false);
 
+  const [loadingSpinProductById, setLoadingSpinProductById] =
+    useState<boolean>(false);
+
+  const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
+    useState<boolean>(false);
+
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
 
+  const [firstChargeProductById, setFirstChargeProductById] =
+    useState<boolean>(true);
+
   const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
+
+  const [ProductByIdListState, setProductByIdListState] =
+    useState<ProductEntityGetById>(productoById_Empty);
+
+  // UseEffect para ProducByid
+
+  useEffect(() => {
+    if (id) {
+      if (firstChargeProductById) {
+        if (loadingProductoGetById?.state === ResponseState.Waiting) {
+          dispatch(actions.loadGetProductById(ResponseState.Started));
+        } else if (loadingProductoGetById?.state === ResponseState.Started) {
+          setFirstChargeProductById(false);
+          dispatch(actions.loadGetProductById(ResponseState.InProgress));
+          dispatch({
+            type: GET_PRODUCT_BY_ID,
+            payload: id,
+          });
+        }
+      }
+      if (loadingProductoGetById?.state === ResponseState.InProgress) {
+        setLoadingSpinProductById(true);
+      } else if (loadingProductoGetById?.state === ResponseState.Finished) {
+        if (loadingProductoGetById?.status) {
+          if (productoGetById && formRef.current) {
+            // debugger;
+            console.log('ID del producto:', id);
+            console.log('ProductoGetById en useEffect:', productoGetById);
+            console.log('categoriaListState:', categoriaListState);
+            console.log(
+              'ID de la categoría del producto:',
+              productoGetById.categoria.id,
+            );
+
+            // Buscar el ID de la categoría por su nombre
+            const categoriaEncontrada = categoriaListState.find(
+              categoria => categoria.id === productoGetById.categoria.id,
+            );
+            console.log('Categoría encontrada:', categoriaEncontrada);
+            const categoriaId = categoriaEncontrada
+              ? categoriaEncontrada.id
+              : ''; // Esto debería ser correcto
+
+            formRef.current.setFieldsValue({
+              nombre: productoGetById.nombre,
+              descripcion: productoGetById.descripcion,
+              precio: productoGetById.precio,
+              // categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+              categoriaId,
+            });
+            const productoConCategoriaId = {
+              ...productoGetById,
+              categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '', // Asigna categoriaId aquí
+            };
+
+            setFormData(productoConCategoriaId);
+            // setFormData(productoGetById);
+            setProductByIdListState(productoGetById);
+            if (loadingSpinProductById) setLoadingSpinProductById(false);
+          }
+        } else {
+          alert(loadingProductoGetById?.message);
+        }
+        dispatch(actions.loadGetProductById(ResponseState.Waiting));
+      }
+    }
+  }, [productoGetById, loadingProductoGetById, id, dispatch]);
+
+  //Useeffect para categorias
 
   useEffect(() => {
     if (firstCharge) {
@@ -78,8 +181,13 @@ export default function AgregarProducto() {
     nombre: '',
     descripcion: '',
     precio: 0,
-    categoriaId: 0,
+    categoriaId: '',
   });
+
+  useEffect(() => {
+    console.log('formData actualizado:', formData);
+    debugger;
+  }, [formData]);
 
   const saveProduct = () => {
     if (!formRef.current) {
@@ -142,7 +250,7 @@ export default function AgregarProducto() {
             nombre: '',
             descripcion: '',
             precio: 0,
-            categoriaId: 0,
+            categoriaId: '',
           });
         }
       } else {
@@ -155,6 +263,60 @@ export default function AgregarProducto() {
       dispatch(actions.loadSaveProducts(ResponseState.Waiting));
     }
   }, [productosSaveLoading, dispatch]);
+
+  //UseEffect de update products
+
+  useEffect(() => {
+    if (loadingUpdateProduct?.state === ResponseState.InProgress) {
+      setLoadingSpinUpdateProductos(true);
+    } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
+      setLoadingSpinUpdateProductos(false);
+      if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
+      if (loadingUpdateProduct?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Actualización completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingUpdateProduct?.message || 'Error en la Actualización.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
+    }
+  }, [loadingUpdateProduct, dispatch]);
+
+  //Función update products
+  const onUpdateProduct = () => {
+    if (!formRef.current) {
+      return;
+    }
+    // Obtenemos los valores del formulario
+    const formValues = formRef.current.getFieldsValue();
+
+    // Preparamos los datos a enviar
+    const productDataUpdated = {
+      ...formValues,
+      precio: Number(formValues.precio), // Aseguramos que el precio sea un número
+      categoriaId: String(formValues.categoriaId), // Convertimos categoriaId a número
+    };
+
+    dispatch(actions.loadUpdateProducts(ResponseState.InProgress));
+
+    // Dispatch al saga con el producto actualizado
+    dispatch({
+      type: UPDATE_PRODUCT,
+      payload: {
+        id: id,
+        productData: productDataUpdated, // El objeto con los datos actualizados
+      },
+    });
+  };
 
   return (
     <>
@@ -203,8 +365,10 @@ export default function AgregarProducto() {
               }}
             >
               <MainForm
+                id={id}
                 formRef={formRef}
                 saveProduct={saveProduct}
+                onUpdateProduct={onUpdateProduct}
                 handleChange={handleChange}
                 formData={formData}
                 setFormData={setFormData}

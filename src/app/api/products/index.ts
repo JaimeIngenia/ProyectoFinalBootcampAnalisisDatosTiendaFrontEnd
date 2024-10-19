@@ -1,5 +1,5 @@
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
-import { ProductEntityGetAll } from './types'; // Asegúrate de que esta ruta sea correcta
+import { ProductEntityGetAll, ProductEntityGetById } from './types'; // Asegúrate de que esta ruta sea correcta
 import axios from 'axios';
 
 export async function getAllProductos(): Promise<ProductEntityGetAll[]> {
@@ -38,6 +38,38 @@ export async function deleteProduct(productId: string): Promise<void> {
     );
   } catch (error) {
     console.error(`Error eliminando el producto ${productId}:`, error);
+    throw error;
+  }
+}
+
+// Actualizar un producto existente
+export async function updateProduct(
+  productId: string,
+  productData: ProductEntitySave,
+): Promise<ProductEntitySave> {
+  try {
+    const response = await axios.put<ProductEntitySave>(
+      `https://localhost:7029/api/Producto/UpdateProducto/${productId}`,
+      productData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating product ${productId}:`, error);
+    throw error;
+  }
+}
+
+// Obtener un producto por ID
+export async function getProductById(
+  productId: string,
+): Promise<ProductEntityGetById> {
+  try {
+    const response = await axios.get<ProductEntityGetById>(
+      `https://localhost:7029/api/Producto/GetProductById/${productId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product ${productId}:`, error);
     throw error;
   }
 }

@@ -58,3 +58,18 @@ export const productosDeleteLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.productosDeleteLoading,
 );
+// Update Productos
+export const productosUpdateLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.productosUpdateLoading,
+);
+// Get Productos By Id
+export const productosGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.productoById,
+);
+
+export const productosGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.productosGetByIdLoading,
+);

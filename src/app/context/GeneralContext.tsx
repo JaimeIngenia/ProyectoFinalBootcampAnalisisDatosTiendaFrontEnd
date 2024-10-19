@@ -12,6 +12,9 @@ import {
   categoriasSelector,
   categoriasSelectorLoading,
   productoSaveSelectorLoading,
+  productosGetByIdLoadingSelector,
+  productosGetByIdSelector,
+  productosUpdateLoadingSelector,
 } from 'app/features/slice/selectors';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
@@ -24,6 +27,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const categorias = useSelector(categoriasSelector);
   const loadingCategorias = useSelector(categoriasSelectorLoading);
   const productosSaveLoading = useSelector(productoSaveSelectorLoading);
+  const loadingUpdateProduct = useSelector(productosUpdateLoadingSelector);
+  const productoGetById = useSelector(productosGetByIdSelector);
+  const loadingProductoGetById = useSelector(productosGetByIdLoadingSelector);
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const toggleDarkMode = useCallback(() => {
@@ -51,6 +57,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
       value={{
         categorias,
         loadingCategorias,
+        loadingUpdateProduct,
+        productoGetById,
+        loadingProductoGetById,
         darkMode,
         toggleDarkMode,
         themeColors,

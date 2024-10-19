@@ -6,8 +6,10 @@ import CustomSelect from 'app/features/customSelect';
 const { Item } = Form;
 
 export default function MainForm({
+  id,
   formRef,
   saveProduct,
+  onUpdateProduct,
   handleChange,
   formData,
   loadingSpinCategorias,
@@ -20,7 +22,8 @@ export default function MainForm({
       layout="vertical"
       ref={formRef}
       name="Formulario"
-      onFinish={saveProduct}
+      // onFinish={saveProduct}
+      onFinish={formData.id ? onUpdateProduct : saveProduct}
     >
       <Row gutter={[16, 16]}>
         {/* Campo Nombre */}
@@ -84,14 +87,38 @@ export default function MainForm({
             <Spin spinning={loadingSpinCategorias}>
               <CustomSelect
                 list={categoriaListState}
+                // onChange={value => {
+                //   debugger;
+                //   console.log('Categoría seleccionada:', value); // Ver qué ID se selecciona
+                //   setFormData({ ...formData, categoriaId: value });
+                //   if (formRef.current) {
+                //     formRef.current.setFieldsValue({
+                //       categoriaId: value,
+                //     });
+                //   }
+                // }}
                 onChange={value => {
-                  // Actualizar el estado local
-                  setFormData({ ...formData, categoriaId: value });
-                  // Solo intentar actualizar el valor del formulario si formRef.current no es null
-                  if (formRef.current) {
-                    formRef.current.setFieldsValue({
-                      categoriaId: value,
-                    });
+                  console.log('Valor de cambio:', value); // Verifica el valor recibido
+                  console.log('formData antes:', formData); // Verifica el estado antes del cambio
+
+                  if (formData.id) {
+                    // Verifica si el ID está presente
+                    debugger; // Este debe ser alcanzado si el ID está presente
+                    setFormData(prev => ({ ...prev, categoriaId: value }));
+
+                    if (formRef.current) {
+                      formRef.current.setFieldsValue({
+                        categoriaId: value,
+                      });
+                    }
+                  } else {
+                    debugger; // Este se activará si no hay un ID
+                    setFormData(prev => ({ ...prev, categoriaId: value }));
+                    if (formRef.current) {
+                      formRef.current.setFieldsValue({
+                        categoriaId: value,
+                      });
+                    }
                   }
                 }}
                 label="Categoría"
@@ -111,7 +138,8 @@ export default function MainForm({
             disabled={isButtonDisabled}
             block
           >
-            Agregar Producto
+            {/* Agregar Producto */}
+            {formData.id ? 'Actualizar Producto' : 'Agregar Producto'}
           </Button>
         </Col>
       </Row>

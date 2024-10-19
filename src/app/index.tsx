@@ -25,6 +25,7 @@ export function App() {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/listaProductos" element={<ListaProductos />} />
           <Route path="/agregarProductos" element={<AgregarProducto />} />
+          <Route path="/editarProducto/:id" element={<AgregarProducto />} />
         </Routes>
       </div>
 

@@ -26,7 +26,7 @@ export function formValidation(values: ProductoFormValues) {
   }
 
   // // Validación de "categoriaId"
-  if (!values.categoriaId || values.categoriaId <= 0) {
+  if (!values.categoriaId || values.categoriaId.length <= 0) {
     _errors['categoriaId'] = 'Debes seleccionar una categoría válida';
   }
 

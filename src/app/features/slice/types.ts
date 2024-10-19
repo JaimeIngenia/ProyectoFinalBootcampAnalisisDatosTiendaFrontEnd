@@ -1,4 +1,7 @@
-import { ProductEntityGetAll } from 'app/api/products/types';
+import {
+  ProductEntityGetAll,
+  ProductEntityGetById,
+} from 'app/api/products/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export interface GeneralStatesReduxSaga {
@@ -6,6 +9,7 @@ export interface GeneralStatesReduxSaga {
   categorias: Entity[];
   productos: ProductEntityGetAll[];
   productosGuardados: ProductEntitySave;
+  productoById: ProductEntityGetById;
   loadingStates: LoadingStates;
 }
 
@@ -16,10 +20,12 @@ export interface LoadingStates {
   productosLoading: LoadingState; // Estado de carga para productos
   productosSaveLoading: LoadingState; // Estado de carga para productos
   productosDeleteLoading: LoadingState;
+  productosUpdateLoading: LoadingState;
+  productosGetByIdLoading: LoadingState;
 }
 
 export interface Entity {
-  id: number;
+  id: string;
   nombre: string;
 }
 
