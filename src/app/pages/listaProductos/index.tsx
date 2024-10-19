@@ -82,6 +82,7 @@ export function ListaProductos() {
 
   //Productos Selectors
   const productos = useSelector(productosSelector);
+
   const loadingProductos = useSelector(productosSelectorLoading);
   const loadingDeleteProduct = useSelector(productosDeleteLoadingSelector);
   const loadingUpdateProduct = useSelector(productosUpdateLoadingSelector);
@@ -105,6 +106,10 @@ export function ListaProductos() {
 
   //updatwe
 
+  useEffect(() => {
+    setProductosListState(productos);
+  }, [productos]);
+
   const [isEditing, setIsEditing] = useState(false); // Control del modal
   const [editingProduct, setEditingProduct] =
     useState<Partial<ProductEntityGetAll> | null>(null);
@@ -127,6 +132,7 @@ export function ListaProductos() {
   };
   useEffect(() => {
     if (firstCharge) {
+      // debugger;
       if (loadingProductos?.state === ResponseState.Waiting) {
         dispatch(actions.loadProducts(ResponseState.Started));
       } else if (loadingProductos?.state === ResponseState.Started) {
@@ -161,7 +167,7 @@ export function ListaProductos() {
       }
       dispatch(actions.loadProducts(ResponseState.Waiting));
     }
-  }, [productos, loadingProductos]);
+  }, [productos, loadingProductos, dispatch]);
 
   useEffect(() => {
     if (loadingDeleteProduct?.state === ResponseState.InProgress) {
@@ -197,6 +203,11 @@ export function ListaProductos() {
       setLoadingSpinUpdateProductos(false);
       if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
       if (loadingUpdateProduct?.status) {
+        // Jaime esto está raro
+        dispatch(actions.loadProducts(ResponseState.InProgress));
+        dispatch({
+          type: LOAD_PRODUCTOS_LIST,
+        });
         notification.success({
           message: 'Éxito',
           description: 'Actualización completada correctamente.',
@@ -250,7 +261,7 @@ export function ListaProductos() {
       }
       dispatch(actions.loadCategorias(ResponseState.Waiting));
     }
-  }, [categorias, loadingCategorias]);
+  }, [categorias, loadingCategorias, dispatch]);
 
   //Delete products
   const onDeleteProduct = record => {

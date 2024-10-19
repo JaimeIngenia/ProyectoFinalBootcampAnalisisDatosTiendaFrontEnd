@@ -44,17 +44,17 @@ export async function deleteProduct(productId: string): Promise<void> {
 
 // Actualizar un producto existente
 export async function updateProduct(
-  productId: string,
+  id: string,
   productData: ProductEntitySave,
 ): Promise<ProductEntitySave> {
   try {
     const response = await axios.put<ProductEntitySave>(
-      `https://localhost:7029/api/Producto/UpdateProducto/${productId}`,
+      `https://localhost:7029/api/Producto/UpdateProducto/${id}`,
       productData,
     );
     return response.data;
   } catch (error) {
-    console.error(`Error updating product ${productId}:`, error);
+    console.error(`Error updating product ${id}:`, error);
     throw error;
   }
 }

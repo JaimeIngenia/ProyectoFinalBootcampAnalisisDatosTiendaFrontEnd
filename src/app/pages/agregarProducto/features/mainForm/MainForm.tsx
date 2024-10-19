@@ -23,7 +23,7 @@ export default function MainForm({
       ref={formRef}
       name="Formulario"
       // onFinish={saveProduct}
-      onFinish={formData.id ? onUpdateProduct : saveProduct}
+      onFinish={id ? onUpdateProduct : saveProduct}
     >
       <Row gutter={[16, 16]}>
         {/* Campo Nombre */}
@@ -103,7 +103,6 @@ export default function MainForm({
 
                   if (formData.id) {
                     // Verifica si el ID está presente
-                    debugger; // Este debe ser alcanzado si el ID está presente
                     setFormData(prev => ({ ...prev, categoriaId: value }));
 
                     if (formRef.current) {
@@ -112,7 +111,6 @@ export default function MainForm({
                       });
                     }
                   } else {
-                    debugger; // Este se activará si no hay un ID
                     setFormData(prev => ({ ...prev, categoriaId: value }));
                     if (formRef.current) {
                       formRef.current.setFieldsValue({
@@ -139,7 +137,7 @@ export default function MainForm({
             block
           >
             {/* Agregar Producto */}
-            {formData.id ? 'Actualizar Producto' : 'Agregar Producto'}
+            {id ? 'Actualizar Producto' : 'Agregar Producto'}
           </Button>
         </Col>
       </Row>

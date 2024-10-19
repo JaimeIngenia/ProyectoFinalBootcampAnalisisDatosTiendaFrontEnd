@@ -67,8 +67,8 @@ function* fetchDeleteProductSaga(action: any) {
 // Saga para actualizar un producto existente
 function* fetchUpdateProductSaga(action) {
   try {
-    const { productId, productData } = action.payload;
-    const updatedProduct = yield call(updateProduct, productId, productData);
+    const { id, productData } = action.payload;
+    const updatedProduct = yield call(updateProduct, id, productData);
     yield put(actions.reducerUpdateProductSuccess(updatedProduct));
   } catch (error) {
     let errorMessage = 'Unknown error occurred';

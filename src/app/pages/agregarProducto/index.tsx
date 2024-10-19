@@ -20,7 +20,7 @@ import agregarProducto from '../../../assets/agregarProducto.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -28,6 +28,11 @@ import {
 import { productoById_Empty } from 'app/features/slice/emptyTypes';
 
 export default function AgregarProducto() {
+  const navigate = useNavigate(); // Hook para navegar entre rutas
+
+  const handleEditProduct = id => {
+    navigate(`/listaProductos`); // Navega a la ruta con el ID como parámetro
+  };
   // Obtén el ID de los parámetros de la URL
   const { id } = useParams();
   //Genral flow redux
@@ -110,10 +115,13 @@ export default function AgregarProducto() {
               descripcion: productoGetById.descripcion,
               precio: productoGetById.precio,
               // categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-              categoriaId,
+              // categoriaId,
             });
             const productoConCategoriaId = {
-              ...productoGetById,
+              nombre: productoGetById.nombre,
+              descripcion: productoGetById.descripcion,
+              precio: productoGetById.precio,
+              // ...productoGetById,
               categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '', // Asigna categoriaId aquí
             };
 
@@ -184,10 +192,10 @@ export default function AgregarProducto() {
     categoriaId: '',
   });
 
-  useEffect(() => {
-    console.log('formData actualizado:', formData);
-    debugger;
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log('formData actualizado:', formData);
+  //   debugger;
+  // }, [formData]);
 
   const saveProduct = () => {
     if (!formRef.current) {
@@ -266,30 +274,30 @@ export default function AgregarProducto() {
 
   //UseEffect de update products
 
-  useEffect(() => {
-    if (loadingUpdateProduct?.state === ResponseState.InProgress) {
-      setLoadingSpinUpdateProductos(true);
-    } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
-      setLoadingSpinUpdateProductos(false);
-      if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
-      if (loadingUpdateProduct?.status) {
-        notification.success({
-          message: 'Éxito',
-          description: 'Actualización completada correctamente.',
-          placement: 'bottomRight', // Puedes cambiar la posición si deseas
-        });
-      } else {
-        notification.error({
-          message: 'Error',
-          description:
-            loadingUpdateProduct?.message || 'Error en la Actualización.',
-          placement: 'bottomRight',
-        });
-      }
+  // useEffect(() => {
+  //   if (loadingUpdateProduct?.state === ResponseState.InProgress) {
+  //     setLoadingSpinUpdateProductos(true);
+  //   } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
+  //     setLoadingSpinUpdateProductos(false);
+  //     if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
+  //     if (loadingUpdateProduct?.status) {
+  //       notification.success({
+  //         message: 'Éxito',
+  //         description: 'Actualización completada correctamente.',
+  //         placement: 'bottomRight', // Puedes cambiar la posición si deseas
+  //       });
+  //     } else {
+  //       notification.error({
+  //         message: 'Error',
+  //         description:
+  //           loadingUpdateProduct?.message || 'Error en la Actualización.',
+  //         placement: 'bottomRight',
+  //       });
+  //     }
 
-      dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
-    }
-  }, [loadingUpdateProduct, dispatch]);
+  //     dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
+  //   }
+  // }, [loadingUpdateProduct, dispatch]);
 
   //Función update products
   const onUpdateProduct = () => {
@@ -302,8 +310,8 @@ export default function AgregarProducto() {
     // Preparamos los datos a enviar
     const productDataUpdated = {
       ...formValues,
-      precio: Number(formValues.precio), // Aseguramos que el precio sea un número
-      categoriaId: String(formValues.categoriaId), // Convertimos categoriaId a número
+      // precio: Number(formValues.precio), // Aseguramos que el precio sea un número
+      // categoriaId: String(formValues.categoriaId), // Convertimos categoriaId a número
     };
 
     dispatch(actions.loadUpdateProducts(ResponseState.InProgress));
@@ -316,6 +324,7 @@ export default function AgregarProducto() {
         productData: productDataUpdated, // El objeto con los datos actualizados
       },
     });
+    navigate(`/listaProductos`);
   };
 
   return (
