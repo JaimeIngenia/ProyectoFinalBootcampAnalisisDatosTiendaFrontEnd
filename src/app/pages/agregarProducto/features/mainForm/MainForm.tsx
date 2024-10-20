@@ -16,6 +16,8 @@ export default function MainForm({
   categoriaListState,
   setFormData,
   isButtonDisabled,
+  handleSelectChangeUpdate,
+  productByIdListState,
 }) {
   return (
     <Form
@@ -28,12 +30,16 @@ export default function MainForm({
       <Row gutter={[16, 16]}>
         {/* Campo Nombre */}
         <Col xs={24} sm={12} md={12} lg={12}>
-          <Item label="Nombre" name="nombre" rules={rulesForm.rulesNombre}>
+          <Item
+            label="Nombre"
+            // name="nombre"
+            rules={rulesForm.rulesNombre}
+          >
             <Input
               placeholder="Nombre del Producto"
               onChange={handleChange}
               name="nombre"
-              value={formData.nombre}
+              value={formData.nombre || ''}
             />
           </Item>
         </Col>
@@ -42,14 +48,14 @@ export default function MainForm({
         <Col xs={24} sm={12} md={12} lg={12}>
           <Form.Item
             label="Descripción"
-            name="descripcion"
+            // name="descripcion"
             rules={rulesForm.rulesDescripcion}
           >
             <Input
               placeholder="Descripción del Producto"
               onChange={handleChange}
               name="descripcion"
-              value={formData.descripcion}
+              value={formData.descripcion || ''}
             />
           </Form.Item>
         </Col>
@@ -59,7 +65,7 @@ export default function MainForm({
           <Form.Item
             required
             label="Precio"
-            name="precio"
+            // name="precio"
             rules={rulesForm.rulesPrecio}
           >
             <Input
@@ -67,7 +73,7 @@ export default function MainForm({
               placeholder="Precio del Producto"
               onChange={handleChange}
               name="precio"
-              value={formData.precio}
+              value={formData.precio || ''}
             />
           </Form.Item>
         </Col>
@@ -76,7 +82,7 @@ export default function MainForm({
         <Col xs={24} sm={12} md={12} lg={12}>
           <Form.Item
             label="Categoría"
-            name="categoriaId"
+            // name="categoriaId"
             rules={[
               {
                 required: true,
@@ -87,41 +93,16 @@ export default function MainForm({
             <Spin spinning={loadingSpinCategorias}>
               <CustomSelect
                 list={categoriaListState}
-                // onChange={value => {
-                //   debugger;
-                //   console.log('Categoría seleccionada:', value); // Ver qué ID se selecciona
-                //   setFormData({ ...formData, categoriaId: value });
-                //   if (formRef.current) {
-                //     formRef.current.setFieldsValue({
-                //       categoriaId: value,
-                //     });
-                //   }
-                // }}
+                // onChange={handleChange}
                 onChange={value => {
-                  console.log('Valor de cambio:', value); // Verifica el valor recibido
-                  console.log('formData antes:', formData); // Verifica el estado antes del cambio
-
-                  if (formData.id) {
-                    // Verifica si el ID está presente
-                    setFormData(prev => ({ ...prev, categoriaId: value }));
-
-                    if (formRef.current) {
-                      formRef.current.setFieldsValue({
-                        categoriaId: value,
-                      });
-                    }
-                  } else {
-                    setFormData(prev => ({ ...prev, categoriaId: value }));
-                    if (formRef.current) {
-                      formRef.current.setFieldsValue({
-                        categoriaId: value,
-                      });
-                    }
-                  }
+                  setFormData(prevState => ({
+                    ...prevState,
+                    categoriaId: value,
+                  }));
                 }}
                 label="Categoría"
                 name="categoriaId"
-                value={formData.categoriaId}
+                value={formData.categoriaId || ''}
               />
             </Spin>
           </Form.Item>

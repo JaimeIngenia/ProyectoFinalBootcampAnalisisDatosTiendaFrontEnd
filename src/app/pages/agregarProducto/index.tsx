@@ -28,17 +28,13 @@ import {
 import { productoById_Empty } from 'app/features/slice/emptyTypes';
 
 export default function AgregarProducto() {
-  const navigate = useNavigate(); // Hook para navegar entre rutas
-
-  const handleEditProduct = id => {
-    navigate(`/listaProductos`); // Navega a la ruta con el ID como parámetro
-  };
+  // Hook para navegar entre rutas
+  const navigate = useNavigate();
   // Obtén el ID de los parámetros de la URL
   const { id } = useParams();
   //Genral flow redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
-
   //   Context
   const {
     categorias,
@@ -49,6 +45,10 @@ export default function AgregarProducto() {
     loadingProductoGetById,
     loadingUpdateProduct,
   } = useGeneralContext();
+
+  const [firstCharge, setFirstCharge] = useState<boolean>(true);
+  const [firstChargeProductById, setFirstChargeProductById] =
+    useState<boolean>(true);
 
   // Manejo estados de carga
 
@@ -61,17 +61,40 @@ export default function AgregarProducto() {
   const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
     useState<boolean>(false);
 
-  const [firstCharge, setFirstCharge] = useState<boolean>(true);
-
-  const [firstChargeProductById, setFirstChargeProductById] =
-    useState<boolean>(true);
+  // Estados de lista para los selectors
 
   const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
 
-  const [ProductByIdListState, setProductByIdListState] =
+  const [productByIdListState, setProductByIdListState] =
     useState<ProductEntityGetById>(productoById_Empty);
 
   // UseEffect para ProducByid
+
+  const handleSelectChangeUpdate = value => {
+    console.log('Categoría seleccionada:', value); // Verificar valor seleccionado
+
+    // Actualiza el formulario directamente con setFieldsValue
+    if (formRef.current) {
+      formRef.current.setFieldsValue({ categoriaId: value });
+    }
+  };
+
+  useEffect(() => {
+    if (id && productByIdListState !== productoById_Empty) {
+      const categoriaEncontrada = categoriaListState.find(
+        categoria => categoria.id === productoGetById.categoria.id,
+      );
+      const productoConCategoriaId = {
+        nombre: productoGetById.nombre,
+        descripcion: productoGetById.descripcion,
+        precio: productoGetById.precio,
+        categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+      };
+
+      setFormData(productoConCategoriaId);
+      debugger;
+    }
+  }, [id, productByIdListState]);
 
   useEffect(() => {
     if (id) {
@@ -92,41 +115,27 @@ export default function AgregarProducto() {
       } else if (loadingProductoGetById?.state === ResponseState.Finished) {
         if (loadingProductoGetById?.status) {
           if (productoGetById && formRef.current) {
-            // debugger;
-            console.log('ID del producto:', id);
-            console.log('ProductoGetById en useEffect:', productoGetById);
-            console.log('categoriaListState:', categoriaListState);
-            console.log(
-              'ID de la categoría del producto:',
-              productoGetById.categoria.id,
-            );
-
             // Buscar el ID de la categoría por su nombre
             const categoriaEncontrada = categoriaListState.find(
               categoria => categoria.id === productoGetById.categoria.id,
             );
-            console.log('Categoría encontrada:', categoriaEncontrada);
-            const categoriaId = categoriaEncontrada
-              ? categoriaEncontrada.id
-              : ''; // Esto debería ser correcto
+            debugger;
 
-            formRef.current.setFieldsValue({
-              nombre: productoGetById.nombre,
-              descripcion: productoGetById.descripcion,
-              precio: productoGetById.precio,
-              // categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-              // categoriaId,
-            });
-            const productoConCategoriaId = {
-              nombre: productoGetById.nombre,
-              descripcion: productoGetById.descripcion,
-              precio: productoGetById.precio,
-              // ...productoGetById,
-              categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '', // Asigna categoriaId aquí
-            };
+            // formRef.current.setFieldsValue({
+            //   nombre: productoGetById.nombre,
+            //   descripcion: productoGetById.descripcion,
+            //   precio: productoGetById.precio,
+            //   categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+            // });
+            debugger;
+            // const productoConCategoriaId = {
+            //   nombre: productoGetById.nombre,
+            //   descripcion: productoGetById.descripcion,
+            //   precio: productoGetById.precio,
+            //   categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+            // };
 
-            setFormData(productoConCategoriaId);
-            // setFormData(productoGetById);
+            // setFormData(productoConCategoriaId);
             setProductByIdListState(productoGetById);
             if (loadingSpinProductById) setLoadingSpinProductById(false);
           }
@@ -201,18 +210,15 @@ export default function AgregarProducto() {
     if (!formRef.current) {
       return;
     }
-
-    // Obtenemos los valores del formulario
     const formValues = formRef.current.getFieldsValue();
 
-    // Preparamos los datos a enviar
+    // const productData = {
+    //   ...formValues,
+    // };
     const productData = {
-      ...formValues,
-      precio: Number(formValues.precio), // Aseguramos que el precio sea un número
-      categoriaId: String(formValues.categoriaId), // Convertimos categoriaId a número
+      ...formData,
     };
 
-    // Dispatch de Redux para iniciar el guardado
     dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
       type: 'SAVE_PRODUCTOS',
@@ -238,7 +244,6 @@ export default function AgregarProducto() {
   useEffect(() => {
     const validationErrors = formValidation(formData);
     setErrors(validationErrors);
-
     setIsButtonDisabled(Object.keys(validationErrors).length > 0);
   }, [formData]);
 
@@ -272,33 +277,6 @@ export default function AgregarProducto() {
     }
   }, [productosSaveLoading, dispatch]);
 
-  //UseEffect de update products
-
-  // useEffect(() => {
-  //   if (loadingUpdateProduct?.state === ResponseState.InProgress) {
-  //     setLoadingSpinUpdateProductos(true);
-  //   } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
-  //     setLoadingSpinUpdateProductos(false);
-  //     if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
-  //     if (loadingUpdateProduct?.status) {
-  //       notification.success({
-  //         message: 'Éxito',
-  //         description: 'Actualización completada correctamente.',
-  //         placement: 'bottomRight', // Puedes cambiar la posición si deseas
-  //       });
-  //     } else {
-  //       notification.error({
-  //         message: 'Error',
-  //         description:
-  //           loadingUpdateProduct?.message || 'Error en la Actualización.',
-  //         placement: 'bottomRight',
-  //       });
-  //     }
-
-  //     dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
-  //   }
-  // }, [loadingUpdateProduct, dispatch]);
-
   //Función update products
   const onUpdateProduct = () => {
     if (!formRef.current) {
@@ -309,19 +287,17 @@ export default function AgregarProducto() {
 
     // Preparamos los datos a enviar
     const productDataUpdated = {
-      ...formValues,
-      // precio: Number(formValues.precio), // Aseguramos que el precio sea un número
-      // categoriaId: String(formValues.categoriaId), // Convertimos categoriaId a número
+      ...formData,
     };
-
+    // const productDataUpdated = {
+    //   ...formValues,
+    // };
     dispatch(actions.loadUpdateProducts(ResponseState.InProgress));
-
-    // Dispatch al saga con el producto actualizado
     dispatch({
       type: UPDATE_PRODUCT,
       payload: {
         id: id,
-        productData: productDataUpdated, // El objeto con los datos actualizados
+        productData: productDataUpdated,
       },
     });
     navigate(`/listaProductos`);
@@ -384,6 +360,8 @@ export default function AgregarProducto() {
                 loadingSpinCategorias={loadingSpinCategorias}
                 categoriaListState={categoriaListState}
                 isButtonDisabled={isButtonDisabled}
+                handleSelectChangeUpdate={handleSelectChangeUpdate}
+                productByIdListState={productByIdListState}
               />
             </ConfigProvider>
           </div>

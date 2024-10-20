@@ -23,12 +23,6 @@ export interface LoadingStates {
   productosUpdateLoading: LoadingState;
   productosGetByIdLoading: LoadingState;
 }
-
-export interface Entity {
-  id: string;
-  nombre: string;
-}
-
 export interface LoadingState {
   state: ResponseState;
   status?: boolean;
@@ -40,6 +34,11 @@ export enum ResponseState {
   InProgress,
   Finished,
   Waiting,
+}
+
+export interface Entity {
+  id: string;
+  nombre: string;
 }
 
 export interface StateType {
