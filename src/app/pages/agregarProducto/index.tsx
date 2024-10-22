@@ -1,14 +1,9 @@
-import {
-  ConfigProvider,
-  Form,
-  FormInstance,
-  message,
-  notification,
-  Spin,
-} from 'antd';
+import { ConfigProvider, FormInstance, message, Spin } from 'antd';
+import { ProductEntityGetById } from 'app/api/products/types';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
+import { productoById_Empty } from 'app/features/slice/emptyTypes';
 import {
   GET_PRODUCT_BY_ID,
   LOAD_CATEGORIAS_LIST,
@@ -17,16 +12,11 @@ import {
 import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import agregarProducto from '../../../assets/agregarProducto.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-  ProductEntityGetAll,
-  ProductEntityGetById,
-} from 'app/api/products/types';
-import { productoById_Empty } from 'app/features/slice/emptyTypes';
 
 export default function AgregarProducto() {
   // Hook para navegar entre rutas
@@ -59,9 +49,6 @@ export default function AgregarProducto() {
   const [loadingSpinProductById, setLoadingSpinProductById] =
     useState<boolean>(false);
 
-  const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
-    useState<boolean>(false);
-
   // Estados de lista para los selectors
 
   const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
@@ -69,61 +56,49 @@ export default function AgregarProducto() {
   const [productByIdListState, setProductByIdListState] =
     useState<ProductEntityGetById>(productoById_Empty);
 
-  //UseEffect para getProductById
+  //Form
 
-  useEffect(() => {
-    if (id && productByIdListState !== productoById_Empty) {
-      const categoriaEncontrada = categoriaListState.find(
-        categoria => categoria.id === productoGetById.categoria.id,
-      );
-      const productoConCategoriaId = {
-        nombre: productoGetById.nombre,
-        descripcion: productoGetById.descripcion,
-        precio: productoGetById.precio,
-        categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-      };
+  const formRef = useRef<FormInstance>(null);
 
-      setFormData(productoConCategoriaId);
-      debugger;
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const [reset, setReset] = useState<boolean>(false);
+
+  const [formData, setFormData] = useState({
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    categoriaId: '',
+  });
+
+  const saveProduct = () => {
+    if (!formRef.current) {
+      return;
     }
-  }, [id, productByIdListState]);
+    // const formValues = formRef.current.getFieldsValue();
+    // const productData = {
+    //   ...formValues,
+    // };
+    const productData = {
+      ...formData,
+    };
 
-  useEffect(() => {
-    if (id) {
-      if (firstChargeProductById) {
-        if (loadingProductoGetById?.state === ResponseState.Waiting) {
-          dispatch(actions.loadGetProductById(ResponseState.Started));
-        } else if (loadingProductoGetById?.state === ResponseState.Started) {
-          setFirstChargeProductById(false);
-          dispatch(actions.loadGetProductById(ResponseState.InProgress));
-          dispatch({
-            type: GET_PRODUCT_BY_ID,
-            payload: id,
-          });
-        }
-      }
-      if (loadingProductoGetById?.state === ResponseState.InProgress) {
-        setLoadingSpinProductById(true);
-      } else if (loadingProductoGetById?.state === ResponseState.Finished) {
-        if (loadingProductoGetById?.status) {
-          if (productoGetById && formRef.current) {
-            setProductByIdListState(productoGetById);
-            if (loadingSpinProductById) setLoadingSpinProductById(false);
-          }
-        } else {
-          alert(loadingProductoGetById?.message);
-        }
-        dispatch(actions.loadGetProductById(ResponseState.Waiting));
-      }
-    } else {
-      setFormData({
-        nombre: '',
-        descripcion: '',
-        precio: 0,
-        categoriaId: '',
-      });
-    }
-  }, [productoGetById, loadingProductoGetById, id, dispatch]);
+    dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
+    dispatch({
+      type: 'SAVE_PRODUCTOS',
+      payload: productData,
+    });
+  };
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   //Useeffect para categorias
 
@@ -162,61 +137,61 @@ export default function AgregarProducto() {
     }
   }, [categorias, loadingCategorias]);
 
-  //Form
-
-  const formRef = useRef<FormInstance>(null);
-
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const [reset, setReset] = useState<boolean>(false);
-
-  const [formData, setFormData] = useState({
-    nombre: '',
-    descripcion: '',
-    precio: 0,
-    categoriaId: '',
-  });
-
-  // useEffect(() => {
-  //   console.log('formData actualizado:', formData);
-  //   debugger;
-  // }, [formData]);
-
-  const saveProduct = () => {
-    if (!formRef.current) {
-      return;
-    }
-    // const formValues = formRef.current.getFieldsValue();
-    // const productData = {
-    //   ...formValues,
-    // };
-    const productData = {
-      ...formData,
-    };
-
-    dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
-    dispatch({
-      type: 'SAVE_PRODUCTOS',
-      payload: productData,
-    });
-  };
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  //UseEffect para getProductById
 
   useEffect(() => {
-    if (formRef.current) {
-      formRef.current.resetFields();
+    if (id) {
+      if (firstChargeProductById) {
+        if (loadingProductoGetById?.state === ResponseState.Waiting) {
+          dispatch(actions.loadGetProductById(ResponseState.Started));
+        } else if (loadingProductoGetById?.state === ResponseState.Started) {
+          setFirstChargeProductById(false);
+          dispatch(actions.loadGetProductById(ResponseState.InProgress));
+          dispatch({
+            type: GET_PRODUCT_BY_ID,
+            payload: id,
+          });
+        }
+      }
+      if (loadingProductoGetById?.state === ResponseState.InProgress) {
+        setLoadingSpinProductById(true);
+      } else if (loadingProductoGetById?.state === ResponseState.Finished) {
+        if (loadingProductoGetById?.status) {
+          if (productoGetById && formRef.current) {
+            setProductByIdListState(productoGetById);
+            if (loadingSpinProductById) setLoadingSpinProductById(false);
+          }
+        } else {
+          alert(loadingProductoGetById?.message);
+        }
+        dispatch(actions.loadGetProductById(ResponseState.Waiting));
+      }
+    } else {
+      setFormData({
+        nombre: '',
+        descripcion: '',
+        precio: 0,
+        categoriaId: '',
+      });
     }
-    setReset(false);
-  }, [reset]);
+  }, [productoGetById, loadingProductoGetById, id, dispatch]);
+
+  useEffect(() => {
+    if (id && productByIdListState !== productoById_Empty) {
+      const categoriaEncontrada = categoriaListState.find(
+        categoria => categoria.id === productoGetById.categoria.id,
+      );
+      const productoConCategoriaId = {
+        nombre: productoGetById.nombre,
+        descripcion: productoGetById.descripcion,
+        precio: productoGetById.precio,
+        categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+      };
+
+      setFormData(productoConCategoriaId);
+      debugger;
+    }
+  }, [id, productByIdListState]);
 
   useEffect(() => {
     const validationErrors = formValidation(formData);
@@ -224,7 +199,7 @@ export default function AgregarProducto() {
     setIsButtonDisabled(Object.keys(validationErrors).length > 0);
   }, [formData]);
 
-  // UseEffect para manejar los estados de carga
+  // UseEffect para save products
   useEffect(() => {
     if (productosSaveLoading.state === ResponseState.InProgress) {
       message.loading('Guardando producto...');

@@ -31,7 +31,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const productoGetById = useSelector(productosGetByIdSelector);
   const loadingProductoGetById = useSelector(productosGetByIdLoadingSelector);
   // Estado y función para el modo oscuro
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(true);
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prevMode => !prevMode);
   }, []);

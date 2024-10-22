@@ -1,27 +1,22 @@
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Modal, notification, Spin, Table } from 'antd';
+import { ProductEntityGetAll } from 'app/api/products/types';
 import { GeneralContainer } from 'app/components/containers';
-import React, { useEffect, useState } from 'react';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Input, Modal, Table } from 'antd';
+import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  DELETE_PRODUCT,
+  LOAD_PRODUCTOS_LIST,
+} from 'app/features/slice/sagaActions';
 import {
   productosDeleteLoadingSelector,
   productosSelector,
   productosSelectorLoading,
   productosUpdateLoadingSelector,
 } from 'app/features/slice/selectors';
-import { ProductEntityGetAll } from 'app/api/products/types';
 import { Entity, ResponseState } from 'app/features/slice/types';
-import {
-  DELETE_PRODUCT,
-  LOAD_CATEGORIAS_LIST,
-  LOAD_PRODUCTOS_LIST,
-  UPDATE_PRODUCT,
-} from 'app/features/slice/sagaActions';
-import { Spin } from 'antd';
-import { notification } from 'antd';
-import CustomSelect from 'app/features/customSelect';
-import { useGeneralContext } from 'app/context/GeneralContext';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export function ListaProductos() {
@@ -94,15 +89,11 @@ export function ListaProductos() {
   const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
     useState<boolean>(false);
 
-  const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
-
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
 
   const [productosListState, setProductosListState] = useState<
     ProductEntityGetAll[]
   >([]);
-  const [loadingSpinCategorias, setLoadingSpinCategorias] =
-    useState<boolean>(false);
 
   //updatwe
 
@@ -110,26 +101,7 @@ export function ListaProductos() {
     setProductosListState(productos);
   }, [productos]);
 
-  const [isEditing, setIsEditing] = useState(false); // Control del modal
-  const [editingProduct, setEditingProduct] =
-    useState<Partial<ProductEntityGetAll> | null>(null);
-
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingProduct(null);
-  };
-
-  const onEditProduct = record => {
-    setIsEditing(true); // Abre el modal
-    setEditingProduct({ ...record }); // Copia el producto en edición
-  };
-
-  const handleInputChange = (campo: keyof ProductEntityGetAll, valor: any) => {
-    setEditingProduct(prevProduct => ({
-      ...(prevProduct || {}),
-      [campo]: valor,
-    }));
-  };
+  //UseEffect para cargar los productos
   useEffect(() => {
     if (firstCharge) {
       // debugger;
@@ -168,6 +140,8 @@ export function ListaProductos() {
       dispatch(actions.loadProducts(ResponseState.Waiting));
     }
   }, [productos, loadingProductos, dispatch]);
+
+  //UseEffect para eliminar un producto
 
   useEffect(() => {
     if (loadingDeleteProduct?.state === ResponseState.InProgress) {
@@ -226,43 +200,6 @@ export function ListaProductos() {
     }
   }, [loadingUpdateProduct, dispatch]);
 
-  //UseEffect de categorias
-
-  useEffect(() => {
-    if (firstCharge) {
-      if (loadingCategorias?.state === ResponseState.Waiting) {
-        dispatch(actions.loadCategorias(ResponseState.Started));
-      } else if (loadingCategorias?.state === ResponseState.Started) {
-        setFirstCharge(false);
-        dispatch(actions.loadCategorias(ResponseState.InProgress));
-        dispatch({
-          type: LOAD_CATEGORIAS_LIST,
-        });
-      }
-    }
-    if (loadingCategorias?.state === ResponseState.InProgress) {
-      setLoadingSpinCategorias(true);
-    } else if (loadingCategorias?.state === ResponseState.Finished) {
-      if (loadingCategorias?.status) {
-        if (categorias && categorias.length > 0) {
-          let dataList: Array<Entity> = [];
-
-          categorias?.forEach(r => {
-            dataList.push({
-              id: r.id,
-              nombre: r.nombre,
-            });
-          });
-          setCategoriaListState(dataList);
-          if (loadingSpinCategorias) setLoadingSpinCategorias(false);
-        }
-      } else {
-        alert(loadingCategorias?.message);
-      }
-      dispatch(actions.loadCategorias(ResponseState.Waiting));
-    }
-  }, [categorias, loadingCategorias, dispatch]);
-
   //Delete products
   const onDeleteProduct = record => {
     Modal.confirm({
@@ -283,20 +220,6 @@ export function ListaProductos() {
         console.log('Eliminación cancelada');
       },
     });
-  };
-  //update products
-  const onUpdateProduct = () => {
-    if (!editingProduct) return;
-
-    // Dispatch al saga con el producto actualizado
-    dispatch({
-      type: UPDATE_PRODUCT,
-      payload: {
-        id: editingProduct.id,
-        productData: editingProduct, // El objeto con los datos actualizados
-      },
-    });
-    resetEditing(); // Cierra el modal después de enviar la actualización
   };
 
   return (
@@ -336,40 +259,6 @@ export function ListaProductos() {
           </Spin>
         </div>
       </GeneralContainer>
-      {/* Modal para editar */}
-      {/* <Modal
-        title="Editar Producto"
-        visible={isEditing}
-        onCancel={resetEditing}
-        onOk={onUpdateProduct}
-      >
-        <Input
-          placeholder="Nombre"
-          value={editingProduct?.nombre}
-          onChange={e => handleInputChange('nombre', e.target.value)}
-        />
-        <Input
-          placeholder="Descripción"
-          value={editingProduct?.descripcion}
-          onChange={e => handleInputChange('descripcion', e.target.value)}
-          style={{ marginTop: 8 }}
-        />
-        <Input
-          type="number"
-          placeholder="Precio"
-          value={editingProduct?.precio}
-          onChange={e => handleInputChange('precio', e.target.value)}
-          style={{ marginTop: 8 }}
-        />
-        <CustomSelect
-          list={categoriaListState} // Asegúrate de tener la lista de categorías
-          onChange={value => handleInputChange('categoriaId', value)} // Maneja el cambio del select
-          label="Categoría"
-          name="categoriaId"
-          value={editingProduct?.categoriaId} // Asigna el valor del producto que estás editando
-          style={{ marginTop: 8 }} // Estilo opcional
-        />
-      </Modal> */}
     </>
   );
 }
