@@ -16,7 +16,6 @@ export default function MainForm({
   categoriaListState,
   setFormData,
   isButtonDisabled,
-  handleSelectChangeUpdate,
   productByIdListState,
 }) {
   return (

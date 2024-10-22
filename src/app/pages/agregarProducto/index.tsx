@@ -4,6 +4,7 @@ import {
   FormInstance,
   message,
   notification,
+  Spin,
 } from 'antd';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
@@ -68,16 +69,7 @@ export default function AgregarProducto() {
   const [productByIdListState, setProductByIdListState] =
     useState<ProductEntityGetById>(productoById_Empty);
 
-  // UseEffect para ProducByid
-
-  const handleSelectChangeUpdate = value => {
-    console.log('Categoría seleccionada:', value); // Verificar valor seleccionado
-
-    // Actualiza el formulario directamente con setFieldsValue
-    if (formRef.current) {
-      formRef.current.setFieldsValue({ categoriaId: value });
-    }
-  };
+  //UseEffect para getProductById
 
   useEffect(() => {
     if (id && productByIdListState !== productoById_Empty) {
@@ -115,27 +107,6 @@ export default function AgregarProducto() {
       } else if (loadingProductoGetById?.state === ResponseState.Finished) {
         if (loadingProductoGetById?.status) {
           if (productoGetById && formRef.current) {
-            // Buscar el ID de la categoría por su nombre
-            const categoriaEncontrada = categoriaListState.find(
-              categoria => categoria.id === productoGetById.categoria.id,
-            );
-            debugger;
-
-            // formRef.current.setFieldsValue({
-            //   nombre: productoGetById.nombre,
-            //   descripcion: productoGetById.descripcion,
-            //   precio: productoGetById.precio,
-            //   categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-            // });
-            debugger;
-            // const productoConCategoriaId = {
-            //   nombre: productoGetById.nombre,
-            //   descripcion: productoGetById.descripcion,
-            //   precio: productoGetById.precio,
-            //   categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-            // };
-
-            // setFormData(productoConCategoriaId);
             setProductByIdListState(productoGetById);
             if (loadingSpinProductById) setLoadingSpinProductById(false);
           }
@@ -144,6 +115,13 @@ export default function AgregarProducto() {
         }
         dispatch(actions.loadGetProductById(ResponseState.Waiting));
       }
+    } else {
+      setFormData({
+        nombre: '',
+        descripcion: '',
+        precio: 0,
+        categoriaId: '',
+      });
     }
   }, [productoGetById, loadingProductoGetById, id, dispatch]);
 
@@ -210,8 +188,7 @@ export default function AgregarProducto() {
     if (!formRef.current) {
       return;
     }
-    const formValues = formRef.current.getFieldsValue();
-
+    // const formValues = formRef.current.getFieldsValue();
     // const productData = {
     //   ...formValues,
     // };
@@ -349,20 +326,21 @@ export default function AgregarProducto() {
                 },
               }}
             >
-              <MainForm
-                id={id}
-                formRef={formRef}
-                saveProduct={saveProduct}
-                onUpdateProduct={onUpdateProduct}
-                handleChange={handleChange}
-                formData={formData}
-                setFormData={setFormData}
-                loadingSpinCategorias={loadingSpinCategorias}
-                categoriaListState={categoriaListState}
-                isButtonDisabled={isButtonDisabled}
-                handleSelectChangeUpdate={handleSelectChangeUpdate}
-                productByIdListState={productByIdListState}
-              />
+              <Spin spinning={loadingSpinProductById}>
+                <MainForm
+                  id={id}
+                  formRef={formRef}
+                  saveProduct={saveProduct}
+                  onUpdateProduct={onUpdateProduct}
+                  handleChange={handleChange}
+                  formData={formData}
+                  setFormData={setFormData}
+                  loadingSpinCategorias={loadingSpinCategorias}
+                  categoriaListState={categoriaListState}
+                  isButtonDisabled={isButtonDisabled}
+                  productByIdListState={productByIdListState}
+                />
+              </Spin>
             </ConfigProvider>
           </div>
         </div>
