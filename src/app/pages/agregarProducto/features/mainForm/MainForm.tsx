@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { rulesForm } from '../../utils/rulesForm';
-import { Button, Col, Form, Input, Row, Spin } from 'antd';
-import CustomSelect from 'app/features/customSelect';
+import React, { useEffect } from 'react';
+// import { rulesForm } from '../../utils/rulesForm';
+import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
 const { Item } = Form;
 
 export default function MainForm({
@@ -17,28 +16,34 @@ export default function MainForm({
   setFormData,
   isButtonDisabled,
   productByIdListState,
+  handleSelectChange,
+  rulesForm,
 }) {
+  const [form] = Form.useForm();
   return (
     <Form
+      form={form}
       layout="vertical"
       ref={formRef}
       name="Formulario"
-      // onFinish={saveProduct}
       onFinish={id ? onUpdateProduct : saveProduct}
+      validateTrigger={['onBlur', 'onChange']}
+      initialValues={id ? formData : undefined}
     >
       <Row gutter={[16, 16]}>
         {/* Campo Nombre */}
         <Col xs={24} sm={12} md={12} lg={12}>
           <Item
+            required
             label="Nombre"
-            // name="nombre"
+            name="nombre"
             rules={rulesForm.rulesNombre}
           >
             <Input
               placeholder="Nombre del Producto"
               onChange={handleChange}
               name="nombre"
-              value={formData.nombre || ''}
+              // value={formData.nombre || ''}
             />
           </Item>
         </Col>
@@ -46,15 +51,16 @@ export default function MainForm({
         {/* Campo Descripción */}
         <Col xs={24} sm={12} md={12} lg={12}>
           <Form.Item
+            required
             label="Descripción"
-            // name="descripcion"
+            name="descripcion"
             rules={rulesForm.rulesDescripcion}
           >
             <Input
               placeholder="Descripción del Producto"
               onChange={handleChange}
               name="descripcion"
-              value={formData.descripcion || ''}
+              // value={formData.descripcion || ''}
             />
           </Form.Item>
         </Col>
@@ -64,7 +70,7 @@ export default function MainForm({
           <Form.Item
             required
             label="Precio"
-            // name="precio"
+            name="precio"
             rules={rulesForm.rulesPrecio}
           >
             <Input
@@ -72,39 +78,33 @@ export default function MainForm({
               placeholder="Precio del Producto"
               onChange={handleChange}
               name="precio"
-              value={formData.precio || ''}
+              // value={formData.precio || ''}
             />
           </Form.Item>
         </Col>
 
         {/* Select Categoría */}
         <Col xs={24} sm={12} md={12} lg={12}>
-          <Form.Item
+          <Item
+            required
             label="Categoría"
-            // name="categoriaId"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor selecciona una categoría',
-              },
-            ]}
+            name="categoriaId"
+            rules={rulesForm.rulesCategoriaId}
           >
             <Spin spinning={loadingSpinCategorias}>
-              <CustomSelect
-                list={categoriaListState}
-                // onChange={handleChange}
-                onChange={value => {
-                  setFormData(prevState => ({
-                    ...prevState,
-                    categoriaId: value,
-                  }));
-                }}
-                label="Categoría"
-                name="categoriaId"
-                value={formData.categoriaId || ''}
-              />
+              <Select
+                placeholder="Selecciona una categoría"
+                onChange={handleSelectChange}
+                value={formData.categoriaId}
+              >
+                {categoriaListState.map(categoria => (
+                  <Select.Option key={categoria.id} name="categoriaId">
+                    {categoria.nombre}
+                  </Select.Option>
+                ))}
+              </Select>
             </Spin>
-          </Form.Item>
+          </Item>
         </Col>
       </Row>
 

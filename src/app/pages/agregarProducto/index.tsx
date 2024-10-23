@@ -43,6 +43,7 @@ export default function AgregarProducto() {
 
   // Manejo estados de carga
 
+  const [a, setA] = useState<boolean>(false);
   const [loadingSpinCategorias, setLoadingSpinCategorias] =
     useState<boolean>(false);
 
@@ -58,13 +59,53 @@ export default function AgregarProducto() {
 
   //Form
 
+  const rulesForm = {
+    rulesNombre: [
+      {
+        required: true,
+        validator: async (_, value) => {
+          if (value !== undefined && (!value || value.trim().length === 0)) {
+            throw new Error('El nombre es obligatorio');
+          }
+        },
+      },
+    ],
+    rulesDescripcion: [
+      {
+        required: true,
+        validator: async (_, value) => {
+          if (value !== undefined && (!value || value.trim().length === 0)) {
+            throw new Error('La descripción es obligatoria');
+          }
+        },
+      },
+    ],
+    rulesPrecio: [
+      {
+        required: true,
+        validator: async (_, value) => {
+          if (value !== undefined && value <= 0) {
+            throw new Error('El precio debe ser mayor que 0');
+          }
+        },
+      },
+    ],
+    rulesCategoriaId: [
+      {
+        required: true,
+        validator: async (_, value) => {
+          if (value !== undefined && (!value || value.length <= 0)) {
+            throw new Error('Debes seleccionar una categoría válida');
+          }
+        },
+      },
+    ],
+  };
+
   const formRef = useRef<FormInstance>(null);
+  // const formRef = useRef(null);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const [reset, setReset] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -77,13 +118,11 @@ export default function AgregarProducto() {
     if (!formRef.current) {
       return;
     }
-    // const formValues = formRef.current.getFieldsValue();
-    // const productData = {
-    //   ...formValues,
-    // };
+    const formValues = formRef.current.getFieldsValue();
     const productData = {
-      ...formData,
+      ...formValues,
     };
+    debugger;
 
     dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
@@ -92,14 +131,64 @@ export default function AgregarProducto() {
     });
   };
 
-  const handleChange = e => {
+  // En el componente padre
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+
+    // Actualizar el Form y el estado local
+    formRef.current?.setFieldsValue({
+      [name]: name === 'precio' ? Number(value) : value,
     });
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'precio' ? Number(value) : value,
+    }));
+
+    // Validar todos los campos después de actualizar
+    formRef.current
+      ?.validateFields()
+      .then(() => {
+        setIsButtonDisabled(false);
+      })
+      .catch(() => {
+        setIsButtonDisabled(true);
+      });
   };
 
+  const handleSelectChange = (value: string) => {
+    // Actualizar el Form y el estado local
+    formRef.current?.setFieldsValue({
+      categoriaId: value,
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      categoriaId: value,
+    }));
+
+    // Validar todos los campos después de actualizar
+    formRef.current
+      ?.validateFields()
+      .then(() => {
+        setIsButtonDisabled(false);
+      })
+      .catch(() => {
+        setIsButtonDisabled(true);
+      });
+  };
+
+  // También necesitamos validar cuando el componente se monta
+  useEffect(() => {
+    formRef.current
+      ?.validateFields()
+      .then(() => {
+        setIsButtonDisabled(false);
+      })
+      .catch(() => {
+        setIsButtonDisabled(true);
+      });
+  }, []);
   //Useeffect para categorias
 
   useEffect(() => {
@@ -128,6 +217,7 @@ export default function AgregarProducto() {
             });
           });
           setCategoriaListState(dataList);
+          setA(true);
           if (loadingSpinCategorias) setLoadingSpinCategorias(false);
         }
       } else {
@@ -177,7 +267,12 @@ export default function AgregarProducto() {
   }, [productoGetById, loadingProductoGetById, id, dispatch]);
 
   useEffect(() => {
-    if (id && productByIdListState !== productoById_Empty) {
+    if (
+      id &&
+      productByIdListState !== productoById_Empty &&
+      categoriaListState.length > 0 &&
+      a
+    ) {
       const categoriaEncontrada = categoriaListState.find(
         categoria => categoria.id === productoGetById.categoria.id,
       );
@@ -188,16 +283,13 @@ export default function AgregarProducto() {
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
       };
 
+      formRef.current?.setFieldsValue(productoConCategoriaId);
+
       setFormData(productoConCategoriaId);
+
       debugger;
     }
-  }, [id, productByIdListState]);
-
-  useEffect(() => {
-    const validationErrors = formValidation(formData);
-    setErrors(validationErrors);
-    setIsButtonDisabled(Object.keys(validationErrors).length > 0);
-  }, [formData]);
+  }, [id, productByIdListState, categoriaListState, a]);
 
   // UseEffect para save products
   useEffect(() => {
@@ -237,13 +329,9 @@ export default function AgregarProducto() {
     // Obtenemos los valores del formulario
     const formValues = formRef.current.getFieldsValue();
 
-    // Preparamos los datos a enviar
     const productDataUpdated = {
-      ...formData,
+      ...formValues,
     };
-    // const productDataUpdated = {
-    //   ...formValues,
-    // };
     dispatch(actions.loadUpdateProducts(ResponseState.InProgress));
     dispatch({
       type: UPDATE_PRODUCT,
@@ -314,6 +402,8 @@ export default function AgregarProducto() {
                   categoriaListState={categoriaListState}
                   isButtonDisabled={isButtonDisabled}
                   productByIdListState={productByIdListState}
+                  handleSelectChange={handleSelectChange}
+                  rulesForm={rulesForm}
                 />
               </Spin>
             </ConfigProvider>
