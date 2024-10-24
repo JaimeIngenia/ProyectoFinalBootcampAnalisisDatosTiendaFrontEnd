@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
-// import { rulesForm } from '../../utils/rulesForm';
+import { rulesForm } from '../../utils/rulesForm';
 import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
 const { Item } = Form;
 
@@ -17,7 +17,7 @@ export default function MainForm({
   isButtonDisabled,
   productByIdListState,
   handleSelectChange,
-  rulesForm,
+  // rulesForm,
 }) {
   const [form] = Form.useForm();
   return (
@@ -27,7 +27,7 @@ export default function MainForm({
       ref={formRef}
       name="Formulario"
       onFinish={id ? onUpdateProduct : saveProduct}
-      validateTrigger={['onBlur', 'onChange']}
+      // validateTrigger={['onBlur', 'onChange']}
       initialValues={id ? formData : undefined}
     >
       <Row gutter={[16, 16]}>
@@ -38,12 +38,12 @@ export default function MainForm({
             label="Nombre"
             name="nombre"
             rules={rulesForm.rulesNombre}
+            validateTrigger="onBlur"
           >
             <Input
               placeholder="Nombre del Producto"
               onChange={handleChange}
               name="nombre"
-              // value={formData.nombre || ''}
             />
           </Item>
         </Col>
@@ -55,12 +55,12 @@ export default function MainForm({
             label="Descripción"
             name="descripcion"
             rules={rulesForm.rulesDescripcion}
+            validateTrigger="onBlur"
           >
             <Input
               placeholder="Descripción del Producto"
               onChange={handleChange}
               name="descripcion"
-              // value={formData.descripcion || ''}
             />
           </Form.Item>
         </Col>
@@ -72,13 +72,13 @@ export default function MainForm({
             label="Precio"
             name="precio"
             rules={rulesForm.rulesPrecio}
+            validateTrigger="onBlur"
           >
             <Input
               type="number"
               placeholder="Precio del Producto"
               onChange={handleChange}
               name="precio"
-              // value={formData.precio || ''}
             />
           </Form.Item>
         </Col>
@@ -90,6 +90,7 @@ export default function MainForm({
             label="Categoría"
             name="categoriaId"
             rules={rulesForm.rulesCategoriaId}
+            validateTrigger="onBlur"
           >
             <Spin spinning={loadingSpinCategorias}>
               <Select

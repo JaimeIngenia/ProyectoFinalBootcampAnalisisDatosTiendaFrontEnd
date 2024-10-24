@@ -132,6 +132,52 @@ export default function AgregarProducto() {
   };
 
   // En el componente padre
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+
+  //   // Actualizar el Form y el estado local
+  //   formRef.current?.setFieldsValue({
+  //     [name]: name === 'precio' ? Number(value) : value,
+  //   });
+
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: name === 'precio' ? Number(value) : value,
+  //   }));
+
+  //   // Validar todos los campos después de actualizar
+  //   formRef.current
+  //     ?.validateFields()
+  //     .then(() => {
+  //       setIsButtonDisabled(false);
+  //     })
+  //     .catch(() => {
+  //       setIsButtonDisabled(true);
+  //     });
+  // };
+
+  // const handleSelectChange = (value: string) => {
+  //   // Actualizar el Form y el estado local
+  //   formRef.current?.setFieldsValue({
+  //     categoriaId: value,
+  //   });
+
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     categoriaId: value,
+  //   }));
+
+  //   // Validar todos los campos después de actualizar
+  //   formRef.current
+  //     ?.validateFields()
+  //     .then(() => {
+  //       setIsButtonDisabled(false);
+  //     })
+  //     .catch(() => {
+  //       setIsButtonDisabled(true);
+  //     });
+  // };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -145,17 +191,16 @@ export default function AgregarProducto() {
       [name]: name === 'precio' ? Number(value) : value,
     }));
 
-    // Validar todos los campos después de actualizar
+    // Validar solo el campo que ha cambiado
     formRef.current
-      ?.validateFields()
+      ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        setIsButtonDisabled(false);
+        setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
-        setIsButtonDisabled(true);
+        setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
       });
   };
-
   const handleSelectChange = (value: string) => {
     // Actualizar el Form y el estado local
     formRef.current?.setFieldsValue({
@@ -167,14 +212,14 @@ export default function AgregarProducto() {
       categoriaId: value,
     }));
 
-    // Validar todos los campos después de actualizar
+    // Validar solo el campo 'categoriaId'
     formRef.current
-      ?.validateFields()
+      ?.validateFields(['categoriaId']) // Valida solo el campo de categoría
       .then(() => {
-        setIsButtonDisabled(false);
+        setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
-        setIsButtonDisabled(true);
+        setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
       });
   };
 
@@ -288,6 +333,9 @@ export default function AgregarProducto() {
       setFormData(productoConCategoriaId);
 
       debugger;
+    } else {
+      // Resetear todos los campos
+      formRef.current?.resetFields();
     }
   }, [id, productByIdListState, categoriaListState, a]);
 
@@ -297,10 +345,8 @@ export default function AgregarProducto() {
       message.loading('Guardando producto...');
     } else if (productosSaveLoading.state === ResponseState.Finished) {
       if (productosSaveLoading.status) {
-        // Si el producto se guarda con éxito
         message.success('Producto guardado con éxito.');
 
-        // Verificar si formRef.current no es null antes de resetear el formulario
         if (formRef.current) {
           formRef.current.resetFields();
           setFormData({
@@ -310,13 +356,12 @@ export default function AgregarProducto() {
             categoriaId: '',
           });
         }
+        navigate(`/listaProductos`);
       } else {
-        // Manejar errores en la solicitud
         message.error(
           `Error al guardar el producto: ${productosSaveLoading.message}`,
         );
       }
-      // Resetear el estado de carga después de que el proceso ha terminado
       dispatch(actions.loadSaveProducts(ResponseState.Waiting));
     }
   }, [productosSaveLoading, dispatch]);
@@ -356,7 +401,9 @@ export default function AgregarProducto() {
             border: 'solid red 3px',
           }}
         >
-          Agregar producto a la tienda
+          {id
+            ? 'Actualizar producto a la tienda'
+            : 'Agregar producto a la tienda'}
         </h1>
         <div
           style={{
@@ -403,7 +450,7 @@ export default function AgregarProducto() {
                   isButtonDisabled={isButtonDisabled}
                   productByIdListState={productByIdListState}
                   handleSelectChange={handleSelectChange}
-                  rulesForm={rulesForm}
+                  // rulesForm={rulesForm}
                 />
               </Spin>
             </ConfigProvider>

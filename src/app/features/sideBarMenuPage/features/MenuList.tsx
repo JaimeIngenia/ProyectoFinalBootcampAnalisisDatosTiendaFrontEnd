@@ -39,7 +39,7 @@ const MenuList = () => {
         <Link to={'/estadisticas'}>Estadisticas</Link>
       </Menu.Item>
 
-      <Menu.SubMenu key="Sensores" icon={<BarsOutlined />} title="Sensores">
+      <Menu.SubMenu key="Productos" icon={<BarsOutlined />} title="Sensores">
         <Menu.Item key="listaProductos">
           <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
@@ -48,9 +48,9 @@ const MenuList = () => {
           <Link to={'/agregarProductos'}>Agregar Producto</Link>
         </Menu.Item>
 
-        <Menu.Item key="riego">
+        {/* <Menu.Item key="riego">
           <Link to={'/riego'}>Riegos</Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu.SubMenu>
 
       <Menu.Item key="/usuario" icon={<UserOutlined />}>

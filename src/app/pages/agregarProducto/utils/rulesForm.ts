@@ -1,5 +1,6 @@
 import {
   funcionGeneradoraValidaciones,
+  funcionGeneradoraValidacionesCategoria,
   funcionGeneradoraValidacionesPrecio,
 } from './formValidation';
 import { createMaxLengthRegex } from './regex';
@@ -19,6 +20,9 @@ export const rulesForm = {
     maxLength: 15,
     label: 'Precio',
     field: 'precio',
+  }),
+  rulesCategoriaId: funcionGeneradoraValidacionesCategoria({
+    label: 'Categoría',
   }),
   rulesInput: [
     {
