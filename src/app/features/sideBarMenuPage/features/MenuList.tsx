@@ -6,7 +6,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Menu, Modal } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import style from '../styles/MenuList.module.css';
 import React from 'react';
@@ -20,6 +20,15 @@ const MenuList = () => {
   const handleLogoutClick = () => {
     setModalVisible(true);
   };
+  const location = useLocation(); // Hook para obtener la ruta actual
+  const { id } = useParams();
+
+  // Detectar si la ruta actual es para editar un producto
+  const isEditProductPage = location.pathname.includes('/editarProducto');
+  // Establecer la clave seleccionada dinámicamente
+  const selectedKey = isEditProductPage
+    ? `/editarProducto/${id}`
+    : location.pathname;
 
   return (
     <Menu
@@ -30,6 +39,7 @@ const MenuList = () => {
         background: themeColors.background,
         color: themeColors.text,
       }}
+      selectedKeys={[selectedKey]}
     >
       <Menu.Item key="/" icon={<HomeOutlined />}>
         <Link to={'/'}>Home</Link>
@@ -44,9 +54,34 @@ const MenuList = () => {
           <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
 
-        <Menu.Item key="agregarProductos">
-          <Link to={'/agregarProductos'}>Agregar Producto</Link>
+        {/* <Menu.Item
+          key={isEditProductPage ? '/editarProducto' : '/agregarProductos'}
+        >
+          <Link
+            to={
+              isEditProductPage ? `/editarProducto/${id}` : '/agregarProductos'
+            }
+          >
+            {isEditProductPage ? 'Actualizar Producto' : 'Agregar Producto'}
+          </Link>
+        </Menu.Item> */}
+        <Menu.Item
+          key={
+            isEditProductPage ? `/editarProducto/${id}` : '/agregarProductos'
+          }
+        >
+          <Link
+            to={
+              isEditProductPage ? `/editarProducto/${id}` : '/agregarProductos'
+            }
+          >
+            {isEditProductPage ? 'Actualizar Producto' : 'Agregar Producto'}
+          </Link>
         </Menu.Item>
+
+        {/* <Menu.Item key="agregarProductos">
+          <Link to={'/agregarProductos'}>Agregar Producto</Link>
+        </Menu.Item> */}
 
         {/* <Menu.Item key="riego">
           <Link to={'/riego'}>Riegos</Link>
