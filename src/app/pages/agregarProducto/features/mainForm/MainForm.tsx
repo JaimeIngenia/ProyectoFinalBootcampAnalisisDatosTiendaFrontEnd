@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
-import { rulesForm } from '../../utils/rulesForm';
 import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
+import React from 'react';
+import { rulesForm } from '../../utils/rulesForm';
+import CustomSelect from 'app/features/customSelect';
 const { Item } = Form;
 
 export default function MainForm({
@@ -17,7 +18,6 @@ export default function MainForm({
   isButtonDisabled,
   productByIdListState,
   handleSelectChange,
-  // rulesForm,
 }) {
   const [form] = Form.useForm();
   return (
@@ -27,7 +27,6 @@ export default function MainForm({
       ref={formRef}
       name="Formulario"
       onFinish={id ? onUpdateProduct : saveProduct}
-      // validateTrigger={['onBlur', 'onChange']}
       initialValues={id ? formData : undefined}
     >
       <Row gutter={[16, 16]}>
@@ -93,7 +92,7 @@ export default function MainForm({
             validateTrigger="onBlur"
           >
             <Spin spinning={loadingSpinCategorias}>
-              <Select
+              {/* <Select
                 placeholder="Selecciona una categoría"
                 onChange={handleSelectChange}
                 value={formData.categoriaId}
@@ -103,7 +102,13 @@ export default function MainForm({
                     {categoria.nombre}
                   </Select.Option>
                 ))}
-              </Select>
+              </Select> */}
+              <CustomSelect
+                list={categoriaListState}
+                onChange={handleSelectChange}
+                label="una categoría"
+                value={formData.categoriaId}
+              />
             </Spin>
           </Item>
         </Col>

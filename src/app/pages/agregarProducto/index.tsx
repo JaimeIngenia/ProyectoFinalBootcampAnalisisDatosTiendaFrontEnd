@@ -59,49 +59,6 @@ export default function AgregarProducto() {
 
   //Form
 
-  const rulesForm = {
-    rulesNombre: [
-      {
-        required: true,
-        validator: async (_, value) => {
-          if (value !== undefined && (!value || value.trim().length === 0)) {
-            throw new Error('El nombre es obligatorio');
-          }
-        },
-      },
-    ],
-    rulesDescripcion: [
-      {
-        required: true,
-        validator: async (_, value) => {
-          if (value !== undefined && (!value || value.trim().length === 0)) {
-            throw new Error('La descripción es obligatoria');
-          }
-        },
-      },
-    ],
-    rulesPrecio: [
-      {
-        required: true,
-        validator: async (_, value) => {
-          if (value !== undefined && value <= 0) {
-            throw new Error('El precio debe ser mayor que 0');
-          }
-        },
-      },
-    ],
-    rulesCategoriaId: [
-      {
-        required: true,
-        validator: async (_, value) => {
-          if (value !== undefined && (!value || value.length <= 0)) {
-            throw new Error('Debes seleccionar una categoría válida');
-          }
-        },
-      },
-    ],
-  };
-
   const formRef = useRef<FormInstance>(null);
   // const formRef = useRef(null);
 
@@ -130,53 +87,6 @@ export default function AgregarProducto() {
       payload: productData,
     });
   };
-
-  // En el componente padre
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-
-  //   // Actualizar el Form y el estado local
-  //   formRef.current?.setFieldsValue({
-  //     [name]: name === 'precio' ? Number(value) : value,
-  //   });
-
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: name === 'precio' ? Number(value) : value,
-  //   }));
-
-  //   // Validar todos los campos después de actualizar
-  //   formRef.current
-  //     ?.validateFields()
-  //     .then(() => {
-  //       setIsButtonDisabled(false);
-  //     })
-  //     .catch(() => {
-  //       setIsButtonDisabled(true);
-  //     });
-  // };
-
-  // const handleSelectChange = (value: string) => {
-  //   // Actualizar el Form y el estado local
-  //   formRef.current?.setFieldsValue({
-  //     categoriaId: value,
-  //   });
-
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     categoriaId: value,
-  //   }));
-
-  //   // Validar todos los campos después de actualizar
-  //   formRef.current
-  //     ?.validateFields()
-  //     .then(() => {
-  //       setIsButtonDisabled(false);
-  //     })
-  //     .catch(() => {
-  //       setIsButtonDisabled(true);
-  //     });
-  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -450,7 +360,6 @@ export default function AgregarProducto() {
                   isButtonDisabled={isButtonDisabled}
                   productByIdListState={productByIdListState}
                   handleSelectChange={handleSelectChange}
-                  // rulesForm={rulesForm}
                 />
               </Spin>
             </ConfigProvider>
