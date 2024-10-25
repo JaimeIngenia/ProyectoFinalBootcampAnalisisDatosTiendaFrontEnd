@@ -4,6 +4,7 @@ import React from 'react';
 import { rulesForm } from '../../utils/rulesForm';
 import CustomSelect from 'app/features/customSelect';
 import { CustomButtonn } from 'app/components/containers';
+import { useGeneralContext } from 'app/context/GeneralContext';
 const { Item } = Form;
 
 export default function MainForm({
@@ -21,6 +22,8 @@ export default function MainForm({
   handleSelectChange,
 }) {
   const [form] = Form.useForm();
+  const { darkMode, themeColors } = useGeneralContext();
+
   return (
     <Form
       form={form}
@@ -44,6 +47,11 @@ export default function MainForm({
               placeholder="Nombre del Producto"
               onChange={handleChange}
               name="nombre"
+              style={
+                darkMode
+                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
+                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
+              }
             />
           </Item>
         </Col>
@@ -61,6 +69,12 @@ export default function MainForm({
               placeholder="Descripción del Producto"
               onChange={handleChange}
               name="descripcion"
+              // style={{ border: `2px solid ${themeColors.colorBorderCustom}` }}
+              style={
+                darkMode
+                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
+                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
+              }
             />
           </Form.Item>
         </Col>
@@ -79,6 +93,12 @@ export default function MainForm({
               placeholder="Precio del Producto"
               onChange={handleChange}
               name="precio"
+              // style={{ border: `2px solid ${themeColors.colorBorderCustom}` }}
+              style={
+                darkMode
+                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
+                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
+              }
             />
           </Form.Item>
         </Col>

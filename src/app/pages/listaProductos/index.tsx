@@ -230,7 +230,7 @@ export function ListaProductos() {
 
   return (
     <>
-      <GeneralContainer theme={themeColors}>
+      <GeneralContainer>
         <h1
           style={{
             height: '20vh',

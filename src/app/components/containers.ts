@@ -12,6 +12,10 @@ export const GeneralContainer = styled.div<{
   justify-content: center;
   border: solid red 3px;
   margin-right: 32px;
+`;
+export const GeneralContainer2 = styled.div<{
+  theme: { background: string; text: string };
+}>`
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
 `;
@@ -31,7 +35,7 @@ export const CustomSelect = styled(Select)`
   .ant-select-selector {
     background-color: ${({ theme }) => theme.background} !important;
     color: ${({ theme }) => theme.text} !important;
-    border: none !important;
+    border: 2px solid ${({ theme }) => theme.borderColor} !important; /* Agregamos el borde */
   }
 
   .ant-select-selector:hover,
@@ -45,6 +49,25 @@ export const CustomSelect = styled(Select)`
     color: ${({ theme }) => theme.text} !important;
   }
 `;
+
+// export const CustomSelect = styled(Select)`
+//   .ant-select-selector {
+//     background-color: ${({ theme }) => theme.background} !important;
+//     color: ${({ theme }) => theme.text} !important;
+//     border: none !important;
+//   }
+
+//   .ant-select-selector:hover,
+//   .ant-select-selector:focus {
+//     background-color: ${({ theme }) => theme.colorPrimary} !important;
+//     color: ${({ theme }) => theme.colorTextBase} !important;
+//   }
+
+//   .ant-select-dropdown {
+//     background-color: ${({ theme }) => theme.background} !important;
+//     color: ${({ theme }) => theme.text} !important;
+//   }
+// `;
 
 // const CustomButtonn = styled(Button)`
 //   // background-color: #050E12 !important;

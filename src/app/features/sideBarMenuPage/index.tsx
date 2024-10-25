@@ -7,8 +7,6 @@ import MenuList from './features/MenuList';
 import ToggleThemeButton from './features/ToggleThemeButton';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { useGeneralContext } from 'app/context/GeneralContext';
-//redux
-// import { counterSlice } from '../../store/slices/counter/counterSlice';
 
 const { Header, Sider } = Layout;
 
@@ -24,7 +22,6 @@ const SideBarMenuPage = () => {
         collapsible
         trigger={null}
         className={styles.sidebar}
-        // theme={darkTheme ? 'dark' : 'light'}
         theme={darkMode ? 'dark' : 'light'}
         style={{
           background: themeColors.background,
@@ -32,18 +29,16 @@ const SideBarMenuPage = () => {
         }}
       >
         <Logo />
-        {/* <MenuList darkTheme={darkMode} backgroundCustom={backgroundCustom} /> */}
         <MenuList />
         <ToggleThemeButton darkTheme={darkMode} toggleTheme={toggleDarkMode} />
-        {/* <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} /> */}
       </Sider>
 
       <Header
         style={{
           padding: 0,
-          background: 'white',
           color: themeColors.text,
           height: '100vh',
+          background: darkMode ? themeColors.background : 'white',
         }}
         className={styles.header}
       >
@@ -53,7 +48,13 @@ const SideBarMenuPage = () => {
             collapsed ? styles.collapsedButton : ''
           }`}
           onClick={() => setCollapsed(!collapsed)}
-          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          icon={
+            collapsed ? (
+              <MenuUnfoldOutlined style={{ color: themeColors.text }} />
+            ) : (
+              <MenuFoldOutlined style={{ color: themeColors.text }} />
+            )
+          }
         />
       </Header>
     </Layout>

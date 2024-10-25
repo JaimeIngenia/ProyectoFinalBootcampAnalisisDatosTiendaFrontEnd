@@ -8,27 +8,38 @@ import { useState } from 'react';
 import { ListaProductos } from './pages/listaProductos';
 import AgregarProducto from './pages/agregarProducto';
 import NotFoundPage from './pages/notFoundPage/NotFoundPage';
+import { GeneralContainer, GeneralContainer2 } from './components/containers';
+import { useGeneralContext } from './context/GeneralContext';
 
 export function App() {
+  const {
+    darkMode,
+    categorias,
+    loadingCategorias,
+    themeColors,
+    productosSaveLoading,
+  } = useGeneralContext();
   return (
     <BrowserRouter>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
-        <SideBarMenuPage />
-        {/* <SideBarMenuPage backgroundCustom="#000B2A" /> */}
+      <GeneralContainer2 theme={themeColors}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <SideBarMenuPage />
+          {/* <SideBarMenuPage backgroundCustom="#000B2A" /> */}
 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="/listaProductos" element={<ListaProductos />} />
-          <Route path="/agregarProductos" element={<AgregarProducto />} />
-          <Route path="/editarProducto/:id" element={<AgregarProducto />} />
-        </Routes>
-      </div>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path="/listaProductos" element={<ListaProductos />} />
+            <Route path="/agregarProductos" element={<AgregarProducto />} />
+            <Route path="/editarProducto/:id" element={<AgregarProducto />} />
+          </Routes>
+        </div>
+      </GeneralContainer2>
 
       <GlobalStyle />
     </BrowserRouter>

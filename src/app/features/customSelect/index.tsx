@@ -54,7 +54,7 @@ const StyledSelect = styled(Select)`
 `;
 
 function CustomSelect({ list, onChange, label, value }) {
-  const { themeColors } = useGeneralContext(); // Obtenemos los colores del contexto
+  const { themeColors, darkMode } = useGeneralContext(); // Obtenemos los colores del contexto
 
   return (
     <Space style={{ width: '100%' }} direction="vertical">
@@ -63,11 +63,24 @@ function CustomSelect({ list, onChange, label, value }) {
         onChange={onChange}
         allowClear
         placeholder={`Seleccione ${label}`}
-        style={{ width: '100%' }}
+        // style={{ width: '100%' }}
         dropdownStyle={{
           background: themeColors.background, // Aplicar el fondo del tema al dropdown
           color: themeColors.text, // Aplicar color de texto del tema
         }}
+        style={
+          darkMode
+            ? {
+                border: `2px solid ${themeColors.colorBorderCustom}`,
+                borderRadius: '5px',
+                width: '100%',
+              }
+            : {
+                border: `1px solid ${themeColors.colorBorderCustom}`,
+                borderRadius: '5px',
+                width: '100%',
+              }
+        }
       >
         {list.map(role => (
           <Select.Option key={role.id} value={role.id}>

@@ -87,11 +87,32 @@ export default function AgregarProducto() {
       payload: productData,
     });
   };
+  const validateAllFields = async () => {
+    try {
+      // Validar todos los campos requeridos
+      await formRef.current?.validateFields([
+        'nombre',
+        'descripcion',
+        'precio',
+        'categoriaId',
+      ]);
+      setIsButtonDisabled(false);
+    } catch (error) {
+      setIsButtonDisabled(true);
+    }
+  };
 
+  // Modificar el useEffect existente para que se ejecute cuando el formulario cambie
+  useEffect(() => {
+    if (formRef.current) {
+      validateAllFields();
+    }
+  }, [formData]); // Agregar formData como dependencia
+
+  // Modificar handleChange
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Actualizar el Form y el estado local
     formRef.current?.setFieldsValue({
       [name]: name === 'precio' ? Number(value) : value,
     });
@@ -101,18 +122,12 @@ export default function AgregarProducto() {
       [name]: name === 'precio' ? Number(value) : value,
     }));
 
-    // Validar solo el campo que ha cambiado
-    formRef.current
-      ?.validateFields([name]) // Valida solo el campo actual
-      .then(() => {
-        setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
+    // No necesitas llamar a validateAllFields aquí porque el useEffect lo hará
+    // cuando formData cambie
   };
+
+  // Modificar handleSelectChange
   const handleSelectChange = (value: string) => {
-    // Actualizar el Form y el estado local
     formRef.current?.setFieldsValue({
       categoriaId: value,
     });
@@ -122,28 +137,66 @@ export default function AgregarProducto() {
       categoriaId: value,
     }));
 
-    // Validar solo el campo 'categoriaId'
-    formRef.current
-      ?.validateFields(['categoriaId']) // Valida solo el campo de categoría
-      .then(() => {
-        setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
+    // No necesitas llamar a validateAllFields aquí porque el useEffect lo hará
+    // cuando formData cambie
   };
 
-  // También necesitamos validar cuando el componente se monta
-  useEffect(() => {
-    formRef.current
-      ?.validateFields()
-      .then(() => {
-        setIsButtonDisabled(false);
-      })
-      .catch(() => {
-        setIsButtonDisabled(true);
-      });
-  }, []);
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+
+  //   // Actualizar el Form y el estado local
+  //   formRef.current?.setFieldsValue({
+  //     [name]: name === 'precio' ? Number(value) : value,
+  //   });
+
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: name === 'precio' ? Number(value) : value,
+  //   }));
+
+  //   // Validar solo el campo que ha cambiado
+  //   formRef.current
+  //     ?.validateFields([name]) // Valida solo el campo actual
+  //     .then(() => {
+  //       setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
+  // const handleSelectChange = (value: string) => {
+  //   // Actualizar el Form y el estado local
+  //   formRef.current?.setFieldsValue({
+  //     categoriaId: value,
+  //   });
+
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     categoriaId: value,
+  //   }));
+
+  //   // Validar solo el campo 'categoriaId'
+  //   formRef.current
+  //     ?.validateFields(['categoriaId']) // Valida solo el campo de categoría
+  //     .then(() => {
+  //       setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
+
+  // // También necesitamos validar cuando el componente se monta
+  // useEffect(() => {
+  //   formRef.current
+  //     ?.validateFields()
+  //     .then(() => {
+  //       setIsButtonDisabled(false);
+  //     })
+  //     .catch(() => {
+  //       setIsButtonDisabled(true);
+  //     });
+  // }, []);
   //Useeffect para categorias
 
   useEffect(() => {
@@ -301,7 +354,7 @@ export default function AgregarProducto() {
   return (
     <>
       {/* <GeneralContainer> */}
-      <GeneralContainer theme={themeColors}>
+      <GeneralContainer>
         <h1
           style={{
             height: '20vh',
@@ -355,6 +408,7 @@ export default function AgregarProducto() {
                   colorTextLightSolid: themeColors.colorTextLightSolid,
                   // Otros tokens personalizados
                   colorBgBase: themeColors.background, // Fondo general
+                  colorBorder: themeColors.colorBorderCustom,
                 },
               }}
             >
