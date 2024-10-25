@@ -49,22 +49,11 @@ const MenuList = () => {
         <Link to={'/estadisticas'}>Estadisticas</Link>
       </Menu.Item>
 
-      <Menu.SubMenu key="Productos" icon={<BarsOutlined />} title="Sensores">
-        <Menu.Item key="listaProductos">
+      <Menu.SubMenu key="Productos" icon={<BarsOutlined />} title="Productos">
+        <Menu.Item key="/listaProductos">
           <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
 
-        {/* <Menu.Item
-          key={isEditProductPage ? '/editarProducto' : '/agregarProductos'}
-        >
-          <Link
-            to={
-              isEditProductPage ? `/editarProducto/${id}` : '/agregarProductos'
-            }
-          >
-            {isEditProductPage ? 'Actualizar Producto' : 'Agregar Producto'}
-          </Link>
-        </Menu.Item> */}
         <Menu.Item
           key={
             isEditProductPage ? `/editarProducto/${id}` : '/agregarProductos'

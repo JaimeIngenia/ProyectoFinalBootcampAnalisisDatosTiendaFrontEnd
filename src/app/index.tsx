@@ -2,11 +2,12 @@ import * as React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalStyle } from 'styles/global-styles';
 import { HomePage } from './pages/HomePage';
-import { NotFoundPage } from './components/NotFoundPage/Loadable';
+// import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import SideBarMenuPage from './features/sideBarMenuPage';
 import { useState } from 'react';
 import { ListaProductos } from './pages/listaProductos';
 import AgregarProducto from './pages/agregarProducto';
+import NotFoundPage from './pages/notFoundPage/NotFoundPage';
 
 export function App() {
   return (

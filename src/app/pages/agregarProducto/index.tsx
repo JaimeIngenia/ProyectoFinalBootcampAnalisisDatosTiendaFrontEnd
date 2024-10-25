@@ -300,7 +300,8 @@ export default function AgregarProducto() {
 
   return (
     <>
-      <GeneralContainer>
+      {/* <GeneralContainer> */}
+      <GeneralContainer theme={themeColors}>
         <h1
           style={{
             height: '20vh',
@@ -337,12 +338,23 @@ export default function AgregarProducto() {
             <img style={{ width: '50%' }} src={agregarProducto} alt="" />
           </div>
           <div className={styles.sub_container}>
+            {/* <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: themeColors.colorPrimary,
+                  colorTextBase: themeColors.colorTextBase,
+                  colorTextLightSolid: themeColors.colorTextLightSolid,
+                },
+              }}
+            > */}
             <ConfigProvider
               theme={{
                 token: {
                   colorPrimary: themeColors.colorPrimary,
                   colorTextBase: themeColors.colorTextBase,
                   colorTextLightSolid: themeColors.colorTextLightSolid,
+                  // Otros tokens personalizados
+                  colorBgBase: themeColors.background, // Fondo general
                 },
               }}
             >

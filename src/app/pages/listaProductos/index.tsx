@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Modal, notification, Spin, Table } from 'antd';
+import { ConfigProvider, Modal, notification, Spin, Table, theme } from 'antd';
 import { ProductEntityGetAll } from 'app/api/products/types';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
@@ -18,14 +18,15 @@ import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+const { darkAlgorithm } = theme;
 
 export function ListaProductos() {
   const columns = [
-    {
-      key: '1',
-      title: 'ID',
-      dataIndex: 'id',
-    },
+    // {
+    //   key: '1',
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    // },
     {
       key: '2',
       title: 'Nombre',
@@ -69,8 +70,13 @@ export function ListaProductos() {
     navigate(`/editarProducto/${id}`); // Navega a la ruta con el ID como parámetro
   };
   //   Context
-  const { categorias, loadingCategorias, themeColors, productosSaveLoading } =
-    useGeneralContext();
+  const {
+    darkMode,
+    categorias,
+    loadingCategorias,
+    themeColors,
+    productosSaveLoading,
+  } = useGeneralContext();
 
   const { actions } = useSlice();
   const dispatch = useDispatch();
@@ -224,7 +230,7 @@ export function ListaProductos() {
 
   return (
     <>
-      <GeneralContainer>
+      <GeneralContainer theme={themeColors}>
         <h1
           style={{
             height: '20vh',
@@ -255,10 +261,71 @@ export function ListaProductos() {
               loadingSpinUpdateProductos
             }
           >
-            <Table columns={columns} dataSource={productosListState}></Table>
+            {/* <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '0C9999',
+                },
+                algorithm: theme.darkAlgorithm,
+              }}
+            > */}
+            {/* <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: themeColors.colorPrimary,
+                  colorText: themeColors.colorTextBase,
+                  colorTextHeading: themeColors.colorTextBase,
+                  colorBgContainer: themeColors.background, // Fondo de tabla y de celdas
+                  colorBgElevated: themeColors.background, // Fondo de encabezado
+                  colorBorder: themeColors.colorPrimary, // Color de bordes
+                  colorTextBase: themeColors.colorTextBase,
+                  colorTextPlaceholder: themeColors.colorTextLightSolid,
+                },
+                algorithm: theme.darkAlgorithm, // Combinación con darkAlgorithm
+              }}
+            > */}
+            <ConfigProvider
+              theme={{
+                ...(darkMode
+                  ? {
+                      token: {
+                        colorPrimary: themeColors.colorPrimary,
+                        colorText: themeColors.colorTextBase,
+                        colorTextHeading: themeColors.colorTextBase,
+                        colorBgContainer: themeColors.background,
+                        colorBgElevated: themeColors.background,
+                        colorBorder: themeColors.colorPrimary,
+                        colorTextBase: themeColors.colorTextBase,
+                        colorTextPlaceholder: themeColors.colorTextLightSolid,
+                      },
+                      algorithm: theme.darkAlgorithm,
+                    }
+                  : {}),
+              }}
+            >
+              <Table columns={columns} dataSource={productosListState}></Table>
+            </ConfigProvider>
           </Spin>
         </div>
       </GeneralContainer>
     </>
   );
 }
+
+// <ConfigProvider
+//   theme={{
+//     token: {
+//       colorPrimary: '0C9999',
+//     },
+
+//     // 1. Use dark algorithm
+
+//     algorithm: theme.darkAlgorithm,
+
+//     // 2. Combine dark algorithm and compact algorithm darkAlgorithm
+
+//     // algorithm: [theme.lightAlgorithm, theme.compactAlgorithm],
+//   }}
+// >
+//   <Table columns={columns} dataSource={productosListState}></Table>
+// </ConfigProvider>;

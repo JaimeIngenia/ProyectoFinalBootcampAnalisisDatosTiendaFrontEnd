@@ -35,20 +35,36 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prevMode => !prevMode);
   }, []);
+  // const lightTheme = {
+  //   background: '#ffffff',
+  //   text: '#333333', // Buen contraste con el fondo blanco
+  //   colorPrimary: '#1A73E8', // Un tono rojo/marrón fuerte, que puede combinar bien con el blanco
+  //   colorTextBase: '#353434', // Puede ser usado para texto destacado
+  //   colorTextLightSolid: 'white', // Texto claro para botones o fondo oscuro
+  // };
+  // const darkTheme = {
+  //   background: '#090D1F', //'#000B2A', // Fondo oscuro, que funciona bien
+  //   text: '#ffffff', // Texto claro para buen contraste en fondo oscuro
+  //   colorPrimary: '#000B2A', // Un azul más claro para elementos interactivos como botones
+  //   colorTextBase: '#000B2A', // Un gris claro para el texto general en lugar de negro
+  //   colorTextLightSolid: 'white', // Texto claro para destacar en botones oscuros
+  // };
   const lightTheme = {
-    background: '#ffffff',
-    text: '#333333', // Buen contraste con el fondo blanco
-    colorPrimary: '#1A73E8', // Un tono rojo/marrón fuerte, que puede combinar bien con el blanco
-    colorTextBase: '#353434', // Puede ser usado para texto destacado
-    colorTextLightSolid: 'white', // Texto claro para botones o fondo oscuro
+    background: '#FFFFFF', // Fondo claro
+    text: '#151837', // Letras oscuras 2
+    colorPrimary: '#0177FB', // Azul claro para combinar con el fondo
+    colorTextBase: '#A5B3CD', // Letras generales
+    colorTextLightSolid: '#151837', // Letras oscuras para resaltar
   };
+
   const darkTheme = {
-    background: '#000B2A', // Fondo oscuro, que funciona bien
-    text: '#ffffff', // Texto claro para buen contraste en fondo oscuro
-    colorPrimary: '#000B2A', // Un azul más claro para elementos interactivos como botones
-    colorTextBase: '#000B2A', // Un gris claro para el texto general en lugar de negro
-    colorTextLightSolid: 'white', // Texto claro para destacar en botones oscuros
+    background: '#090D1F', // Fondo oscuro
+    text: '#FEFEFE', // Letras claras
+    colorPrimary: '#0276F9', // Azul para botones y elementos interactivos
+    colorTextBase: '#A5B3CD', // Letras generales
+    colorTextLightSolid: '#FEFEFE', // Texto claro en elementos oscuros
   };
+
   // Escogemos el tema según darkMode
   const themeColors = darkMode ? darkTheme : lightTheme;
   // Proveedor del contexto

@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
 import React from 'react';
 import { rulesForm } from '../../utils/rulesForm';
 import CustomSelect from 'app/features/customSelect';
+import { CustomButtonn } from 'app/components/containers';
 const { Item } = Form;
 
 export default function MainForm({
@@ -116,7 +117,7 @@ export default function MainForm({
 
       <Row>
         <Col xs={24}>
-          <Button
+          <CustomButtonn
             type="primary"
             htmlType="submit"
             disabled={isButtonDisabled}
@@ -124,7 +125,7 @@ export default function MainForm({
           >
             {/* Agregar Producto */}
             {id ? 'Actualizar Producto' : 'Agregar Producto'}
-          </Button>
+          </CustomButtonn>
         </Col>
       </Row>
     </Form>
