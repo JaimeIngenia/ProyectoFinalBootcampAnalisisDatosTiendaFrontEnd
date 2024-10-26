@@ -10,15 +10,63 @@ import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo 
 export function formValidation(values: ProductoFormValues) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
 
+  const maxLength = 15; // Asigna la longitud máxima para los campos
+  const minLength = 2; // Longitud mínima para nombre y descripción
+
   // Validación de "nombre"
   if (!values.nombre || values.nombre.trim().length === 0) {
     _errors['nombre'] = 'El nombre es obligatorio';
+  } else if (values.nombre.trim().length < minLength) {
+    _errors['nombre'] = `El nombre debe tener al menos ${minLength} caracteres`;
+  } else if (!createMaxLengthRegex(maxLength).test(values.nombre)) {
+    _errors['nombre'] = `El nombre debe tener máximo ${maxLength} caracteres`;
+  } else if (
+    containsOnlyNumbers(values.nombre) ||
+    containsAllowedSymbolsForSkills(values.nombre)
+  ) {
+    _errors['nombre'] = 'El nombre no puede contener solo números o símbolos';
   }
 
   // Validación de "descripcion"
   if (!values.descripcion || values.descripcion.trim().length === 0) {
     _errors['descripcion'] = 'La descripción es obligatoria';
+  } else if (values.descripcion.trim().length < minLength) {
+    _errors['descripcion'] =
+      `La descripción debe tener al menos ${minLength} caracteres`;
+  } else if (!createMaxLengthRegex(maxLength).test(values.descripcion)) {
+    _errors['descripcion'] =
+      `La descripción debe tener máximo ${maxLength} caracteres`;
+  } else if (
+    containsOnlyNumbers(values.descripcion) ||
+    containsAllowedSymbolsForSkills(values.descripcion)
+  ) {
+    _errors['descripcion'] =
+      'La descripción no puede contener solo números o símbolos';
   }
+
+  // // Validación de "nombre"
+  // if (!values.nombre || values.nombre.trim().length === 0) {
+  //   _errors['nombre'] = 'El nombre es obligatorio';
+  // } else if (values.nombre.trim().length < minLength) {
+  //   _errors['nombre'] = 'El nombre debe tener al menos 2 caracteres';
+  // } else if (values.nombre.length > maxLength) {
+  //   _errors['nombre'] = `El nombre debe tener máximo ${maxLength} caracteres`;
+  // } else if (/^[0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(values.nombre)) {
+  //   _errors['nombre'] = 'El nombre no puede contener solo números o símbolos';
+  // }
+
+  // // Validación de "descripcion"
+  // if (!values.descripcion || values.descripcion.trim().length === 0) {
+  //   _errors['descripcion'] = 'La descripción es obligatoria';
+  // } else if (values.descripcion.trim().length < minLength) {
+  //   _errors['descripcion'] = 'La descripción debe tener al menos 2 caracteres';
+  // } else if (values.descripcion.length > maxLength) {
+  //   _errors['descripcion'] =
+  //     `La descripción debe tener máximo ${maxLength} caracteres`;
+  // } else if (/^[0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(values.descripcion)) {
+  //   _errors['descripcion'] =
+  //     'La descripción no puede contener solo números o símbolos';
+  // }
 
   // Validación de "precio"
   if (values.precio <= 0) {

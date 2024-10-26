@@ -3,7 +3,7 @@ export interface ProductoFormValues {
   nombre: string;
   descripcion: string;
   precio: number;
-  categoriaId: string; // Campo que vendrá del select
+  categoriaId: string;
 }
 
 export interface ProductEntitySave {
