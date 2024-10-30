@@ -1,5 +1,19 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { ConfigProvider, Modal, notification, Spin, Table, theme } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  Modal,
+  notification,
+  Space,
+  Spin,
+  Table,
+  theme,
+} from 'antd';
 import { ProductEntityGetAll } from 'app/api/products/types';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
@@ -18,52 +32,212 @@ import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import FilterSection from './features/filterSection';
+import type { ColumnsType } from 'antd/es/table';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+
 const { darkAlgorithm } = theme;
 
 export function ListaProductos() {
-  const columns = [
-    // {
-    //   key: '1',
-    //   title: 'ID',
-    //   dataIndex: 'id',
-    // },
+  // const columns = [
+  //   // {
+  //   //   key: '1',
+  //   //   title: 'ID',
+  //   //   dataIndex: 'id',
+  //   // },
+  //   {
+  //     key: '2',
+  //     title: 'Nombre',
+  //     dataIndex: 'nombre',
+  //   },
+  //   {
+  //     key: '3',
+  //     title: 'Descripción',
+  //     dataIndex: 'descripcion',
+  //   },
+  //   {
+  //     key: '4',
+  //     title: 'Precio',
+  //     dataIndex: 'precio',
+  //   },
+  //   {
+  //     key: '5',
+  //     title: 'Categoría',
+  //     dataIndex: 'categoriaNombre',
+  //   },
+  //   {
+  //     key: '6',
+  //     title: 'Actions',
+  //     render: record => {
+  //       return (
+  //         <>
+  //           <EditOutlined onClick={() => handleEditProduct(record.id)} />
+  //           <DeleteOutlined
+  //             onClick={() => onDeleteProduct(record)}
+  //             style={{ color: 'red', marginLeft: 12 }}
+  //           />
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
+  const onSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+  const columns: ColumnsType<ProductEntityGetAll> = [
     {
       key: '2',
       title: 'Nombre',
       dataIndex: 'nombre',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: FilterDropdownProps) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Buscar nombre"
+            value={selectedKeys[0]}
+            onChange={e =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => confirm()}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Buscar
+            </Button>
+            <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
+              Limpiar
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: filtered => (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value, record) =>
+        String(record.nombre)
+          .toLowerCase()
+          .includes(String(value).toLowerCase()),
     },
     {
       key: '3',
       title: 'Descripción',
       dataIndex: 'descripcion',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: FilterDropdownProps) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Buscar descripción"
+            value={selectedKeys[0]}
+            onChange={e =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => confirm()}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Buscar
+            </Button>
+            <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
+              Limpiar
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: filtered => (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value, record) =>
+        String(record.descripcion)
+          .toLowerCase()
+          .includes(String(value).toLowerCase()),
     },
     {
       key: '4',
       title: 'Precio',
       dataIndex: 'precio',
+      sorter: (a, b) => a.precio - b.precio,
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: FilterDropdownProps) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Mínimo"
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys([e.target.value, selectedKeys[1]])}
+            type="number"
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Input
+            placeholder="Máximo"
+            value={selectedKeys[1]}
+            onChange={e => setSelectedKeys([selectedKeys[0], e.target.value])}
+            type="number"
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Buscar
+            </Button>
+            <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
+              Limpiar
+            </Button>
+          </Space>
+        </div>
+      ),
+      onFilter: (value, record) => {
+        const [min, max] = Array.isArray(value)
+          ? value
+          : [undefined, undefined];
+        const precio = record.precio;
+        return (
+          (!min || precio >= Number(min)) && (!max || precio <= Number(max))
+        );
+      },
     },
     {
       key: '5',
       title: 'Categoría',
       dataIndex: 'categoriaNombre',
-    },
-    {
-      key: '6',
-      title: 'Actions',
-      render: record => {
-        return (
-          <>
-            <EditOutlined onClick={() => handleEditProduct(record.id)} />
-            <DeleteOutlined
-              onClick={() => onDeleteProduct(record)}
-              style={{ color: 'red', marginLeft: 12 }}
-            />
-          </>
-        );
-      },
+      filters: [
+        { text: 'Desechables', value: 'desechables' },
+        { text: 'Plásticos', value: 'plásticos' },
+        // Agrega más categorías según tu lista
+      ],
+      onFilter: (value, record) => record.categoriaNombre === value,
     },
   ];
-
   const navigate = useNavigate(); // Hook para navegar entre rutas
 
   const handleEditProduct = id => {
@@ -243,6 +417,11 @@ export function ListaProductos() {
         >
           ListaProductos de la tienda
         </h1>
+
+        {/* <FilterSection
+          onFilterChange={filters => {}}
+          categoriaListState={categorias}
+        /> */}
 
         <div
           style={{

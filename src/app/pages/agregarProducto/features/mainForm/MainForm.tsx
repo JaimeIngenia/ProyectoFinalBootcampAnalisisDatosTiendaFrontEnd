@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
-import React from 'react';
-import { rulesForm } from '../../utils/rulesForm';
-import CustomSelect from 'app/features/customSelect';
+import { Col, Form, Input, Row, Spin } from 'antd';
 import { CustomButtonn } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
+import CustomSelect from 'app/features/customSelect';
+import React from 'react';
+import { rulesForm } from '../../utils/rulesForm';
 const { Item } = Form;
 
 export default function MainForm({
