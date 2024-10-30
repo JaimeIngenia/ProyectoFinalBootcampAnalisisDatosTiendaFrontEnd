@@ -57,10 +57,9 @@ export default function AgregarProducto() {
   const [productByIdListState, setProductByIdListState] =
     useState<ProductEntityGetById>(productoById_Empty);
 
-  //Form
+  //Formulario
 
   const formRef = useRef<FormInstance>(null);
-  // const formRef = useRef(null);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
@@ -86,59 +85,6 @@ export default function AgregarProducto() {
       payload: productData,
     });
   };
-  const validateAllFields = async () => {
-    try {
-      // Validar todos los campos requeridos
-      await formRef.current?.validateFields([
-        'nombre',
-        'descripcion',
-        'precio',
-        'categoriaId',
-      ]);
-      setIsButtonDisabled(false);
-    } catch (error) {
-      setIsButtonDisabled(true);
-    }
-  };
-
-  // Modificar el useEffect existente para que se ejecute cuando el formulario cambie
-  // useEffect(() => {
-  //   if (formRef.current) {
-  //     validateAllFields();
-  //   }
-  // }, [formData]); // Agregar formData como dependencia
-
-  // // Modificar handleChange
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-
-  //   formRef.current?.setFieldsValue({
-  //     [name]: name === 'precio' ? Number(value) : value,
-  //   });
-
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: name === 'precio' ? Number(value) : value,
-  //   }));
-
-  //   // No necesitas llamar a validateAllFields aquí porque el useEffect lo hará
-  //   // cuando formData cambie
-  // };
-
-  // // Modificar handleSelectChange
-  // const handleSelectChange = (value: string) => {
-  //   formRef.current?.setFieldsValue({
-  //     categoriaId: value,
-  //   });
-
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     categoriaId: value,
-  //   }));
-
-  //   // No necesitas llamar a validateAllFields aquí porque el useEffect lo hará
-  //   // cuando formData cambie
-  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -191,19 +137,6 @@ export default function AgregarProducto() {
     debugger;
     setIsButtonDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
   }, [formData]);
-
-  // // También necesitamos validar cuando el componente se monta
-  // useEffect(() => {
-  //   formRef.current
-  //     ?.validateFields()
-  //     .then(() => {
-  //       setIsButtonDisabled(false);
-  //     })
-  //     .catch(() => {
-  //       setIsButtonDisabled(true);
-  //     });
-  // }, []);
-  //Useeffect para categorias
 
   useEffect(() => {
     if (firstCharge) {

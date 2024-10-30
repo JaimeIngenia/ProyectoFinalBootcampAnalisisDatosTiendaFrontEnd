@@ -44,30 +44,6 @@ export function formValidation(values: ProductoFormValues) {
       'La descripción no puede contener solo números o símbolos';
   }
 
-  // // Validación de "nombre"
-  // if (!values.nombre || values.nombre.trim().length === 0) {
-  //   _errors['nombre'] = 'El nombre es obligatorio';
-  // } else if (values.nombre.trim().length < minLength) {
-  //   _errors['nombre'] = 'El nombre debe tener al menos 2 caracteres';
-  // } else if (values.nombre.length > maxLength) {
-  //   _errors['nombre'] = `El nombre debe tener máximo ${maxLength} caracteres`;
-  // } else if (/^[0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(values.nombre)) {
-  //   _errors['nombre'] = 'El nombre no puede contener solo números o símbolos';
-  // }
-
-  // // Validación de "descripcion"
-  // if (!values.descripcion || values.descripcion.trim().length === 0) {
-  //   _errors['descripcion'] = 'La descripción es obligatoria';
-  // } else if (values.descripcion.trim().length < minLength) {
-  //   _errors['descripcion'] = 'La descripción debe tener al menos 2 caracteres';
-  // } else if (values.descripcion.length > maxLength) {
-  //   _errors['descripcion'] =
-  //     `La descripción debe tener máximo ${maxLength} caracteres`;
-  // } else if (/^[0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(values.descripcion)) {
-  //   _errors['descripcion'] =
-  //     'La descripción no puede contener solo números o símbolos';
-  // }
-
   // Validación de "precio"
   if (values.precio <= 0) {
     _errors['precio'] = 'El precio debe ser mayor que 0';
@@ -233,38 +209,3 @@ export const funcionGeneradoraValidacionesCategoria = ({ label }) => [
     },
   },
 ];
-
-// export const funcionGeneradoraValidacionesPrecio = ({
-//   maxLength,
-//   label,
-//   field,
-// }) => [
-//   ({ getFieldValue }) => {
-//     const value = getFieldValue(field);
-
-//     if (value && value.length <= maxLength) {
-//       if (!minLengthRegexSkills.test(value)) {
-//         return {
-//           required: true,
-//           pattern: minLengthRegexSkills,
-//           message: 'You should write at least 2 characters',
-//         };
-//       }
-//       if (containsAllowedSymbolsForSkills(value)) {
-//         return {
-//           required: true,
-//           pattern: createMaxLengthNoNumbersRegex(maxLength),
-//           message: 'Only symbols are not allowed',
-//         };
-//       }
-//     }
-
-//     return {
-//       required: true,
-//       pattern: createMaxLengthRegex(maxLength),
-//       message: !createMaxLengthRegex(maxLength).test(value)
-//         ? `Maximum ${maxLength} characters allowed for ${label}`
-//         : `${label} is Required!`,
-//     };
-//   },
-// ];
