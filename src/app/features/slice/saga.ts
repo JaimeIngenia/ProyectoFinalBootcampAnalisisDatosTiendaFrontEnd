@@ -112,7 +112,6 @@ function* fetchLoginSaga(action: any) {
     yield put(actions.reducerLoginSuccess(loginResponse.usuario));
     // Ahora despachamos la acción para obtener el usuario por ID
     if (loginResponse.usuario && loginResponse.usuario.id) {
-      debugger;
       yield put(actions.loadUserById(ResponseState.InProgress)); // Cambiamos el estado a Started
       yield put({
         type: 'GET_USER_BY_ID', // Asegúrate de que esta acción esté definida
@@ -126,14 +125,12 @@ function* fetchLoginSaga(action: any) {
 }
 
 function* fetchLogoutSaga(action: any) {
-  debugger;
   try {
     // Llamar a la función de API logoutUser con el ID del usuario
     const logoutResponse: LogoutResponse = yield call(
       logoutUser,
       action.payload.id,
     );
-    debugger;
 
     // Despachar acción de éxito si se cierra sesión correctamente
     yield put(actions.reducerLogoutSuccess(logoutResponse.message));
@@ -144,10 +141,8 @@ function* fetchLogoutSaga(action: any) {
 }
 
 function* fetchUserById(action: any) {
-  debugger;
   try {
     const user = yield call(getUserById, action.payload.id); // Llama a la API con el ID
-    debugger;
     yield put(actions.reducerGetUserByIdSuccess(user)); // Llama a la acción de éxito
   } catch (error) {
     let errorMessage = 'Unknown error occurred';

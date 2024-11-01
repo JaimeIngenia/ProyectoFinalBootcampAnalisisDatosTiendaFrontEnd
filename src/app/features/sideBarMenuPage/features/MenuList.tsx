@@ -78,7 +78,6 @@ const MenuList = () => {
 
     // Despachar la acción de cierre de sesión
     if (productByIdListState.id !== '') {
-      debugger;
       dispatch(actions.loadLogout(ResponseState.InProgress));
       dispatch({
         type: LOGOUT_USER,
@@ -87,7 +86,6 @@ const MenuList = () => {
         },
       });
     } else {
-      debugger;
     }
   };
 

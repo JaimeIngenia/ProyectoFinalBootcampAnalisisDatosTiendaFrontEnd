@@ -223,7 +223,6 @@ const slice = createSlice({
     //Users LogOut
 
     reducerLogoutSuccess(state, action: PayloadAction<string>) {
-      debugger;
       state.loginSuccess = false; // Marcar el login como exitoso
       state.loadingStates.logoutLoading = {
         state: ResponseState.Finished,
@@ -233,7 +232,6 @@ const slice = createSlice({
     },
 
     reducerLogoutFailure(state, action: PayloadAction<any>) {
-      debugger;
       //state.loginSuccess = false; // Marcar el login como fallido
       state.loadingStates.logoutLoading = {
         state: ResponseState.Finished,
@@ -243,7 +241,6 @@ const slice = createSlice({
     },
 
     loadLogout(state, action: PayloadAction<ResponseState>) {
-      debugger;
       state.loadingStates.logoutLoading = {
         state: action.payload,
       };

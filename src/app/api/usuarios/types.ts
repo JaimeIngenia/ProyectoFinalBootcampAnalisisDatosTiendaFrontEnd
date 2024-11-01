@@ -33,3 +33,15 @@ export interface GetUsuarioSimpleResponse {
   validationLogin?: boolean; // Estado de validación del login
   imagen?: string; // Imagen del usuario (opcional)
 }
+
+export interface SaveUserFormValues {
+  nombre: string;
+  correo: string;
+  contrasena: string;
+  empleadoId: string;
+  rolId: string;
+  sucursalId: string;
+  validationLogin: boolean;
+  tiempoSesionActivo?: string; // Tiempo en formato "HH:mm:ss" (puede ser opcional)
+  imagen?: string; // URL de la imagen (opcional)
+}

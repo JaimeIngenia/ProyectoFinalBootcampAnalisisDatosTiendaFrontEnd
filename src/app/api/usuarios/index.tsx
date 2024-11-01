@@ -40,16 +40,13 @@ export async function logoutUser(id: string): Promise<LogoutResponse> {
 export async function getUserById(
   id: string,
 ): Promise<GetUsuarioSimpleResponse> {
-  debugger;
   console.log('ID enviado:', id);
   try {
     const response = await axios.get<GetUsuarioSimpleResponse>(
       `https://localhost:7029/api/Usuario/GetByIdSimple/${id}`,
     );
-    debugger;
     return response.data;
   } catch (error) {
-    debugger;
     if (axios.isAxiosError(error)) {
       console.error('Error de Axios:', error.response?.data); // Detalles del error
       console.error('Código de estado:', error.response?.status);

@@ -49,7 +49,6 @@ export function App() {
       if (loadingLogin.status) {
         message.success('Login exitoso! Iniciando sesion...');
         if (login) {
-          debugger;
           setStateReduxAut(true);
         }
         // navigate(`/listaProductos`);
@@ -68,16 +67,9 @@ export function App() {
     } else if (loadingLogout.state === ResponseState.Finished) {
       if (loadingLogout.status) {
         if (login === false) {
-          debugger;
           setStateReduxAut(false);
           message.success('Cierre de sesión exitoso!');
         }
-        // message.success('Cierre de sesión exitoso!');
-        // if (login) {
-        //   debugger;
-        //   setStateReduxAut(false);
-        // }
-        // navigate(`/listaProductos`);
       } else {
         message.error(`Error al Cerrar Sesión: ${loadingLogout.message}`);
       }
@@ -103,11 +95,6 @@ export function App() {
 
       if (loadingusuarioSimpleGetById.status && usuarioSimpleGetById) {
         setProductByIdListState(usuarioSimpleGetById);
-        // if (usuarioSimpleGetById.validationLogin === false) {
-        //   debugger;
-        //   setStateReduxAut(false);
-        //   message.success('Cierre de sesión exitoso!');
-        // }
       } else {
         alert(
           loadingusuarioSimpleGetById.message || 'Error al cargar el usuario',

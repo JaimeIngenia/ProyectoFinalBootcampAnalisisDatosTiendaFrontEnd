@@ -18,6 +18,8 @@ import {
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
   productosUpdateLoadingSelector,
+  rolesSelector,
+  rolesSelectorLoading,
   ususarioSimpleGetByIdLoadingSelector,
   ususarioSimpleGetByIdSelector,
 } from 'app/features/slice/selectors';
@@ -48,6 +50,10 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prevMode => !prevMode);
   }, []);
+
+  //Roles Selectors
+  const roles = useSelector(rolesSelector);
+  const loadingRoles = useSelector(rolesSelectorLoading);
 
   const lightTheme = {
     background: '#FFFFFF', // Fondo claro
@@ -87,6 +93,8 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingLogout,
         usuarioSimpleGetById,
         loadingusuarioSimpleGetById,
+        roles,
+        loadingRoles,
       }}
     >
       {children}

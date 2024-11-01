@@ -1,8 +1,10 @@
+import { SaveUserFormValues } from 'app/api/usuarios/types';
 import {
   containsAllowedSymbolsForSkills,
   containsOnlyNumbers,
   createMaxLengthNoNumbersRegex,
   createMaxLengthRegex,
+  emailRegex,
   minLengthRegexSkills,
 } from './regex';
 import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo correctamente
@@ -53,6 +55,80 @@ export function formValidation(values: ProductoFormValues) {
   if (!values.categoriaId || values.categoriaId.length <= 0) {
     _errors['categoriaId'] = 'Debes seleccionar una categoría válida';
   }
+
+  return _errors;
+}
+
+export function formRegisterValidation(values: SaveUserFormValues) {
+  const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
+
+  const maxLength = 50; // Asigna la longitud máxima para algunos campos
+  const minLength = 2; // Longitud mínima para "nombre"
+  const passwordMinLength = 8; // Longitud mínima para "contrasena"
+
+  // Validación de "nombre"
+  if (!values.nombre || values.nombre.trim().length === 0) {
+    _errors['nombre'] = 'El nombre es obligatorio';
+  } else if (values.nombre.trim().length < minLength) {
+    _errors['nombre'] = `El nombre debe tener al menos ${minLength} caracteres`;
+  } else if (!createMaxLengthRegex(maxLength).test(values.nombre)) {
+    _errors['nombre'] = `El nombre debe tener máximo ${maxLength} caracteres`;
+  } else if (
+    containsOnlyNumbers(values.nombre) ||
+    containsAllowedSymbolsForSkills(values.nombre)
+  ) {
+    _errors['nombre'] = 'El nombre no puede contener solo números o símbolos';
+  }
+
+  // Validación de "correo"
+  if (!values.correo || values.correo.trim().length === 0) {
+    _errors['correo'] = 'El correo es obligatorio';
+  } else if (!emailRegex.test(values.correo)) {
+    _errors['correo'] = 'Por favor, ingrese un correo electrónico válido';
+  }
+
+  // Validación de "contrasena"
+  if (!values.contrasena || values.contrasena.trim().length === 0) {
+    _errors['contrasena'] = 'La contraseña es obligatoria';
+  }
+  // else if (values.contrasena.length < passwordMinLength) {
+  //   _errors['contrasena'] =
+  //     `La contraseña debe tener al menos ${passwordMinLength} caracteres`;
+  // }
+
+  // Validación de "empleadoId"
+  // if (!values.empleadoId || values.empleadoId.trim().length === 0) {
+  //   _errors['empleadoId'] = 'El empleado es obligatorio';
+  // }
+
+  // // Validación de "rolId"
+  if (!values.rolId || values.rolId.length <= 0) {
+    _errors['rolId'] = 'Debes seleccionar un rol válido';
+  }
+
+  // // Validación de "sucursalId"
+  // if (!values.sucursalId || values.sucursalId.trim().length === 0) {
+  //   _errors['sucursalId'] = 'La sucursal es obligatoria';
+  // }
+
+  // // Validación de "tiempoSesionActivo" (formato opcional, solo si el valor está presente)
+  // if (
+  //   values.tiempoSesionActivo &&
+  //   !/^\d{2}:\d{2}:\d{2}$/.test(values.tiempoSesionActivo)
+  // ) {
+  //   _errors['tiempoSesionActivo'] =
+  //     'El tiempo de sesión debe estar en formato HH:mm:ss';
+  // }
+
+  // // Validación de "imagen" (opcional, pero si está presente, debería ser una URL válida)
+  // if (
+  //   values.imagen &&
+  //   !/^https?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-\._~:\/?#[\]@!\$&'()\*\+,;=.]+$/.test(
+  //     values.imagen,
+  //   )
+  // ) {
+  //   _errors['imagen'] = 'La URL de la imagen no es válida';
+  // }
 
   return _errors;
 }
@@ -189,7 +265,7 @@ export const funcionGeneradoraValidacionesPrecio = ({
   },
 ];
 
-export const funcionGeneradoraValidacionesCategoria = ({ label }) => [
+export const funcionGeneradoraValidacionesRol = ({ label }) => [
   {
     required: true,
     validator: async (rule, value) => {
@@ -200,7 +276,7 @@ export const funcionGeneradoraValidacionesCategoria = ({ label }) => [
         value.toString().trim().length === 0
       ) {
         return Promise.reject(
-          new Error(`Debes seleccionar una ${label} válida`),
+          new Error(`Debes seleccionar un ${label} válidoo`),
         );
       }
 

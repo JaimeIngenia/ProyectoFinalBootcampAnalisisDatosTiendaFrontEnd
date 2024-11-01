@@ -1,6 +1,6 @@
 import {
   funcionGeneradoraValidaciones,
-  funcionGeneradoraValidacionesCategoria,
+  funcionGeneradoraValidacionesRol,
   funcionGeneradoraValidacionesPrecio,
 } from './formValidation';
 import {
@@ -26,8 +26,12 @@ export const rulesForm = {
     label: 'Precio',
     field: 'precio',
   }),
-  rulesCategoriaId: funcionGeneradoraValidacionesCategoria({
+  rulesCategoriaId: funcionGeneradoraValidacionesRol({
     label: 'Categoría',
+  }),
+  //Para la pagina del login
+  rulesRolesId: funcionGeneradoraValidacionesRol({
+    label: 'Rol',
   }),
   rulesInput: [
     {
@@ -35,7 +39,6 @@ export const rulesForm = {
       message: '${label} is Required!',
     },
   ],
-  // Regla de validación para el campo de correo
   rulesCorreo: [
     {
       required: true,
@@ -46,36 +49,34 @@ export const rulesForm = {
       message: 'Por favor, ingrese un correo electrónico válido',
     },
   ],
-
-  // Regla de validación para el campo de contraseña
   rulesContrasena: [
     {
       required: true,
       message: 'Contraseña es obligatoria',
     },
-    {
-      validator: async (rule, value) => {
-        if (!value) {
-          return Promise.reject('Contraseña es obligatoria');
-        }
+    // {
+    //   validator: async (rule, value) => {
+    //     if (!value) {
+    //       return Promise.reject('Contraseña es obligatoria');
+    //     }
 
-        // Validar longitud mínima de la contraseña (6 caracteres)
-        if (!minLengthRegex.test(value)) {
-          return Promise.reject(
-            'La contraseña debe tener al menos 6 caracteres',
-          );
-        }
+    //     // Validar longitud mínima de la contraseña (6 caracteres)
+    //     if (!minLengthRegex.test(value)) {
+    //       return Promise.reject(
+    //         'La contraseña debe tener al menos 6 caracteres',
+    //       );
+    //     }
 
-        // Validar longitud máxima de la contraseña (20 caracteres)
-        if (!maxLengthRegex(20).test(value)) {
-          return Promise.reject(
-            'La contraseña no puede exceder los 20 caracteres',
-          );
-        }
+    //     // Validar longitud máxima de la contraseña (20 caracteres)
+    //     if (!maxLengthRegex(20).test(value)) {
+    //       return Promise.reject(
+    //         'La contraseña no puede exceder los 20 caracteres',
+    //       );
+    //     }
 
-        return Promise.resolve();
-      },
-    },
+    //     return Promise.resolve();
+    //   },
+    // },
   ],
   rulesNombre_v1: [
     ({ getFieldValue }) => ({

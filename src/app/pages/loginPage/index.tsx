@@ -10,12 +10,22 @@ import {
   Modal,
 } from 'antd';
 import { useGeneralContext } from 'app/context/GeneralContext';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { rulesForm } from '../agregarProducto/utils/rulesForm';
 import { useSlice } from 'app/features/slice';
 import { useDispatch } from 'react-redux';
-import { ResponseState } from 'app/features/slice/types';
+import { Entity, ResponseState } from 'app/features/slice/types';
 import { GeneralContainer } from './components/containers';
+import LoginMainForm from './features/loginMainForm';
+import RegistroMainForm from './features/registroMainForm';
+import {
+  formRegisterValidation,
+  formValidation,
+} from '../agregarProducto/utils/formValidation';
+import {
+  LOAD_CATEGORIAS_LIST,
+  LOAD_ROLES_LIST,
+} from 'app/features/slice/sagaActions';
 const { Item } = Form;
 
 export default function LoginPage() {
@@ -27,7 +37,14 @@ export default function LoginPage() {
   const loginFormRef = useRef<FormInstance>(null); // Cambiado a loginFormRef para diferenciar
 
   //   Context
-  const { themeColors, darkMode } = useGeneralContext();
+  const {
+    themeColors,
+    darkMode,
+    roles,
+    loadingRoles,
+    categorias,
+    loadingCategorias,
+  } = useGeneralContext();
   //redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
@@ -61,7 +78,6 @@ export default function LoginPage() {
     const loginData = {
       ...formValues,
     };
-    debugger;
 
     dispatch(actions.loadLogin(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
@@ -70,19 +86,188 @@ export default function LoginPage() {
     });
   };
 
+  // --------
   //Registro
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  // --------
+  const [registerFormData, setRegisterFormData] = useState({
+    nombre: '',
+    contrasena: '',
+    empleadoId: '',
+    rolId: '',
+    sucursalId: '',
+    correo: '',
+    validationLogin: false,
+    tiempoSesionActivo: undefined,
+    imagen: '',
+  });
   const [registerForm] = Form.useForm(); // Formulario del modal
   const registerFormRef = useRef<FormInstance>(null);
+  const [isButtonRegistrerDisabled, setIsButtonRegistrerDisabled] =
+    useState(true);
+
+  // const handleChangeRegistro = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+
+  //   // Actualizar el Form y el estado local
+  //   registerFormRef.current?.setFieldsValue({ [name]: value });
+  //   setLoginFormData(prev => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  //   // Validar solo el campo que ha cambiado
+  //   registerFormRef.current
+  //     ?.validateFields([name]) // Valida solo el campo actual
+  //     .then(() => {
+  //       // debugger;
+  //       // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
+
+  const handleChangeRegistro = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    // Actualiza el valor en el formulario de Ant Design
+    registerFormRef.current?.setFieldsValue({ [name]: value });
+
+    // Actualiza el estado local para la validación en useEffect
+    setRegisterFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Validar solo el campo que ha cambiado
+    registerFormRef.current
+      ?.validateFields([name]) // Valida solo el campo actual
+      .then(() => {
+        // debugger;
+        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+      })
+      .catch(() => {
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+      });
+  };
+
+  const handleSelectChange = (value: string) => {
+    // Actualizar el Form y el estado local
+    registerFormRef.current?.setFieldsValue({
+      rolId: value,
+    });
+
+    setRegisterFormData(prev => ({
+      ...prev,
+      rolId: value,
+    }));
+
+    // Validar solo el campo 'categoriaId'
+    registerFormRef.current
+      ?.validateFields(['rolId']) // Valida solo el campo de categoría
+      .then(() => {
+        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+      })
+      .catch(() => {
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+      });
+  };
+
+  useEffect(() => {
+    const errors = formRegisterValidation(registerFormData); // Ejecuta la validación completa
+    debugger;
+
+    setIsButtonRegistrerDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
+    console.log('isButtonRegisterDisabled:', Object.keys(errors).length > 0);
+  }, [registerFormData]);
+
   // Funciones para el modal
   const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
   const closeModal = () => setIsModalOpen(false);
   const handleRegisterSubmit = () => {
     if (!registerFormRef.current) return;
     const registerData = registerFormRef.current.getFieldsValue();
+    setRegisterFormData(registerData);
     console.log('Datos de registro:', registerData);
     closeModal();
   };
+  // Manejo estado de carga
+
+  const [loadingSpinRoles, setLoadingSpinRoles] = useState<boolean>(false);
+  const [firstCharge, setFirstCharge] = useState<boolean>(true);
+  const [roleListState, setRoleListState] = useState<Entity[]>([]);
+
+  const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
+  const [loadingSpinCategorias, setLoadingSpinCategorias] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (firstCharge) {
+      if (
+        loadingRoles?.state === ResponseState.Waiting &&
+        loadingCategorias?.state === ResponseState.Waiting
+      ) {
+        dispatch(actions.loadRoles(ResponseState.Started));
+        dispatch(actions.loadCategorias(ResponseState.Started));
+      } else if (
+        loadingRoles?.state === ResponseState.Started &&
+        loadingCategorias?.state === ResponseState.Started
+      ) {
+        setFirstCharge(false);
+        dispatch(actions.loadRoles(ResponseState.InProgress));
+        dispatch(actions.loadCategorias(ResponseState.InProgress));
+        dispatch({
+          type: LOAD_ROLES_LIST,
+        });
+        dispatch({
+          type: LOAD_CATEGORIAS_LIST,
+        });
+      }
+    }
+    if (
+      loadingRoles?.state === ResponseState.InProgress &&
+      loadingCategorias?.state === ResponseState.InProgress
+    ) {
+      setLoadingSpinRoles(true);
+      setLoadingSpinCategorias(true);
+    } else if (
+      loadingRoles?.state === ResponseState.Finished &&
+      loadingCategorias?.state === ResponseState.Finished
+    ) {
+      if (loadingRoles?.status) {
+        if (roles && roles.length > 0) {
+          let dataList: Array<Entity> = [];
+
+          roles?.forEach(r => {
+            dataList.push({
+              id: r.id,
+              nombre: r.nombre,
+            });
+          });
+          setRoleListState(dataList);
+          if (loadingSpinRoles) setLoadingSpinRoles(false);
+        }
+      }
+      if (loadingCategorias?.status) {
+        if (categorias && categorias.length > 0) {
+          let dataList: Array<Entity> = [];
+
+          categorias?.forEach(r => {
+            dataList.push({
+              id: r.id,
+              nombre: r.nombre,
+            });
+          });
+          setCategoriaListState(dataList);
+          if (loadingSpinCategorias) setLoadingSpinCategorias(false);
+        }
+      } else {
+        alert(loadingRoles?.message);
+        alert(loadingCategorias?.message);
+      }
+      dispatch(actions.loadRoles(ResponseState.Waiting));
+      dispatch(actions.loadCategorias(ResponseState.Waiting));
+    }
+  }, [roles, loadingRoles, categorias, loadingCategorias]);
 
   return (
     <GeneralContainer>
@@ -92,115 +277,43 @@ export default function LoginPage() {
             colorPrimary: themeColors.colorPrimary,
             colorTextBase: themeColors.colorTextBase,
             colorTextLightSolid: themeColors.colorTextLightSolid,
-            // Otros tokens personalizados
-            colorBgBase: themeColors.background, // Fondo general
+            colorBgBase: themeColors.background,
             colorBorder: themeColors.colorBorderCustom,
           },
         }}
       >
         <Spin spinning={false}>
-          <Form
-            form={loginForm}
-            layout="vertical"
-            ref={loginFormRef}
-            name="LoginForm"
-            onFinish={loginUser}
-            initialValues={loginFormData}
-          >
-            <Row gutter={[16, 16]}>
-              {/* Campo Correo */}
-              <Col xs={24} sm={24} md={12} lg={12}>
-                <Item
-                  required
-                  label="Correo"
-                  name="correo"
-                  rules={rulesForm.rulesCorreo} // Cambia esto para que use una regla de validación de correo si la tienes
-                  validateTrigger="onBlur"
-                >
-                  <Input
-                    placeholder="Correo electrónico"
-                    onChange={handleChange}
-                    name="correo"
-                    style={{
-                      border: `1px solid ${themeColors.colorBorderCustom}`,
-                      ...(darkMode && { borderWidth: 2 }),
-                    }}
-                  />
-                </Item>
-              </Col>
-
-              {/* Campo Contraseña */}
-              <Col xs={24} sm={24} md={12} lg={12}>
-                <Item
-                  required
-                  label="Contraseña"
-                  name="contrasena"
-                  rules={rulesForm.rulesContrasena} // Cambia esto para que use una regla de validación de contraseña si la tienes
-                  validateTrigger="onBlur"
-                >
-                  <Input.Password
-                    placeholder="Contraseña"
-                    onChange={handleChange}
-                    name="contrasena"
-                    style={{
-                      border: `1px solid ${themeColors.colorBorderCustom}`,
-                      ...(darkMode && { borderWidth: 2 }),
-                    }}
-                  />
-                </Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24} style={{ textAlign: 'center' }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ width: '100%' }}
-                >
-                  Iniciar Sesión
-                </Button>
-                <p style={{ marginTop: '1em' }}>
-                  ¿Quieres registrarte?{' '}
-                  <Button type="link" onClick={openModal}>
-                    Regístrate aquí
-                  </Button>
-                </p>
-              </Col>
-            </Row>
-          </Form>
-          <Modal
-            title="Registro"
-            visible={isModalOpen}
-            onCancel={closeModal}
-            footer={null}
-          >
-            <Form
-              form={registerForm}
-              layout="vertical"
-              ref={registerFormRef}
-              name="RegisterForm"
-              onFinish={handleRegisterSubmit}
-            >
-              <Item label="Correo" name="correo" rules={rulesForm.rulesCorreo}>
-                <Input placeholder="Correo electrónico" />
-              </Item>
-              <Item
-                label="Contraseña"
-                name="contrasena"
-                rules={rulesForm.rulesContrasena}
-              >
-                <Input.Password placeholder="Contraseña" />
-              </Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ width: '100%' }}
-              >
-                Registrarse
-              </Button>
-            </Form>
-          </Modal>
+          <LoginMainForm
+            loginForm={loginForm}
+            loginFormRef={loginFormRef}
+            loginUser={loginUser}
+            loginFormData={loginFormData}
+            handleChange={handleChange}
+            openModal={openModal}
+          />
         </Spin>
+        <Modal
+          title="Registro"
+          visible={isModalOpen}
+          onCancel={closeModal}
+          footer={null}
+        >
+          <Spin spinning={false}>
+            <RegistroMainForm
+              registerForm={registerForm}
+              registerFormRef={registerFormRef}
+              handleRegisterSubmit={handleRegisterSubmit}
+              registerFormData={registerFormData}
+              handleChange={handleChangeRegistro}
+              isButtonRegistrerDisabled={isButtonRegistrerDisabled}
+              handleSelectChange={handleSelectChange}
+              loadingSpinRoles={loadingSpinRoles}
+              loadingSpinCategorias={loadingSpinCategorias}
+              categoriaListState={categoriaListState}
+              roleListState={roleListState}
+            />
+          </Spin>
+        </Modal>
       </ConfigProvider>
     </GeneralContainer>
   );

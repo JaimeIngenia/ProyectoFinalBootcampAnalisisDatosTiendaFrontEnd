@@ -27,4 +27,6 @@ export type GeneralContextType = {
   loadingLogout: LoadingState;
   usuarioSimpleGetById: GetUsuarioSimpleResponse;
   loadingusuarioSimpleGetById: LoadingState;
+  loadingRoles: LoadingState;
+  roles: any[];
 };
