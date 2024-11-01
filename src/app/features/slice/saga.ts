@@ -7,11 +7,13 @@ import {
   GET_PRODUCT_BY_ID,
   GET_USER_BY_ID,
   LOAD_CATEGORIAS_LIST,
+  LOAD_EMPLEADOS_LIST,
   LOAD_PRODUCTOS_LIST,
   LOAD_ROLES_LIST,
   LOAD_SUCURSALES_LIST,
   LOGIN_USER,
   LOGOUT_USER,
+  SAVE_USUARIO,
   SAVE_PRODUCTOS,
   UPDATE_PRODUCT,
 } from './sagaActions';
@@ -24,9 +26,20 @@ import {
   updateProduct,
 } from 'app/api/products';
 import { ProductEntityGetAll } from 'app/api/products/types';
-import { LoginResponse, LogoutResponse } from 'app/api/usuarios/types';
-import { getUserById, loginUser, logoutUser } from 'app/api/usuarios';
+import {
+  LoginResponse,
+  LogoutResponse,
+  SaveUsuarioRequest,
+} from 'app/api/usuarios/types';
+import {
+  getUserById,
+  loginUser,
+  logoutUser,
+  saveUsuario,
+} from 'app/api/usuarios';
 import { getAllSucursales } from 'app/api/sucursales';
+import { EmpleadoEntity } from 'app/api/empleados/types';
+import { getAllEmpleados } from 'app/api/empleados';
 
 function* fetchRolesSaga() {
   try {
@@ -154,6 +167,18 @@ function* fetchUserById(action: any) {
     yield put(actions.reducerGetUserByIdFailure(errorMessage)); // Llama a la acción de fallo
   }
 }
+function* saveUsuarioSaga(action: any) {
+  try {
+    yield call(saveUsuario, action.payload);
+    yield put(actions.saveUsuarioSuccess()); // Actualizar el estado en caso de éxito
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.saveUsuarioFailed(errorMessage)); // Enviar mensaje de error al reducer
+  }
+}
 
 // sUCURSALES
 function* fetchSucursalesSaga() {
@@ -179,6 +204,31 @@ function* fetchSucursalesSaga() {
   }
 }
 
+//Empleados
+
+function* fetchEmpleadosSaga() {
+  try {
+    // Llamada a la API para obtener todos los empleados
+    const empleados: EmpleadoEntity[] = yield call(getAllEmpleados);
+
+    // Convertir los datos en formato Entity
+    const entidades: Entity[] = empleados.map(empleado => ({
+      id: empleado.id,
+      nombre: `${empleado.nombre} ${empleado.apellido}`, // Concatenar nombre completo
+    }));
+
+    // Enviar los datos procesados al reducer
+    yield put(actions.fetchEmpleadosSuccess(entidades));
+  } catch (error) {
+    // Manejo del error y envío al reducer
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.getAllEmpleadosFailed(errorMessage));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -191,4 +241,6 @@ export function* Saga() {
   yield takeLatest(LOGOUT_USER, fetchLogoutSaga);
   yield takeLatest(GET_USER_BY_ID, fetchUserById);
   yield takeLatest(LOAD_SUCURSALES_LIST, fetchSucursalesSaga);
+  yield takeLatest(LOAD_EMPLEADOS_LIST, fetchEmpleadosSaga);
+  yield takeLatest(SAVE_USUARIO, saveUsuarioSaga);
 }

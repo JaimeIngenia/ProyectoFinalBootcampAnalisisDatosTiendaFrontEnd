@@ -1,4 +1,4 @@
-import { SaveUserFormValues } from 'app/api/usuarios/types';
+import { SaveUsuarioRequest } from 'app/api/usuarios/types';
 import {
   containsAllowedSymbolsForSkills,
   containsOnlyNumbers,
@@ -59,7 +59,7 @@ export function formValidation(values: ProductoFormValues) {
   return _errors;
 }
 
-export function formRegisterValidation(values: SaveUserFormValues) {
+export function formRegisterValidation(values: SaveUsuarioRequest) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
 
   const maxLength = 50; // Asigna la longitud máxima para algunos campos
@@ -107,6 +107,9 @@ export function formRegisterValidation(values: SaveUserFormValues) {
   }
   if (!values.sucursalId || values.sucursalId.length <= 0) {
     _errors['sucursalId'] = 'Debes seleccionar una sucursal válida';
+  }
+  if (!values.empleadoId || values.empleadoId.length <= 0) {
+    _errors['empleadoId'] = 'Debes seleccionar un Empleado válida';
   }
 
   // // Validación de "sucursalId"
@@ -300,6 +303,26 @@ export const funcionGeneradoraValidacionesSucursal = ({ label }) => [
       ) {
         return Promise.reject(
           new Error(`Debes seleccionar una ${label} válida`),
+        );
+      }
+
+      // Si el valor es válido, resolvemos la promesa
+      return Promise.resolve();
+    },
+  },
+];
+export const funcionGeneradoraValidacionesEmpleado = ({ label }) => [
+  {
+    required: true,
+    validator: async (rule, value) => {
+      // Si el valor no está definido o es vacío
+      if (
+        value === undefined ||
+        value === null ||
+        value.toString().trim().length === 0
+      ) {
+        return Promise.reject(
+          new Error(`Debes seleccionar un ${label} válida`),
         );
       }
 

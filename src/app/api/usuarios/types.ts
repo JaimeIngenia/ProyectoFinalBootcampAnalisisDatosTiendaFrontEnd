@@ -34,14 +34,14 @@ export interface GetUsuarioSimpleResponse {
   imagen?: string; // Imagen del usuario (opcional)
 }
 
-export interface SaveUserFormValues {
+export interface SaveUsuarioRequest {
   nombre: string;
   correo: string;
   contrasena: string;
   empleadoId: string;
   rolId: string;
   sucursalId: string;
-  validationLogin: boolean;
+  validationLogin?: boolean;
   tiempoSesionActivo?: string; // Tiempo en formato "HH:mm:ss" (puede ser opcional)
   imagen?: string; // URL de la imagen (opcional)
 }

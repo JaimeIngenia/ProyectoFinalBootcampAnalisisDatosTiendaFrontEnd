@@ -273,6 +273,30 @@ const slice = createSlice({
       };
     },
 
+    // Reducer para éxito en el guardado del usuario
+    saveUsuarioSuccess(state) {
+      state.loadingStates.usuariosSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // Reducer para fallo en el guardado del usuario
+    saveUsuarioFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.usuariosSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    // Reducer para iniciar la acción de guardado de usuario
+    loadSaveUsuario(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.usuariosSaveLoading = {
+        state: action.payload,
+      };
+    },
+
     //Sucrusales
 
     // Acción para manejar la carga exitosa de sucursales
@@ -295,6 +319,31 @@ const slice = createSlice({
 
     loadSucursales(state, action: PayloadAction<ResponseState>) {
       state.loadingStates.sucursalesLoading = {
+        state: action.payload,
+      };
+    },
+    // Empleados
+    // Éxito al cargar empleados
+    fetchEmpleadosSuccess(state, action: PayloadAction<Entity[]>) {
+      state.empleados = action.payload; // Asume que hay un campo empleados en el estado
+      state.loadingStates.empleadosLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // Acción para manejar errores al cargar empleados
+    getAllEmpleadosFailed(state, action: PayloadAction<string>) {
+      state.loadingStates.empleadosLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    // Iniciar la carga de empleados
+    loadEmpleados(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.empleadosLoading = {
         state: action.payload,
       };
     },

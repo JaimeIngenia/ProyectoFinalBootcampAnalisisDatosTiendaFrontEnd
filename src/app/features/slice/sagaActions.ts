@@ -9,3 +9,5 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const GET_USER_BY_ID = 'GET_USER_BY_ID';
 export const LOAD_SUCURSALES_LIST = 'LOAD_SUCURSALES_LIST';
+export const SAVE_USUARIO = 'SAVE_USUARIO';
+export const LOAD_EMPLEADOS_LIST = 'LOAD_EMPLEADOS_LIST';

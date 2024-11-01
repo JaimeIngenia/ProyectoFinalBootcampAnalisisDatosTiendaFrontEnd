@@ -2,7 +2,10 @@ import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
-import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import {
+  GetUsuarioSimpleResponse,
+  SaveUsuarioRequest,
+} from 'app/api/usuarios/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export interface GeneralStatesReduxSaga {
@@ -15,6 +18,8 @@ export interface GeneralStatesReduxSaga {
   loginSuccess: boolean;
   userSimpleById: GetUsuarioSimpleResponse;
   sucursales: Entity[];
+  empleados: Entity[];
+  usuariosGuardados: SaveUsuarioRequest;
 }
 
 // Define una interfaz para centralizar los estados de carga
@@ -30,6 +35,8 @@ export interface LoadingStates {
   logoutLoading: LoadingState;
   userSimpleByIdLoading: LoadingState;
   sucursalesLoading: LoadingState;
+  empleadosLoading: LoadingState;
+  usuariosSaveLoading: LoadingState; // Estado de carga para productos
 }
 export interface LoadingState {
   state: ResponseState;

@@ -111,3 +111,20 @@ export const sucursalesSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.sucursalesLoading,
 );
+// Empleados
+
+export const empleadosSelector = createSelector(
+  [selectSlice],
+  state => state.empleados,
+);
+
+export const empleadosSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.empleadosLoading,
+);
+
+//Usuario
+export const usuarioSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.usuariosSaveLoading,
+);

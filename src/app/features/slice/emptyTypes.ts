@@ -4,7 +4,10 @@ import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
-import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import {
+  GetUsuarioSimpleResponse,
+  SaveUsuarioRequest,
+} from 'app/api/usuarios/types';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -17,6 +20,14 @@ export const productosGuardados_Empty: ProductEntitySave = {
   descripcion: '',
   precio: 0,
   categoriaId: '',
+};
+export const usuariosGuardados_Empty: SaveUsuarioRequest = {
+  nombre: '',
+  correo: '',
+  contrasena: '',
+  empleadoId: '',
+  rolId: '',
+  sucursalId: '',
 };
 export const productoById_Empty: ProductEntityGetById = {
   id: '',
@@ -51,6 +62,10 @@ export const GeneralStatesReduxSaga_empty = {
 
   sucursales: [],
 
+  empleados: [],
+
+  usuariosGuardados: usuariosGuardados_Empty,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -63,5 +78,7 @@ export const GeneralStatesReduxSaga_empty = {
     logoutLoading: defaultLoadingState,
     userSimpleByIdLoading: defaultLoadingState,
     sucursalesLoading: defaultLoadingState,
+    empleadosLoading: defaultLoadingState,
+    usuariosSaveLoading: defaultLoadingState,
   },
 };

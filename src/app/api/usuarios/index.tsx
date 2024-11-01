@@ -3,6 +3,7 @@ import {
   GetUsuarioSimpleResponse,
   LoginResponse,
   LogoutResponse,
+  SaveUsuarioRequest,
 } from './types';
 
 export async function loginUser(
@@ -46,6 +47,26 @@ export async function getUserById(
       `https://localhost:7029/api/Usuario/GetByIdSimple/${id}`,
     );
     return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error de Axios:', error.response?.data); // Detalles del error
+      console.error('Código de estado:', error.response?.status);
+    } else {
+      console.error('Error desconocido:', error);
+    }
+    throw error;
+  }
+}
+
+// Metodo para save empleado
+
+export async function saveUsuario(data: SaveUsuarioRequest): Promise<void> {
+  try {
+    const response = await axios.post(
+      'https://localhost:7029/api/Usuario/SaveUsuario',
+      data,
+    );
+    console.log('Usuario guardado con éxito:', response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error('Error de Axios:', error.response?.data); // Detalles del error

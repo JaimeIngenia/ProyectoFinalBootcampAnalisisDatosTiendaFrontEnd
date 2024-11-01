@@ -1,42 +1,22 @@
-import {
-  Spin,
-  Form,
-  Row,
-  Col,
-  Input,
-  ConfigProvider,
-  FormInstance,
-  Button,
-  Modal,
-} from 'antd';
+import { ConfigProvider, Form, FormInstance, message, Modal, Spin } from 'antd';
 import { useGeneralContext } from 'app/context/GeneralContext';
-import React, { useEffect, useRef, useState } from 'react';
-import { rulesForm } from '../agregarProducto/utils/rulesForm';
 import { useSlice } from 'app/features/slice';
-import { useDispatch } from 'react-redux';
-import { Entity, ResponseState } from 'app/features/slice/types';
-import { GeneralContainer } from './components/containers';
-import LoginMainForm from './features/loginMainForm';
-import RegistroMainForm from './features/registroMainForm';
-import {
-  formRegisterValidation,
-  formValidation,
-} from '../agregarProducto/utils/formValidation';
 import {
   LOAD_CATEGORIAS_LIST,
+  LOAD_EMPLEADOS_LIST,
   LOAD_ROLES_LIST,
   LOAD_SUCURSALES_LIST,
 } from 'app/features/slice/sagaActions';
+import { Entity, ResponseState } from 'app/features/slice/types';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { formRegisterValidation } from '../agregarProducto/utils/formValidation';
+import { GeneralContainer } from './components/containers';
+import LoginMainForm from './features/loginMainForm';
+import RegistroMainForm from './features/registroMainForm';
 const { Item } = Form;
 
 export default function LoginPage() {
-  const [loginFormData, setLoginFormData] = useState({
-    correo: '',
-    contrasena: '',
-  });
-  const [loginForm] = Form.useForm(); // Cambiado a loginForm para diferenciar
-  const loginFormRef = useRef<FormInstance>(null); // Cambiado a loginFormRef para diferenciar
-
   //   Context
   const {
     themeColors,
@@ -47,7 +27,23 @@ export default function LoginPage() {
     loadingCategorias,
     sucursales,
     loadingSucursales,
+    empleados,
+    loadinEmpleados,
+    usuariosSaveLoading,
   } = useGeneralContext();
+  // Funciones para el modal
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const closeModal = () => setIsModalOpen(false);
+  // Login
+
+  const [loginFormData, setLoginFormData] = useState({
+    correo: '',
+    contrasena: '',
+  });
+  const [loginForm] = Form.useForm(); // Cambiado a loginForm para diferenciar
+  const loginFormRef = useRef<FormInstance>(null); // Cambiado a loginFormRef para diferenciar
+
   //redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
@@ -92,6 +88,7 @@ export default function LoginPage() {
   // --------
   //Registro
   // --------
+
   const [registerFormData, setRegisterFormData] = useState({
     nombre: '',
     contrasena: '',
@@ -173,38 +170,63 @@ export default function LoginPage() {
         // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
       });
   };
+  const handleSelectChangeEmpleado = (value: string) => {
+    // Actualizar el Form y el estado local
+    registerFormRef.current?.setFieldsValue({
+      empleadoId: value,
+    });
+
+    setRegisterFormData(prev => ({
+      ...prev,
+      empleadoId: value,
+    }));
+
+    // Validar solo el campo 'categoriaId'
+    registerFormRef.current
+      ?.validateFields(['empleadoId']) // Valida solo el campo de categoría
+      .then(() => {
+        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+      })
+      .catch(() => {
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+      });
+  };
 
   useEffect(() => {
     const errors = formRegisterValidation(registerFormData); // Ejecuta la validación completa
-    debugger;
 
     setIsButtonRegistrerDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
     console.log('isButtonRegisterDisabled:', Object.keys(errors).length > 0);
   }, [registerFormData]);
 
-  // Funciones para el modal
-  const openModal = () => setIsModalOpen(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-  const closeModal = () => setIsModalOpen(false);
   const handleRegisterSubmit = () => {
     if (!registerFormRef.current) return;
     const registerData = registerFormRef.current.getFieldsValue();
     setRegisterFormData(registerData);
     console.log('Datos de registro:', registerData);
+    debugger;
+    dispatch(actions.loadSaveUsuario(ResponseState.InProgress)); // Cambiamos el estado a Started
+    dispatch({
+      type: 'SAVE_USUARIO',
+      payload: registerData,
+    });
     closeModal();
   };
   // Manejo estado de carga
+
+  const [firstCharge, setFirstCharge] = useState<boolean>(true);
 
   const [loadingSpinRoles, setLoadingSpinRoles] = useState<boolean>(false);
   const [loadingSpinCategorias, setLoadingSpinCategorias] =
     useState<boolean>(false);
   const [loadingSpinSucursales, setLoadingSpinSucursales] =
     useState<boolean>(false);
+  const [loadingSpinEmpleados, setLoadingSpinEmpleados] =
+    useState<boolean>(false);
 
-  const [firstCharge, setFirstCharge] = useState<boolean>(true);
   const [roleListState, setRoleListState] = useState<Entity[]>([]);
   const [surcursalListState, setSurcursalListState] = useState<Entity[]>([]);
-
+  const [empleadoListState, setEmpleadoListState] = useState<Entity[]>([]);
   const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
 
   useEffect(() => {
@@ -212,20 +234,24 @@ export default function LoginPage() {
       if (
         loadingRoles?.state === ResponseState.Waiting &&
         loadingCategorias?.state === ResponseState.Waiting &&
-        loadingSucursales?.state === ResponseState.Waiting
+        loadingSucursales?.state === ResponseState.Waiting &&
+        loadinEmpleados?.state === ResponseState.Waiting
       ) {
         dispatch(actions.loadRoles(ResponseState.Started));
         dispatch(actions.loadCategorias(ResponseState.Started));
         dispatch(actions.loadSucursales(ResponseState.Started));
+        dispatch(actions.loadEmpleados(ResponseState.Started));
       } else if (
         loadingRoles?.state === ResponseState.Started &&
         loadingCategorias?.state === ResponseState.Started &&
-        loadingSucursales?.state === ResponseState.Started
+        loadingSucursales?.state === ResponseState.Started &&
+        loadinEmpleados?.state === ResponseState.Started
       ) {
         setFirstCharge(false);
         dispatch(actions.loadRoles(ResponseState.InProgress));
         dispatch(actions.loadCategorias(ResponseState.InProgress));
         dispatch(actions.loadSucursales(ResponseState.InProgress));
+        dispatch(actions.loadEmpleados(ResponseState.InProgress));
         dispatch({
           type: LOAD_ROLES_LIST,
         });
@@ -235,20 +261,26 @@ export default function LoginPage() {
         dispatch({
           type: LOAD_SUCURSALES_LIST,
         });
+        dispatch({
+          type: LOAD_EMPLEADOS_LIST,
+        });
       }
     }
     if (
       loadingRoles?.state === ResponseState.InProgress &&
       loadingCategorias?.state === ResponseState.InProgress &&
-      loadingSucursales?.state === ResponseState.InProgress
+      loadingSucursales?.state === ResponseState.InProgress &&
+      loadinEmpleados?.state === ResponseState.InProgress
     ) {
       setLoadingSpinRoles(true);
       setLoadingSpinCategorias(true);
       setLoadingSpinSucursales(true);
+      setLoadingSpinEmpleados(true);
     } else if (
       loadingRoles?.state === ResponseState.Finished &&
       loadingCategorias?.state === ResponseState.Finished &&
-      loadingSucursales?.state === ResponseState.Finished
+      loadingSucursales?.state === ResponseState.Finished &&
+      loadinEmpleados?.state === ResponseState.Finished
     ) {
       if (loadingRoles?.status) {
         if (roles && roles.length > 0) {
@@ -278,6 +310,20 @@ export default function LoginPage() {
           if (loadingSpinSucursales) setLoadingSpinSucursales(false);
         }
       }
+      if (loadinEmpleados?.status) {
+        if (empleados && empleados.length > 0) {
+          let dataList: Array<Entity> = [];
+
+          empleados?.forEach(r => {
+            dataList.push({
+              id: r.id,
+              nombre: r.nombre,
+            });
+          });
+          setEmpleadoListState(dataList);
+          if (loadingSpinEmpleados) setLoadingSpinEmpleados(false);
+        }
+      }
       if (loadingCategorias?.status) {
         if (categorias && categorias.length > 0) {
           let dataList: Array<Entity> = [];
@@ -305,7 +351,42 @@ export default function LoginPage() {
     loadingCategorias,
     sucursales,
     loadingSucursales,
+    empleados,
+    loadinEmpleados,
   ]);
+
+  // UseEffect para save usuarios
+  useEffect(() => {
+    if (usuariosSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando usuario...');
+    } else if (usuariosSaveLoading.state === ResponseState.Finished) {
+      if (usuariosSaveLoading.status) {
+        message.success('Usuario guardado con éxito.');
+
+        if (registerFormRef.current) {
+          registerFormRef.current.resetFields();
+          setRegisterFormData({
+            nombre: '',
+            contrasena: '',
+            empleadoId: '',
+            rolId: '',
+            sucursalId: '',
+            correo: '',
+            validationLogin: false,
+            tiempoSesionActivo: undefined,
+            imagen: '',
+          });
+        }
+        debugger;
+        // navigate(`/listaProductos`);
+      } else {
+        message.error(
+          `Error al guardar el usuario: ${usuariosSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveUsuario(ResponseState.Waiting));
+    }
+  }, [usuariosSaveLoading, dispatch]);
 
   return (
     <GeneralContainer>
@@ -352,6 +433,9 @@ export default function LoginPage() {
               surcursalListState={surcursalListState}
               loadingSpinSucursales={loadingSpinSucursales}
               handleSelectChangeSucursal={handleSelectChangeSucursal}
+              empleadoListState={empleadoListState}
+              loadingSpinEmpleados={loadingSpinEmpleados}
+              handleSelectChangeEmpleado={handleSelectChangeEmpleado}
             />
           </Spin>
         </Modal>

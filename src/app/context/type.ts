@@ -31,4 +31,7 @@ export type GeneralContextType = {
   roles: any[];
   sucursales: any[];
   loadingSucursales: LoadingState;
+  empleados: any[];
+  loadinEmpleados: LoadingState;
+  usuariosSaveLoading: LoadingState;
 };

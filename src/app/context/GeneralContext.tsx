@@ -11,6 +11,8 @@ import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
+  empleadosSelector,
+  empleadosSelectorLoading,
   loginLoadingSelector,
   LoginSelector,
   logoutLoadingSelector,
@@ -22,6 +24,7 @@ import {
   rolesSelectorLoading,
   sucursalesSelector,
   sucursalesSelectorLoading,
+  usuarioSaveSelectorLoading,
   ususarioSimpleGetByIdLoadingSelector,
   ususarioSimpleGetByIdSelector,
 } from 'app/features/slice/selectors';
@@ -35,8 +38,8 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   // Usamos los selectores de Redux-Saga
   const categorias = useSelector(categoriasSelector);
   const loadingCategorias = useSelector(categoriasSelectorLoading);
-  const productosSaveLoading = useSelector(productoSaveSelectorLoading);
   const loadingUpdateProduct = useSelector(productosUpdateLoadingSelector);
+  const productosSaveLoading = useSelector(productoSaveSelectorLoading);
   const productoGetById = useSelector(productosGetByIdSelector);
   const loadingProductoGetById = useSelector(productosGetByIdLoadingSelector);
   const usuarioSimpleGetById = useSelector(ususarioSimpleGetByIdSelector);
@@ -48,6 +51,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const loadingLogout = useSelector(logoutLoadingSelector);
   const sucursales = useSelector(sucursalesSelector);
   const loadingSucursales = useSelector(sucursalesSelectorLoading);
+  const empleados = useSelector(empleadosSelector);
+  const loadinEmpleados = useSelector(empleadosSelectorLoading);
+  const usuariosSaveLoading = useSelector(usuarioSaveSelectorLoading);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -101,6 +107,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingRoles,
         sucursales,
         loadingSucursales,
+        empleados,
+        loadinEmpleados,
+        usuariosSaveLoading,
       }}
     >
       {children}
