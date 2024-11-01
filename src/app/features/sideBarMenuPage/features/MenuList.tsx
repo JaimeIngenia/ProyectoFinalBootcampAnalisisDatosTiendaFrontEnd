@@ -7,14 +7,55 @@ import {
 } from '@ant-design/icons';
 import { Menu, Modal } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from '../styles/MenuList.module.css';
 import React from 'react';
 import { useGeneralContext } from 'app/context/GeneralContext';
+import { useSlice } from 'app/features/slice';
+import { useDispatch } from 'react-redux';
+import { ResponseState } from 'app/features/slice/types';
+import { LOGOUT_USER } from 'app/features/slice/sagaActions';
+import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import { usuarioById_Empty } from 'app/features/slice/emptyTypes';
 
 const MenuList = () => {
-  const { darkMode, themeColors } = useGeneralContext();
+  //Genral flow redux
+  const { actions } = useSlice();
+  const dispatch = useDispatch();
 
+  const {
+    darkMode,
+    themeColors,
+    loadingusuarioSimpleGetById,
+    usuarioSimpleGetById,
+  } = useGeneralContext();
+
+  //Arquitectura para traer un estado
+
+  const [firstChargeProductById, setFirstChargeProductById] =
+    useState<boolean>(true);
+  const [loadingSpinProductById, setLoadingSpinProductById] =
+    useState<boolean>(false);
+  const [productByIdListState, setProductByIdListState] =
+    useState<GetUsuarioSimpleResponse>(usuarioById_Empty);
+
+  useEffect(() => {
+    // Efecto para cargar el usuario por ID
+    if (loadingusuarioSimpleGetById.state === ResponseState.Started) {
+      setLoadingSpinProductById(true);
+    } else if (loadingusuarioSimpleGetById.state === ResponseState.Finished) {
+      setLoadingSpinProductById(false);
+
+      if (loadingusuarioSimpleGetById.status && usuarioSimpleGetById) {
+        setProductByIdListState(usuarioSimpleGetById);
+      } else {
+        alert(
+          loadingusuarioSimpleGetById.message || 'Error al cargar el usuario',
+        );
+      }
+    }
+  }, [loadingusuarioSimpleGetById, usuarioSimpleGetById]);
+  // Modal de Losout
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogoutClick = () => {
@@ -29,6 +70,26 @@ const MenuList = () => {
   const selectedKey = isEditProductPage
     ? `/editarProducto/${id}`
     : location.pathname;
+
+  const logoutSession = () => {
+    // const userId = '5459ba78-d3dc-42ca-95de-33b971f2f3cd'; // Cambia esto por el ID del usuario actual
+    setModalVisible(false);
+    // Despachar acción para indicar que el proceso de cierre de sesión ha comenzado
+
+    // Despachar la acción de cierre de sesión
+    if (productByIdListState.id !== '') {
+      debugger;
+      dispatch(actions.loadLogout(ResponseState.InProgress));
+      dispatch({
+        type: LOGOUT_USER,
+        payload: {
+          id: productByIdListState.id,
+        },
+      });
+    } else {
+      debugger;
+    }
+  };
 
   return (
     <Menu
@@ -92,7 +153,7 @@ const MenuList = () => {
       <Modal
         title="Confirmación de Logout"
         visible={modalVisible}
-        // onOk={/* Lógica para confirmar logout */}
+        onOk={logoutSession}
         onCancel={() => setModalVisible(false)}
       >
         <p>¿Estás seguro de que quieres cerrar sesión?</p>

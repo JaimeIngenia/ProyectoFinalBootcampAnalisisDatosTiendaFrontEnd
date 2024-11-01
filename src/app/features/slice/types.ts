@@ -2,6 +2,7 @@ import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
+import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export interface GeneralStatesReduxSaga {
@@ -11,6 +12,8 @@ export interface GeneralStatesReduxSaga {
   productosGuardados: ProductEntitySave;
   productoById: ProductEntityGetById;
   loadingStates: LoadingStates;
+  loginSuccess: boolean;
+  userSimpleById: GetUsuarioSimpleResponse;
 }
 
 // Define una interfaz para centralizar los estados de carga
@@ -22,6 +25,9 @@ export interface LoadingStates {
   productosDeleteLoading: LoadingState;
   productosUpdateLoading: LoadingState;
   productosGetByIdLoading: LoadingState;
+  loginLoading: LoadingState;
+  logoutLoading: LoadingState;
+  userSimpleByIdLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

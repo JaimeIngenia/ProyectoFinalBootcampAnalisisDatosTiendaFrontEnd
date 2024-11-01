@@ -49,6 +49,45 @@ export function ListaProductos() {
   //     key: '2',
   //     title: 'Nombre',
   //     dataIndex: 'nombre',
+  //     lterDropdown: ({
+  //       setSelectedKeys,
+  //       selectedKeys,
+  //       confirm,
+  //       clearFilters,
+  //     }: FilterDropdownProps) => (
+  //       <div style={{ padding: 8 }}>
+  //         <Input
+  //           placeholder="Buscar nombre"
+  //           value={selectedKeys[0]}
+  //           onChange={e =>
+  //             setSelectedKeys(e.target.value ? [e.target.value] : [])
+  //           }
+  //           onPressEnter={() => confirm()}
+  //           style={{ marginBottom: 8, display: 'block' }}
+  //         />
+  //         <Space>
+  //           <Button
+  //             type="primary"
+  //             onClick={() => confirm()}
+  //             icon={<SearchOutlined />}
+  //             size="small"
+  //             style={{ width: 90 }}
+  //           >
+  //             Buscar
+  //           </Button>
+  //           <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
+  //             Limpiar
+  //           </Button>
+  //         </Space>
+  //       </div>
+  //     ),
+  //     filterIcon: filtered => (
+  //       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+  //     ),
+  //     onFilter: (value, record) =>
+  //       String(record.nombre)
+  //         .toLowerCase()
+  //         .includes(String(value).toLowerCase()),
   //   },
   //   {
   //     key: '3',
@@ -236,6 +275,21 @@ export function ListaProductos() {
         // Agrega más categorías según tu lista
       ],
       onFilter: (value, record) => record.categoriaNombre === value,
+    },
+    {
+      key: '6',
+      title: 'Actions',
+      render: record => {
+        return (
+          <>
+            <EditOutlined onClick={() => handleEditProduct(record.id)} />
+            <DeleteOutlined
+              onClick={() => onDeleteProduct(record)}
+              style={{ color: 'red', marginLeft: 12 }}
+            />
+          </>
+        );
+      },
     },
   ];
   const navigate = useNavigate(); // Hook para navegar entre rutas

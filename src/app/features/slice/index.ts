@@ -9,6 +9,10 @@ import {
   ProductEntityGetById,
 } from 'app/api/products/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
+import {
+  GetUsuarioSimpleResponse,
+  UsuarioEntity,
+} from 'app/api/usuarios/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -187,6 +191,87 @@ const slice = createSlice({
 
     loadGetProductById(state, action: PayloadAction<ResponseState>) {
       state.loadingStates.productosGetByIdLoading = {
+        state: action.payload,
+      };
+    },
+
+    //Users
+
+    reducerLoginSuccess(state, action: PayloadAction<UsuarioEntity>) {
+      state.loginSuccess = true; // Marcar el login como exitoso
+      state.loadingStates.loginLoading = {
+        state: ResponseState.Finished,
+        status: true,
+        message: 'Inicio de sesión exitoso',
+      };
+    },
+
+    reducerLoginFailure(state, action: PayloadAction<any>) {
+      state.loginSuccess = false; // Marcar el login como fallido
+      state.loadingStates.loginLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: 'Error en el inicio de sesión',
+      };
+    },
+
+    loadLogin(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.loginLoading = {
+        state: action.payload,
+      };
+    },
+    //Users LogOut
+
+    reducerLogoutSuccess(state, action: PayloadAction<string>) {
+      debugger;
+      state.loginSuccess = false; // Marcar el login como exitoso
+      state.loadingStates.logoutLoading = {
+        state: ResponseState.Finished,
+        status: true,
+        message: action.payload,
+      };
+    },
+
+    reducerLogoutFailure(state, action: PayloadAction<any>) {
+      debugger;
+      //state.loginSuccess = false; // Marcar el login como fallido
+      state.loadingStates.logoutLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: 'Error en el cierre de sesión',
+      };
+    },
+
+    loadLogout(state, action: PayloadAction<ResponseState>) {
+      debugger;
+      state.loadingStates.logoutLoading = {
+        state: action.payload,
+      };
+    },
+    //Users getById
+
+    reducerGetUserByIdSuccess(
+      state,
+      action: PayloadAction<GetUsuarioSimpleResponse>,
+    ) {
+      state.userSimpleById = action.payload;
+      state.loadingStates.userSimpleByIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+        message: 'Usuario traido existosamente',
+      };
+    },
+
+    reducerGetUserByIdFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.userSimpleByIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: 'Error en la traida del usuario',
+      };
+    },
+
+    loadUserById(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.userSimpleByIdLoading = {
         state: action.payload,
       };
     },

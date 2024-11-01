@@ -73,3 +73,29 @@ export const productosGetByIdLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.productosGetByIdLoading,
 );
+
+//Usuarios
+
+export const LoginSelector = createSelector(
+  [selectSlice],
+  state => state.loginSuccess,
+);
+
+export const loginLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.loginLoading,
+);
+export const logoutLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.logoutLoading,
+);
+// Get Usuario By Id
+export const ususarioSimpleGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.userSimpleById,
+);
+
+export const ususarioSimpleGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.userSimpleByIdLoading,
+);

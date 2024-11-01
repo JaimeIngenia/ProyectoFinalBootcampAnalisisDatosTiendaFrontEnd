@@ -2,6 +2,7 @@ import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
+import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
 import { LoadingState } from 'app/features/slice/types';
 
 export type GeneralContextType = {
@@ -21,4 +22,9 @@ export type GeneralContextType = {
     colorBorderCustom: string;
   };
   productosSaveLoading: LoadingState;
+  login: boolean;
+  loadingLogin: LoadingState;
+  loadingLogout: LoadingState;
+  usuarioSimpleGetById: GetUsuarioSimpleResponse;
+  loadingusuarioSimpleGetById: LoadingState;
 };

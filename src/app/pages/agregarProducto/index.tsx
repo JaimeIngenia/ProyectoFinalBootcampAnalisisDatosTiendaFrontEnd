@@ -103,7 +103,7 @@ export default function AgregarProducto() {
     formRef.current
       ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        debugger;
+        // debugger;
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
@@ -134,7 +134,6 @@ export default function AgregarProducto() {
 
   useEffect(() => {
     const errors = formValidation(formData); // Ejecuta la validación completa
-    debugger;
     setIsButtonDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
   }, [formData]);
 

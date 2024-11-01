@@ -4,6 +4,7 @@ import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
+import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -24,6 +25,14 @@ export const productoById_Empty: ProductEntityGetById = {
   precio: 0,
   categoria: { id: '', nombre: '' },
 };
+export const usuarioById_Empty: GetUsuarioSimpleResponse = {
+  id: '',
+  nombre: '',
+  correo: '',
+  contrasena: '',
+  validationLogin: false,
+  imagen: '',
+};
 
 export const GeneralStatesReduxSaga_empty = {
   roles: [],
@@ -36,6 +45,10 @@ export const GeneralStatesReduxSaga_empty = {
 
   productoById: productoById_Empty,
 
+  loginSuccess: false,
+
+  userSimpleById: usuarioById_Empty,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -44,5 +57,8 @@ export const GeneralStatesReduxSaga_empty = {
     productosDeleteLoading: defaultLoadingState,
     productosUpdateLoading: defaultLoadingState,
     productosGetByIdLoading: defaultLoadingState,
+    loginLoading: defaultLoadingState,
+    logoutLoading: defaultLoadingState,
+    userSimpleByIdLoading: defaultLoadingState,
   },
 };

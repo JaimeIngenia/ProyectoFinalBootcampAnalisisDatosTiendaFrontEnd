@@ -11,10 +11,15 @@ import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
+  loginLoadingSelector,
+  LoginSelector,
+  logoutLoadingSelector,
   productoSaveSelectorLoading,
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
   productosUpdateLoadingSelector,
+  ususarioSimpleGetByIdLoadingSelector,
+  ususarioSimpleGetByIdSelector,
 } from 'app/features/slice/selectors';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
@@ -30,6 +35,14 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const loadingUpdateProduct = useSelector(productosUpdateLoadingSelector);
   const productoGetById = useSelector(productosGetByIdSelector);
   const loadingProductoGetById = useSelector(productosGetByIdLoadingSelector);
+  const usuarioSimpleGetById = useSelector(ususarioSimpleGetByIdSelector);
+  const loadingusuarioSimpleGetById = useSelector(
+    ususarioSimpleGetByIdLoadingSelector,
+  );
+  const login = useSelector(LoginSelector);
+  const loadingLogin = useSelector(loginLoadingSelector);
+  const loadingLogout = useSelector(logoutLoadingSelector);
+
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const toggleDarkMode = useCallback(() => {
@@ -69,6 +82,11 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         toggleDarkMode,
         themeColors,
         productosSaveLoading,
+        login,
+        loadingLogin,
+        loadingLogout,
+        usuarioSimpleGetById,
+        loadingusuarioSimpleGetById,
       }}
     >
       {children}
@@ -86,3 +104,6 @@ export const useGeneralContext = () => {
   }
   return context;
 };
+// function logoutLoading(state: DefaultRootState): unknown {
+//   throw new Error('Function not implemented.');
+// }
