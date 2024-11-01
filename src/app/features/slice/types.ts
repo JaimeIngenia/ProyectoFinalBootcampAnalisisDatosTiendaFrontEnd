@@ -14,6 +14,7 @@ export interface GeneralStatesReduxSaga {
   loadingStates: LoadingStates;
   loginSuccess: boolean;
   userSimpleById: GetUsuarioSimpleResponse;
+  sucursales: Entity[];
 }
 
 // Define una interfaz para centralizar los estados de carga
@@ -28,6 +29,7 @@ export interface LoadingStates {
   loginLoading: LoadingState;
   logoutLoading: LoadingState;
   userSimpleByIdLoading: LoadingState;
+  sucursalesLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

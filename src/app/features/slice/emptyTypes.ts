@@ -49,6 +49,8 @@ export const GeneralStatesReduxSaga_empty = {
 
   userSimpleById: usuarioById_Empty,
 
+  sucursales: [],
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -60,5 +62,6 @@ export const GeneralStatesReduxSaga_empty = {
     loginLoading: defaultLoadingState,
     logoutLoading: defaultLoadingState,
     userSimpleByIdLoading: defaultLoadingState,
+    sucursalesLoading: defaultLoadingState,
   },
 };

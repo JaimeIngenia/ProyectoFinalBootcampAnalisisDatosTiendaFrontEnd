@@ -105,6 +105,9 @@ export function formRegisterValidation(values: SaveUserFormValues) {
   if (!values.rolId || values.rolId.length <= 0) {
     _errors['rolId'] = 'Debes seleccionar un rol válido';
   }
+  if (!values.sucursalId || values.sucursalId.length <= 0) {
+    _errors['sucursalId'] = 'Debes seleccionar una sucursal válida';
+  }
 
   // // Validación de "sucursalId"
   // if (!values.sucursalId || values.sucursalId.trim().length === 0) {
@@ -277,6 +280,26 @@ export const funcionGeneradoraValidacionesRol = ({ label }) => [
       ) {
         return Promise.reject(
           new Error(`Debes seleccionar un ${label} válidoo`),
+        );
+      }
+
+      // Si el valor es válido, resolvemos la promesa
+      return Promise.resolve();
+    },
+  },
+];
+export const funcionGeneradoraValidacionesSucursal = ({ label }) => [
+  {
+    required: true,
+    validator: async (rule, value) => {
+      // Si el valor no está definido o es vacío
+      if (
+        value === undefined ||
+        value === null ||
+        value.toString().trim().length === 0
+      ) {
+        return Promise.reject(
+          new Error(`Debes seleccionar una ${label} válida`),
         );
       }
 

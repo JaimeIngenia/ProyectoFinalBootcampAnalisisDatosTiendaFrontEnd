@@ -25,6 +25,7 @@ import {
 import {
   LOAD_CATEGORIAS_LIST,
   LOAD_ROLES_LIST,
+  LOAD_SUCURSALES_LIST,
 } from 'app/features/slice/sagaActions';
 const { Item } = Form;
 
@@ -44,6 +45,8 @@ export default function LoginPage() {
     loadingRoles,
     categorias,
     loadingCategorias,
+    sucursales,
+    loadingSucursales,
   } = useGeneralContext();
   //redux
   const { actions } = useSlice();
@@ -105,27 +108,6 @@ export default function LoginPage() {
   const [isButtonRegistrerDisabled, setIsButtonRegistrerDisabled] =
     useState(true);
 
-  // const handleChangeRegistro = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-
-  //   // Actualizar el Form y el estado local
-  //   registerFormRef.current?.setFieldsValue({ [name]: value });
-  //   setLoginFormData(prev => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  //   // Validar solo el campo que ha cambiado
-  //   registerFormRef.current
-  //     ?.validateFields([name]) // Valida solo el campo actual
-  //     .then(() => {
-  //       // debugger;
-  //       // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-  //     })
-  //     .catch(() => {
-  //       // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-  //     });
-  // };
-
   const handleChangeRegistro = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -170,6 +152,27 @@ export default function LoginPage() {
         // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
       });
   };
+  const handleSelectChangeSucursal = (value: string) => {
+    // Actualizar el Form y el estado local
+    registerFormRef.current?.setFieldsValue({
+      sucursalId: value,
+    });
+
+    setRegisterFormData(prev => ({
+      ...prev,
+      sucursalId: value,
+    }));
+
+    // Validar solo el campo 'categoriaId'
+    registerFormRef.current
+      ?.validateFields(['sucursalId']) // Valida solo el campo de categoría
+      .then(() => {
+        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+      })
+      .catch(() => {
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+      });
+  };
 
   useEffect(() => {
     const errors = formRegisterValidation(registerFormData); // Ejecuta la validación completa
@@ -193,45 +196,59 @@ export default function LoginPage() {
   // Manejo estado de carga
 
   const [loadingSpinRoles, setLoadingSpinRoles] = useState<boolean>(false);
-  const [firstCharge, setFirstCharge] = useState<boolean>(true);
-  const [roleListState, setRoleListState] = useState<Entity[]>([]);
-
-  const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
   const [loadingSpinCategorias, setLoadingSpinCategorias] =
     useState<boolean>(false);
+  const [loadingSpinSucursales, setLoadingSpinSucursales] =
+    useState<boolean>(false);
+
+  const [firstCharge, setFirstCharge] = useState<boolean>(true);
+  const [roleListState, setRoleListState] = useState<Entity[]>([]);
+  const [surcursalListState, setSurcursalListState] = useState<Entity[]>([]);
+
+  const [categoriaListState, setCategoriaListState] = useState<Entity[]>([]);
 
   useEffect(() => {
     if (firstCharge) {
       if (
         loadingRoles?.state === ResponseState.Waiting &&
-        loadingCategorias?.state === ResponseState.Waiting
+        loadingCategorias?.state === ResponseState.Waiting &&
+        loadingSucursales?.state === ResponseState.Waiting
       ) {
         dispatch(actions.loadRoles(ResponseState.Started));
         dispatch(actions.loadCategorias(ResponseState.Started));
+        dispatch(actions.loadSucursales(ResponseState.Started));
       } else if (
         loadingRoles?.state === ResponseState.Started &&
-        loadingCategorias?.state === ResponseState.Started
+        loadingCategorias?.state === ResponseState.Started &&
+        loadingSucursales?.state === ResponseState.Started
       ) {
         setFirstCharge(false);
         dispatch(actions.loadRoles(ResponseState.InProgress));
         dispatch(actions.loadCategorias(ResponseState.InProgress));
+        dispatch(actions.loadSucursales(ResponseState.InProgress));
         dispatch({
           type: LOAD_ROLES_LIST,
         });
         dispatch({
           type: LOAD_CATEGORIAS_LIST,
         });
+        dispatch({
+          type: LOAD_SUCURSALES_LIST,
+        });
       }
     }
     if (
       loadingRoles?.state === ResponseState.InProgress &&
-      loadingCategorias?.state === ResponseState.InProgress
+      loadingCategorias?.state === ResponseState.InProgress &&
+      loadingSucursales?.state === ResponseState.InProgress
     ) {
       setLoadingSpinRoles(true);
       setLoadingSpinCategorias(true);
+      setLoadingSpinSucursales(true);
     } else if (
       loadingRoles?.state === ResponseState.Finished &&
-      loadingCategorias?.state === ResponseState.Finished
+      loadingCategorias?.state === ResponseState.Finished &&
+      loadingSucursales?.state === ResponseState.Finished
     ) {
       if (loadingRoles?.status) {
         if (roles && roles.length > 0) {
@@ -245,6 +262,20 @@ export default function LoginPage() {
           });
           setRoleListState(dataList);
           if (loadingSpinRoles) setLoadingSpinRoles(false);
+        }
+      }
+      if (loadingSucursales?.status) {
+        if (sucursales && sucursales.length > 0) {
+          let dataList: Array<Entity> = [];
+
+          sucursales?.forEach(r => {
+            dataList.push({
+              id: r.id,
+              nombre: r.nombre,
+            });
+          });
+          setSurcursalListState(dataList);
+          if (loadingSpinSucursales) setLoadingSpinSucursales(false);
         }
       }
       if (loadingCategorias?.status) {
@@ -267,7 +298,14 @@ export default function LoginPage() {
       dispatch(actions.loadRoles(ResponseState.Waiting));
       dispatch(actions.loadCategorias(ResponseState.Waiting));
     }
-  }, [roles, loadingRoles, categorias, loadingCategorias]);
+  }, [
+    roles,
+    loadingRoles,
+    categorias,
+    loadingCategorias,
+    sucursales,
+    loadingSucursales,
+  ]);
 
   return (
     <GeneralContainer>
@@ -311,6 +349,9 @@ export default function LoginPage() {
               loadingSpinCategorias={loadingSpinCategorias}
               categoriaListState={categoriaListState}
               roleListState={roleListState}
+              surcursalListState={surcursalListState}
+              loadingSpinSucursales={loadingSpinSucursales}
+              handleSelectChangeSucursal={handleSelectChangeSucursal}
             />
           </Spin>
         </Modal>

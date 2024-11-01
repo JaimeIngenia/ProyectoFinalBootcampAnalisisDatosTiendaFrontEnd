@@ -9,6 +9,7 @@ import {
   LOAD_CATEGORIAS_LIST,
   LOAD_PRODUCTOS_LIST,
   LOAD_ROLES_LIST,
+  LOAD_SUCURSALES_LIST,
   LOGIN_USER,
   LOGOUT_USER,
   SAVE_PRODUCTOS,
@@ -25,6 +26,7 @@ import {
 import { ProductEntityGetAll } from 'app/api/products/types';
 import { LoginResponse, LogoutResponse } from 'app/api/usuarios/types';
 import { getUserById, loginUser, logoutUser } from 'app/api/usuarios';
+import { getAllSucursales } from 'app/api/sucursales';
 
 function* fetchRolesSaga() {
   try {
@@ -153,6 +155,30 @@ function* fetchUserById(action: any) {
   }
 }
 
+// sUCURSALES
+function* fetchSucursalesSaga() {
+  try {
+    // Llamada a la API para obtener todas las sucursales
+    const sucursales = yield call(getAllSucursales);
+
+    // Desestructuración y conversión de los datos en el formato Entity
+    const entidades: Entity[] = sucursales.map(sucursal => ({
+      id: sucursal.id,
+      nombre: sucursal.region, // Nombre se asigna como región
+    }));
+
+    // Enviar los datos procesados al reducer
+    yield put(actions.fetchSucursalesSuccess(entidades));
+  } catch (error) {
+    // Manejo del error y envío del mensaje al reducer
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.getAllSucursalesFailed(errorMessage));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -164,4 +190,5 @@ export function* Saga() {
   yield takeLatest(LOGIN_USER, fetchLoginSaga);
   yield takeLatest(LOGOUT_USER, fetchLogoutSaga);
   yield takeLatest(GET_USER_BY_ID, fetchUserById);
+  yield takeLatest(LOAD_SUCURSALES_LIST, fetchSucursalesSaga);
 }

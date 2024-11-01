@@ -2,6 +2,7 @@ import {
   funcionGeneradoraValidaciones,
   funcionGeneradoraValidacionesRol,
   funcionGeneradoraValidacionesPrecio,
+  funcionGeneradoraValidacionesSucursal,
 } from './formValidation';
 import {
   createMaxLengthRegex,
@@ -32,6 +33,9 @@ export const rulesForm = {
   //Para la pagina del login
   rulesRolesId: funcionGeneradoraValidacionesRol({
     label: 'Rol',
+  }),
+  rulesSucursalId: funcionGeneradoraValidacionesSucursal({
+    label: 'Sucursal',
   }),
   rulesInput: [
     {

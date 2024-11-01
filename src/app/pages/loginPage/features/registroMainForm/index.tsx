@@ -31,6 +31,9 @@ export default function RegistroMainForm({
   loadingSpinCategorias,
   categoriaListState,
   roleListState,
+  surcursalListState,
+  loadingSpinSucursales,
+  handleSelectChangeSucursal,
 }) {
   const { darkMode, themeColors } = useGeneralContext();
   return (
@@ -112,6 +115,22 @@ export default function RegistroMainForm({
             onChange={handleSelectChange}
             label="Rol"
             value={registerFormData.rolId}
+          />
+        </Spin>
+      </Item>
+      <Item
+        required
+        label="Sucursal"
+        name="sucursalId"
+        rules={rulesForm.rulesSucursalId}
+        validateTrigger="onBlur"
+      >
+        <Spin spinning={loadingSpinSucursales}>
+          <CustomSelect
+            list={surcursalListState}
+            onChange={handleSelectChangeSucursal}
+            label="Sucursal"
+            value={registerFormData.sucursalId}
           />
         </Spin>
       </Item>

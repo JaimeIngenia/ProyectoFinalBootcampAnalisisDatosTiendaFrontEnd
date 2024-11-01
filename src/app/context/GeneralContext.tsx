@@ -20,6 +20,8 @@ import {
   productosUpdateLoadingSelector,
   rolesSelector,
   rolesSelectorLoading,
+  sucursalesSelector,
+  sucursalesSelectorLoading,
   ususarioSimpleGetByIdLoadingSelector,
   ususarioSimpleGetByIdSelector,
 } from 'app/features/slice/selectors';
@@ -44,6 +46,8 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const login = useSelector(LoginSelector);
   const loadingLogin = useSelector(loginLoadingSelector);
   const loadingLogout = useSelector(logoutLoadingSelector);
+  const sucursales = useSelector(sucursalesSelector);
+  const loadingSucursales = useSelector(sucursalesSelectorLoading);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -95,6 +99,8 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingusuarioSimpleGetById,
         roles,
         loadingRoles,
+        sucursales,
+        loadingSucursales,
       }}
     >
       {children}

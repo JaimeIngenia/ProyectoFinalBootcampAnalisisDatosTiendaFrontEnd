@@ -272,6 +272,32 @@ const slice = createSlice({
         state: action.payload,
       };
     },
+
+    //Sucrusales
+
+    // Acción para manejar la carga exitosa de sucursales
+    fetchSucursalesSuccess(state, action: PayloadAction<Entity[]>) {
+      state.sucursales = action.payload;
+      state.loadingStates.sucursalesLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // Acción para manejar errores al cargar sucursales
+    getAllSucursalesFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.sucursalesLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadSucursales(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.sucursalesLoading = {
+        state: action.payload,
+      };
+    },
   },
 });
 

@@ -99,3 +99,15 @@ export const ususarioSimpleGetByIdLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.userSimpleByIdLoading,
 );
+
+// sucursales
+
+export const sucursalesSelector = createSelector(
+  [selectSlice],
+  state => state.sucursales,
+);
+
+export const sucursalesSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.sucursalesLoading,
+);

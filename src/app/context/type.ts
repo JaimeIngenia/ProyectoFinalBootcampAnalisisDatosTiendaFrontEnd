@@ -29,4 +29,6 @@ export type GeneralContextType = {
   loadingusuarioSimpleGetById: LoadingState;
   loadingRoles: LoadingState;
   roles: any[];
+  sucursales: any[];
+  loadingSucursales: LoadingState;
 };

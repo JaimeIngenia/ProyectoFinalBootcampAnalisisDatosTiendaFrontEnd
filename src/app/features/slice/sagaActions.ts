@@ -8,3 +8,4 @@ export const GET_PRODUCT_BY_ID = 'GET_PRODUCT_BY_ID';
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const GET_USER_BY_ID = 'GET_USER_BY_ID';
+export const LOAD_SUCURSALES_LIST = 'LOAD_SUCURSALES_LIST';
