@@ -40,6 +40,7 @@ export interface LoadingStates {
   usuariosSaveLoading: LoadingState; // Estado de carga para productos
   clientesLoading: LoadingState;
   ventasSaveLoading: LoadingState;
+  detalleVentaLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

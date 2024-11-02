@@ -141,8 +141,13 @@ export const clientesSelectorLoading = createSelector(
   state => state.loadingStates.clientesLoading,
 );
 
-//Usuario
+//Venta
 export const ventaSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.ventasSaveLoading,
+);
+//Detalle Venta
+export const detalleVentaSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.detalleVentaLoading,
 );

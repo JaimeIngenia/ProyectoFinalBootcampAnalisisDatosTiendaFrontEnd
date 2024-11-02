@@ -395,6 +395,30 @@ const slice = createSlice({
         state: action.payload,
       };
     },
+
+    //Detalle Ventas
+    loadSaveDetalleVenta(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.detalleVentaLoading = {
+        state: action.payload,
+        status: false,
+      };
+    },
+    // Reducer para éxito al guardar detalle de venta
+    saveDetalleVentaSuccess(state, action: PayloadAction<any>) {
+      // state.detalleVenta = action.payload;
+      state.loadingStates.detalleVentaLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+    // Reducer para fallo al guardar detalle de venta
+    saveDetalleVentaFailed(state, action: PayloadAction<string>) {
+      state.loadingStates.detalleVentaLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
   },
 });
 

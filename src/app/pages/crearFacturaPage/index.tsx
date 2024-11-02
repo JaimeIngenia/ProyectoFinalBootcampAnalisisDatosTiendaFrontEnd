@@ -58,6 +58,7 @@ export default function CrearFacturaPage() {
     ventasSaveLoading,
     productos,
     loadingProductos,
+    detalleVentaSaveLoading,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -83,9 +84,9 @@ export default function CrearFacturaPage() {
         ventaId: ventaId,
       };
       debugger;
-      dispatch(actions.loadSaveVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
       dispatch({
-        type: 'SAVE_VENTA',
+        type: 'SAVE_DETALLE_VENTA',
         payload: payload,
       });
       closeModal();
@@ -318,20 +319,15 @@ export default function CrearFacturaPage() {
     // Genera el ID en el frontend
     const ventaId = generateGUID();
     setVentaId(ventaId);
-    debugger;
     // aqui esta el id del empleado
     const idEmpleado = productByIdListState.empleadoId;
     // aquí esta el id del cliente
-    debugger; // Solo llega a este debugger y no pasa mas de ahí cahtGPT
     if (!clientFormRef.current) {
       return;
     }
-    debugger;
     const formValues = clientFormRef.current.getFieldsValue();
-    debugger;
 
     const idCliente = formValues.clienteId;
-    debugger;
 
     // Obtiene la fecha actual en el formato necesario
     const fecha = new Date().toISOString();
@@ -376,6 +372,30 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadSaveVenta(ResponseState.Waiting));
     }
   }, [ventasSaveLoading, dispatch]);
+  // UseEffect para save detalleVentas
+  useEffect(() => {
+    if (detalleVentaSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Detalle Venta...');
+    } else if (detalleVentaSaveLoading.state === ResponseState.Finished) {
+      if (detalleVentaSaveLoading.status) {
+        message.success('DetalleVenta guardada con éxito.');
+
+        if (detalleVentaFormRef.current) {
+          detalleVentaFormRef.current.resetFields();
+          setdetalleVentaFormData({
+            cantidad: 0,
+            productoId: '',
+            ventaId: '',
+          });
+        }
+      } else {
+        message.error(
+          `Error al guardar la Detalleventa(factura-productodetalle): ${detalleVentaSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
+    }
+  }, [detalleVentaSaveLoading, dispatch]);
 
   //Productos Selectors
 

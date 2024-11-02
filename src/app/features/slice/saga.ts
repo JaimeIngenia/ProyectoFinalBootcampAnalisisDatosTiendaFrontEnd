@@ -18,6 +18,7 @@ import {
   UPDATE_PRODUCT,
   LOAD_CLIENTES_LIST,
   SAVE_VENTA,
+  SAVE_DETALLE_VENTA,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -46,6 +47,7 @@ import { ClienteEntity } from 'app/api/clientes/types';
 import { getAllClientes } from 'app/api/clientes';
 import { SaveVentaRequest } from 'app/api/venta/types';
 import { saveVenta } from 'app/api/venta';
+import { saveDetalleVenta } from 'app/api/detalleVenta';
 
 function* fetchRolesSaga() {
   try {
@@ -276,6 +278,22 @@ function* saveVentaSaga(action: any) {
   }
 }
 
+//DetalleVentas
+
+function* saveDetalleVentaSaga(action: any) {
+  try {
+    // Llama a la función de API con el payload
+    const response = yield call(saveDetalleVenta, action.payload);
+    yield put(actions.saveDetalleVentaSuccess(response));
+  } catch (error) {
+    let errorMessage = 'Error desconocido';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.saveDetalleVentaFailed(errorMessage));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -292,4 +310,5 @@ export function* Saga() {
   yield takeLatest(SAVE_USUARIO, saveUsuarioSaga);
   yield takeLatest(LOAD_CLIENTES_LIST, fetchClientesSaga);
   yield takeLatest(SAVE_VENTA, saveVentaSaga);
+  yield takeLatest(SAVE_DETALLE_VENTA, saveDetalleVentaSaga);
 }

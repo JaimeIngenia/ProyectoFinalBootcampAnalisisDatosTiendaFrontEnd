@@ -204,7 +204,6 @@ export default function LoginPage() {
     const registerData = registerFormRef.current.getFieldsValue();
     setRegisterFormData(registerData);
     console.log('Datos de registro:', registerData);
-    debugger;
     dispatch(actions.loadSaveUsuario(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
       type: 'SAVE_USUARIO',

@@ -39,4 +39,5 @@ export type GeneralContextType = {
   ventasSaveLoading: LoadingState;
   productos: ProductEntityGetAll[];
   loadingProductos: LoadingState;
+  detalleVentaSaveLoading: LoadingState;
 };
