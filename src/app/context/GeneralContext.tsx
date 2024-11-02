@@ -11,6 +11,8 @@ import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
+  clientesSelector,
+  clientesSelectorLoading,
   empleadosSelector,
   empleadosSelectorLoading,
   loginLoadingSelector,
@@ -19,6 +21,8 @@ import {
   productoSaveSelectorLoading,
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
+  productosSelector,
+  productosSelectorLoading,
   productosUpdateLoadingSelector,
   rolesSelector,
   rolesSelectorLoading,
@@ -27,6 +31,7 @@ import {
   usuarioSaveSelectorLoading,
   ususarioSimpleGetByIdLoadingSelector,
   ususarioSimpleGetByIdSelector,
+  ventaSaveSelectorLoading,
 } from 'app/features/slice/selectors';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
@@ -54,6 +59,11 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const empleados = useSelector(empleadosSelector);
   const loadinEmpleados = useSelector(empleadosSelectorLoading);
   const usuariosSaveLoading = useSelector(usuarioSaveSelectorLoading);
+  const clientes = useSelector(clientesSelector);
+  const loadinClientes = useSelector(clientesSelectorLoading);
+  const ventasSaveLoading = useSelector(ventaSaveSelectorLoading);
+  const productos = useSelector(productosSelector);
+  const loadingProductos = useSelector(productosSelectorLoading);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -110,6 +120,11 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         empleados,
         loadinEmpleados,
         usuariosSaveLoading,
+        clientes,
+        loadinClientes,
+        ventasSaveLoading,
+        productos,
+        loadingProductos,
       }}
     >
       {children}

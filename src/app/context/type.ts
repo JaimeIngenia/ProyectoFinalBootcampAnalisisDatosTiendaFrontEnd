@@ -34,4 +34,9 @@ export type GeneralContextType = {
   empleados: any[];
   loadinEmpleados: LoadingState;
   usuariosSaveLoading: LoadingState;
+  clientes: any[];
+  loadinClientes: LoadingState;
+  ventasSaveLoading: LoadingState;
+  productos: ProductEntityGetAll[];
+  loadingProductos: LoadingState;
 };

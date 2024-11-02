@@ -19,6 +19,7 @@ import { useSlice } from './features/slice';
 import { useDispatch } from 'react-redux';
 import { GetUsuarioSimpleResponse } from './api/usuarios/types';
 import { usuarioById_Empty } from './features/slice/emptyTypes';
+import CrearFacturaPage from './pages/crearFacturaPage';
 
 export function App() {
   //Genral flow redux
@@ -41,7 +42,7 @@ export function App() {
   } = useGeneralContext();
 
   // let stateReduxAut = false;
-  // UseEffect para save products
+  // UseEffect para slogin
   useEffect(() => {
     if (loadingLogin.state === ResponseState.InProgress) {
       message.loading('Login User...');
@@ -122,6 +123,8 @@ export function App() {
               <Route path="/listaProductos" element={<ListaProductos />} />
               <Route path="/agregarProductos" element={<AgregarProducto />} />
               <Route path="/editarProducto/:id" element={<AgregarProducto />} />
+              <Route path="/crearFactura" element={<CrearFacturaPage />} />
+              {/* <Route path="/crearFactura/:id" element={<CrearFacturaPage />} /> */}
             </Route>
           </Routes>
         </div>

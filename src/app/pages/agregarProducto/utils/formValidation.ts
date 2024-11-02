@@ -8,6 +8,8 @@ import {
   minLengthRegexSkills,
 } from './regex';
 import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo correctamente
+import { ClienteSelect } from 'app/api/clientes/types';
+import { DetalleVentaForm } from 'app/api/detalleVenta/types';
 
 export function formValidation(values: ProductoFormValues) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
@@ -135,6 +137,37 @@ export function formRegisterValidation(values: SaveUsuarioRequest) {
   // ) {
   //   _errors['imagen'] = 'La URL de la imagen no es válida';
   // }
+
+  return _errors;
+}
+export function formClientSelectValidation(values: ClienteSelect) {
+  const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
+
+  const maxLength = 50; // Asigna la longitud máxima para algunos campos
+  const minLength = 2; // Longitud mínima para "nombre"
+  const passwordMinLength = 8; // Longitud mínima para "contrasena"
+
+  if (!values.clienteId || values.clienteId.length <= 0) {
+    _errors['clienteId'] = 'Debes seleccionar un Cliente válido';
+  }
+
+  return _errors;
+}
+export function formDetalleVentaValidation(values: DetalleVentaForm) {
+  const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
+
+  const maxLength = 50; // Asigna la longitud máxima para algunos campos
+  const minLength = 2; // Longitud mínima para "nombre"
+  const passwordMinLength = 8; // Longitud mínima para "contrasena"
+
+  if (!values.productoId || values.productoId.length <= 0) {
+    _errors['productoId'] = 'Debes seleccionar un Producto válido';
+  }
+
+  // Validación de "precio"
+  if (values.cantidad <= 0) {
+    _errors['cantidad'] = 'El precio debe ser mayor que 0';
+  }
 
   return _errors;
 }
@@ -312,6 +345,46 @@ export const funcionGeneradoraValidacionesSucursal = ({ label }) => [
   },
 ];
 export const funcionGeneradoraValidacionesEmpleado = ({ label }) => [
+  {
+    required: true,
+    validator: async (rule, value) => {
+      // Si el valor no está definido o es vacío
+      if (
+        value === undefined ||
+        value === null ||
+        value.toString().trim().length === 0
+      ) {
+        return Promise.reject(
+          new Error(`Debes seleccionar un ${label} válida`),
+        );
+      }
+
+      // Si el valor es válido, resolvemos la promesa
+      return Promise.resolve();
+    },
+  },
+];
+export const funcionGeneradoraValidacionesVenta = ({ label }) => [
+  {
+    required: true,
+    validator: async (rule, value) => {
+      // Si el valor no está definido o es vacío
+      if (
+        value === undefined ||
+        value === null ||
+        value.toString().trim().length === 0
+      ) {
+        return Promise.reject(
+          new Error(`Debes seleccionar una ${label} válida`),
+        );
+      }
+
+      // Si el valor es válido, resolvemos la promesa
+      return Promise.resolve();
+    },
+  },
+];
+export const funcionGeneradoraValidacionesProducto = ({ label }) => [
   {
     required: true,
     validator: async (rule, value) => {

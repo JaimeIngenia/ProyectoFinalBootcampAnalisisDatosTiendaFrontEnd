@@ -347,6 +347,54 @@ const slice = createSlice({
         state: action.payload,
       };
     },
+
+    //Clientes
+
+    fetchClientesSuccess(state, action: PayloadAction<Entity[]>) {
+      state.clientes = action.payload; // Actualiza el estado con los clientes obtenidos
+      state.loadingStates.clientesLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // Acción para manejar errores al cargar clientes
+    getAllClientesFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.clientesLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadClientes(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.clientesLoading = {
+        state: action.payload, // Cambia el estado de carga
+      };
+    },
+
+    //vENTAS
+
+    saveVentaSuccess(state) {
+      state.loadingStates.ventasSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    saveVentaFailed(state, action: PayloadAction<any>) {
+      state.loadingStates.ventasSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadSaveVenta(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.ventasSaveLoading = {
+        state: action.payload,
+      };
+    },
   },
 });
 

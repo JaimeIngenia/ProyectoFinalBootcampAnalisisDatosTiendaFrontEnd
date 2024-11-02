@@ -129,11 +129,17 @@ const MenuList = () => {
 
         {/* <Menu.Item key="agregarProductos">
           <Link to={'/agregarProductos'}>Agregar Producto</Link>
-        </Menu.Item> */}
+          </Menu.Item> */}
 
         {/* <Menu.Item key="riego">
           <Link to={'/riego'}>Riegos</Link>
-        </Menu.Item> */}
+          </Menu.Item> */}
+      </Menu.SubMenu>
+
+      <Menu.SubMenu key="Ventas" icon={<BarsOutlined />} title="Ventas">
+        <Menu.Item key="/crearFactura">
+          <Link to={'/crearFactura'}>Crear Factura</Link>
+        </Menu.Item>
       </Menu.SubMenu>
 
       <Menu.Item key="/usuario" icon={<UserOutlined />}>

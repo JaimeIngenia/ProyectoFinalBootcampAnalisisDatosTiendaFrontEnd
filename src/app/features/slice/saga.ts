@@ -16,6 +16,8 @@ import {
   SAVE_USUARIO,
   SAVE_PRODUCTOS,
   UPDATE_PRODUCT,
+  LOAD_CLIENTES_LIST,
+  SAVE_VENTA,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -40,6 +42,10 @@ import {
 import { getAllSucursales } from 'app/api/sucursales';
 import { EmpleadoEntity } from 'app/api/empleados/types';
 import { getAllEmpleados } from 'app/api/empleados';
+import { ClienteEntity } from 'app/api/clientes/types';
+import { getAllClientes } from 'app/api/clientes';
+import { SaveVentaRequest } from 'app/api/venta/types';
+import { saveVenta } from 'app/api/venta';
 
 function* fetchRolesSaga() {
   try {
@@ -229,6 +235,47 @@ function* fetchEmpleadosSaga() {
   }
 }
 
+// Clientes
+
+// Saga para obtener y transformar los datos de clientes
+function* fetchClientesSaga() {
+  try {
+    // Llamada a la API para obtener todos los clientes
+    const clientes: ClienteEntity[] = yield call(getAllClientes);
+
+    // Desestructuración y conversión de los datos en el formato ClienteSimple
+    const clientesFiltrados: Entity[] = clientes.map(cliente => ({
+      id: cliente.id,
+      nombre: cliente.nombre, // Usar solo el nombre completo sin apellido
+    }));
+
+    // Enviar los datos procesados al reducer
+    yield put(actions.fetchClientesSuccess(clientesFiltrados));
+  } catch (error) {
+    // Manejo del error y envío del mensaje al reducer
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.getAllClientesFailed(errorMessage));
+  }
+}
+
+//Ventas
+
+function* saveVentaSaga(action: any) {
+  try {
+    yield call(saveVenta, action.payload);
+    yield put(actions.saveVentaSuccess()); // Actualizar el estado en caso de éxito
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.saveVentaFailed(errorMessage)); // Enviar mensaje de error al reducer
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -243,4 +290,6 @@ export function* Saga() {
   yield takeLatest(LOAD_SUCURSALES_LIST, fetchSucursalesSaga);
   yield takeLatest(LOAD_EMPLEADOS_LIST, fetchEmpleadosSaga);
   yield takeLatest(SAVE_USUARIO, saveUsuarioSaga);
+  yield takeLatest(LOAD_CLIENTES_LIST, fetchClientesSaga);
+  yield takeLatest(SAVE_VENTA, saveVentaSaga);
 }

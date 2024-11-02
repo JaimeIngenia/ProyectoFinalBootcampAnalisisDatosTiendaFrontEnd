@@ -128,3 +128,21 @@ export const usuarioSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.usuariosSaveLoading,
 );
+
+// Clientes
+
+export const clientesSelector = createSelector(
+  [selectSlice],
+  state => state.clientes,
+);
+
+export const clientesSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.clientesLoading,
+);
+
+//Usuario
+export const ventaSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.ventasSaveLoading,
+);

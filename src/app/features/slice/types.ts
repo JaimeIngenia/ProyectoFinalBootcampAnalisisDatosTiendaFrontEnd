@@ -19,6 +19,7 @@ export interface GeneralStatesReduxSaga {
   userSimpleById: GetUsuarioSimpleResponse;
   sucursales: Entity[];
   empleados: Entity[];
+  clientes: Entity[];
   usuariosGuardados: SaveUsuarioRequest;
 }
 
@@ -37,6 +38,8 @@ export interface LoadingStates {
   sucursalesLoading: LoadingState;
   empleadosLoading: LoadingState;
   usuariosSaveLoading: LoadingState; // Estado de carga para productos
+  clientesLoading: LoadingState;
+  ventasSaveLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

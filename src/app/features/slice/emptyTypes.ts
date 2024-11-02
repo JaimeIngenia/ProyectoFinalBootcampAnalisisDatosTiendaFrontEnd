@@ -43,6 +43,7 @@ export const usuarioById_Empty: GetUsuarioSimpleResponse = {
   contrasena: '',
   validationLogin: false,
   imagen: '',
+  empleadoId: '',
 };
 
 export const GeneralStatesReduxSaga_empty = {
@@ -64,6 +65,8 @@ export const GeneralStatesReduxSaga_empty = {
 
   empleados: [],
 
+  clientes: [],
+
   usuariosGuardados: usuariosGuardados_Empty,
 
   loadingStates: {
@@ -80,5 +83,7 @@ export const GeneralStatesReduxSaga_empty = {
     sucursalesLoading: defaultLoadingState,
     empleadosLoading: defaultLoadingState,
     usuariosSaveLoading: defaultLoadingState,
+    clientesLoading: defaultLoadingState,
+    ventasSaveLoading: defaultLoadingState,
   },
 };

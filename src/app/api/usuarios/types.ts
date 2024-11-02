@@ -32,6 +32,7 @@ export interface GetUsuarioSimpleResponse {
   contrasena: string; // Contrasena del usuario
   validationLogin?: boolean; // Estado de validación del login
   imagen?: string; // Imagen del usuario (opcional)
+  empleadoId?: string; // GUID del empleado (opcional)
 }
 
 export interface SaveUsuarioRequest {
