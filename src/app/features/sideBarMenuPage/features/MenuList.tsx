@@ -143,6 +143,9 @@ const MenuList = () => {
       </Menu.SubMenu>
 
       <Menu.SubMenu key="Clientes" icon={<BarsOutlined />} title="Clientes">
+        <Menu.Item key="/listarClientes">
+          <Link to={'/listarClientes'}>Listar Clientes</Link>
+        </Menu.Item>
         <Menu.Item key="/crearClientPage">
           <Link to={'/crearClientPage'}>Crear Cliente</Link>
         </Menu.Item>

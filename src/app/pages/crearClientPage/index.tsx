@@ -121,7 +121,7 @@ export default function CrearClientPage() {
             telefono: '',
           });
         }
-        // navigate(`/listaProductos`);
+        navigate(`/listarClientes`);
       } else {
         message.error(
           `Error al guardar el cliente: ${clienteSaveLoading.message}`,

@@ -247,13 +247,14 @@ function* fetchClientesSaga() {
     const clientes: ClienteEntity[] = yield call(getAllClientes);
 
     // Desestructuración y conversión de los datos en el formato ClienteSimple
-    const clientesFiltrados: Entity[] = clientes.map(cliente => ({
-      id: cliente.id,
-      nombre: cliente.nombre, // Usar solo el nombre completo sin apellido
-    }));
+    // const clientesFiltrados: Entity[] = clientes.map(cliente => ({
+    //   id: cliente.id,
+    //   nombre: cliente.nombre, // Usar solo el nombre completo sin apellido
+    // }));
 
     // Enviar los datos procesados al reducer
-    yield put(actions.fetchClientesSuccess(clientesFiltrados));
+    yield put(actions.fetchClientesSuccess(clientes));
+    // yield put(actions.fetchClientesSuccess(clientesFiltrados));
   } catch (error) {
     // Manejo del error y envío del mensaje al reducer
     let errorMessage = 'Unknown error occurred';
