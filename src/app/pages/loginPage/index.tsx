@@ -61,7 +61,6 @@ export default function LoginPage() {
     loginFormRef.current
       ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        // debugger;
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
@@ -120,7 +119,6 @@ export default function LoginPage() {
     registerFormRef.current
       ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        // debugger;
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
@@ -376,7 +374,6 @@ export default function LoginPage() {
             imagen: '',
           });
         }
-        debugger;
         // navigate(`/listaProductos`);
       } else {
         message.error(

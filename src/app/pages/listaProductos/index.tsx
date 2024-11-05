@@ -338,7 +338,6 @@ export function ListaProductos() {
   //UseEffect para cargar los productos
   useEffect(() => {
     if (firstCharge) {
-      // debugger;
       if (loadingProductos?.state === ResponseState.Waiting) {
         dispatch(actions.loadProducts(ResponseState.Started));
       } else if (loadingProductos?.state === ResponseState.Started) {

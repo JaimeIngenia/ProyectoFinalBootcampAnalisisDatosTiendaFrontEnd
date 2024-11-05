@@ -1,6 +1,11 @@
 import { ConfigProvider, FormInstance, message, Spin } from 'antd';
 import { ProductEntityGetById } from 'app/api/products/types';
-import { GeneralContainer } from 'app/components/containers';
+import {
+  ContainerImagesGeneral,
+  CustomTitleGeneal,
+  GeneralContainer,
+  SubGeneralContainer,
+} from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
 import { productoById_Empty } from 'app/features/slice/emptyTypes';
@@ -103,7 +108,6 @@ export default function AgregarProducto() {
     formRef.current
       ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        // debugger;
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
@@ -289,61 +293,24 @@ export default function AgregarProducto() {
 
   return (
     <>
-      {/* <GeneralContainer> */}
       <GeneralContainer>
-        <h1
-          style={{
-            height: '20vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            border: 'solid red 3px',
-          }}
-        >
+        <CustomTitleGeneal>
           {id
             ? 'Actualizar producto a la tienda'
             : 'Agregar producto a la tienda'}
-        </h1>
-        <div
-          style={{
-            height: '80vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '50%',
-              marginBottom: '50px',
-              height: '20vh',
-            }}
-          >
+        </CustomTitleGeneal>
+        <SubGeneralContainer>
+          <ContainerImagesGeneral>
             <img style={{ width: '50%' }} src={agregarProducto} alt="" />
-          </div>
-          <div className={styles.sub_container}>
-            {/* <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: themeColors.colorPrimary,
-                  colorTextBase: themeColors.colorTextBase,
-                  colorTextLightSolid: themeColors.colorTextLightSolid,
-                },
-              }}
-            > */}
+          </ContainerImagesGeneral>
+          <div>
             <ConfigProvider
               theme={{
                 token: {
                   colorPrimary: themeColors.colorPrimary,
                   colorTextBase: themeColors.colorTextBase,
                   colorTextLightSolid: themeColors.colorTextLightSolid,
-                  // Otros tokens personalizados
-                  colorBgBase: themeColors.background, // Fondo general
+                  colorBgBase: themeColors.background,
                   colorBorder: themeColors.colorBorderCustom,
                 },
               }}
@@ -366,7 +333,7 @@ export default function AgregarProducto() {
               </Spin>
             </ConfigProvider>
           </div>
-        </div>
+        </SubGeneralContainer>
       </GeneralContainer>
     </>
   );

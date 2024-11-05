@@ -53,7 +53,7 @@ const StyledSelect = styled(Select)`
   }
 `;
 
-function CustomSelect({ list, onChange, label, value }) {
+function CustomSelect({ list, onChange, label, value, disableCustom = false }) {
   const { themeColors, darkMode } = useGeneralContext(); // Obtenemos los colores del contexto
 
   return (
@@ -64,6 +64,7 @@ function CustomSelect({ list, onChange, label, value }) {
         allowClear
         placeholder={`Seleccione ${label}`}
         // style={{ width: '100%' }}
+        // disabled={!disableCustom}
         dropdownStyle={{
           background: themeColors.background, // Aplicar el fondo del tema al dropdown
           color: themeColors.text, // Aplicar color de texto del tema

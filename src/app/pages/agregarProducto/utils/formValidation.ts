@@ -8,7 +8,7 @@ import {
   minLengthRegexSkills,
 } from './regex';
 import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo correctamente
-import { ClienteSelect } from 'app/api/clientes/types';
+import { ClienteEntitySave, ClienteSelect } from 'app/api/clientes/types';
 import { DetalleVentaForm } from 'app/api/detalleVenta/types';
 
 export function formValidation(values: ProductoFormValues) {
@@ -153,6 +153,7 @@ export function formClientSelectValidation(values: ClienteSelect) {
 
   return _errors;
 }
+
 export function formDetalleVentaValidation(values: DetalleVentaForm) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
 
@@ -172,6 +173,43 @@ export function formDetalleVentaValidation(values: DetalleVentaForm) {
   return _errors;
 }
 
+export function formClientSaveValidation(values: ClienteEntitySave) {
+  const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
+
+  const maxLength = 50; // Asigna la longitud máxima para algunos campos
+  const minLength = 2; // Longitud mínima para "nombre"
+
+  // Validación de "nombre"
+  if (!values.nombre || values.nombre.trim().length === 0) {
+    _errors['nombre'] = 'El nombre es obligatorio';
+  }
+
+  if (!values.apellido || values.apellido.trim().length === 0) {
+    _errors['apellido'] = 'El apellido es obligatorio';
+  }
+
+  if (!values.email || values.email.trim().length === 0) {
+    _errors['email'] = 'El email es obligatorio';
+  }
+
+  if (!values.telefono || values.telefono.trim().length === 0) {
+    _errors['telefono'] = 'El telefono es obligatorio';
+  }
+  debugger;
+
+  return _errors;
+
+  // else if (values.nombre.trim().length < minLength) {
+  //   _errors['nombre'] = `El nombre debe tener al menos ${minLength} caracteres`;
+  // } else if (!createMaxLengthRegex(maxLength).test(values.nombre)) {
+  //   _errors['nombre'] = `El nombre debe tener máximo ${maxLength} caracteres`;
+  // } else if (
+  //   containsOnlyNumbers(values.nombre) ||
+  //   containsAllowedSymbolsForSkills(values.nombre)
+  // ) {
+  //   _errors['nombre'] = 'El nombre no puede contener solo números o símbolos';
+  // }
+}
 // export const funcionGeneradoraValidaciones = ({ maxLength, label, field }) => [
 //   ({ getFieldValue }) => {
 //     const value = getFieldValue(field);

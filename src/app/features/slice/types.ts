@@ -26,9 +26,9 @@ export interface GeneralStatesReduxSaga {
 // Define una interfaz para centralizar los estados de carga
 export interface LoadingStates {
   rolesLoading: LoadingState; // Estado de carga para roles
-  categoriasLoading: LoadingState; // Estado de carga para categorías
-  productosLoading: LoadingState; // Estado de carga para productos
-  productosSaveLoading: LoadingState; // Estado de carga para productos
+  categoriasLoading: LoadingState;
+  productosLoading: LoadingState;
+  productosSaveLoading: LoadingState;
   productosDeleteLoading: LoadingState;
   productosUpdateLoading: LoadingState;
   productosGetByIdLoading: LoadingState;
@@ -37,10 +37,11 @@ export interface LoadingStates {
   userSimpleByIdLoading: LoadingState;
   sucursalesLoading: LoadingState;
   empleadosLoading: LoadingState;
-  usuariosSaveLoading: LoadingState; // Estado de carga para productos
+  usuariosSaveLoading: LoadingState;
   clientesLoading: LoadingState;
   ventasSaveLoading: LoadingState;
-  detalleVentaLoading: LoadingState;
+  detalleVentaSaveLoading: LoadingState;
+  clienteSaveLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

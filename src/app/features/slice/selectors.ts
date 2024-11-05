@@ -149,5 +149,11 @@ export const ventaSaveSelectorLoading = createSelector(
 //Detalle Venta
 export const detalleVentaSaveSelectorLoading = createSelector(
   [selectSlice],
-  state => state.loadingStates.detalleVentaLoading,
+  state => state.loadingStates.detalleVentaSaveLoading,
+);
+
+//Cliente
+export const clienteSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.clienteSaveLoading,
 );

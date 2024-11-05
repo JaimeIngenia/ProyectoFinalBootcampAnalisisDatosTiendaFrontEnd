@@ -13,6 +13,7 @@ import {
   GetUsuarioSimpleResponse,
   UsuarioEntity,
 } from 'app/api/usuarios/types';
+import { ClienteEntitySave } from 'app/api/clientes/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -350,6 +351,8 @@ const slice = createSlice({
 
     //Clientes
 
+    // -> GetAll
+
     fetchClientesSuccess(state, action: PayloadAction<Entity[]>) {
       state.clientes = action.payload; // Actualiza el estado con los clientes obtenidos
       state.loadingStates.clientesLoading = {
@@ -358,7 +361,6 @@ const slice = createSlice({
       };
     },
 
-    // Acción para manejar errores al cargar clientes
     getAllClientesFailed(state, action: PayloadAction<any>) {
       state.loadingStates.clientesLoading = {
         state: ResponseState.Finished,
@@ -373,7 +375,7 @@ const slice = createSlice({
       };
     },
 
-    //vENTAS
+    //Ventas
 
     saveVentaSuccess(state) {
       state.loadingStates.ventasSaveLoading = {
@@ -398,25 +400,45 @@ const slice = createSlice({
 
     //Detalle Ventas
     loadSaveDetalleVenta(state, action: PayloadAction<ResponseState>) {
-      state.loadingStates.detalleVentaLoading = {
+      state.loadingStates.detalleVentaSaveLoading = {
         state: action.payload,
         status: false,
       };
     },
-    // Reducer para éxito al guardar detalle de venta
     saveDetalleVentaSuccess(state, action: PayloadAction<any>) {
-      // state.detalleVenta = action.payload;
-      state.loadingStates.detalleVentaLoading = {
+      state.loadingStates.detalleVentaSaveLoading = {
         state: ResponseState.Finished,
         status: true,
       };
     },
-    // Reducer para fallo al guardar detalle de venta
     saveDetalleVentaFailed(state, action: PayloadAction<string>) {
-      state.loadingStates.detalleVentaLoading = {
+      state.loadingStates.detalleVentaSaveLoading = {
         state: ResponseState.Finished,
         status: false,
         message: action.payload,
+      };
+    },
+
+    //Clientes
+
+    // -> Save
+    reducerSaveClienteSuccess(state, action: PayloadAction<ClienteEntitySave>) {
+      // state.clientesGuardados = action.payload;
+      state.loadingStates.clienteSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+    reducerSaveClienteFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.clienteSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+    loadSaveCliente(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.clienteSaveLoading = {
+        state: action.payload,
       };
     },
   },

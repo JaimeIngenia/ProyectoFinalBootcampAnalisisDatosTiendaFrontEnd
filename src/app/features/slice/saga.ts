@@ -19,6 +19,7 @@ import {
   LOAD_CLIENTES_LIST,
   SAVE_VENTA,
   SAVE_DETALLE_VENTA,
+  SAVE_CLIENTE,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -43,8 +44,8 @@ import {
 import { getAllSucursales } from 'app/api/sucursales';
 import { EmpleadoEntity } from 'app/api/empleados/types';
 import { getAllEmpleados } from 'app/api/empleados';
-import { ClienteEntity } from 'app/api/clientes/types';
-import { getAllClientes } from 'app/api/clientes';
+import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
+import { getAllClientes, saveCliente } from 'app/api/clientes';
 import { SaveVentaRequest } from 'app/api/venta/types';
 import { saveVenta } from 'app/api/venta';
 import { saveDetalleVenta } from 'app/api/detalleVenta';
@@ -294,6 +295,18 @@ function* saveDetalleVentaSaga(action: any) {
   }
 }
 
+function* fetchSaveClienteSaga(action: any) {
+  try {
+    const savedCliente: ClienteEntitySave = yield call(
+      saveCliente,
+      action.payload,
+    );
+    yield put(actions.reducerSaveClienteSuccess(savedCliente));
+  } catch (error) {
+    yield put(actions.reducerSaveClienteFailure(error));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -311,4 +324,5 @@ export function* Saga() {
   yield takeLatest(LOAD_CLIENTES_LIST, fetchClientesSaga);
   yield takeLatest(SAVE_VENTA, saveVentaSaga);
   yield takeLatest(SAVE_DETALLE_VENTA, saveDetalleVentaSaga);
+  yield takeLatest(SAVE_CLIENTE, fetchSaveClienteSaga);
 }

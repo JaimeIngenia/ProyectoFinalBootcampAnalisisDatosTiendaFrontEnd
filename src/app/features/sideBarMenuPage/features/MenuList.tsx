@@ -142,6 +142,12 @@ const MenuList = () => {
         </Menu.Item>
       </Menu.SubMenu>
 
+      <Menu.SubMenu key="Clientes" icon={<BarsOutlined />} title="Clientes">
+        <Menu.Item key="/crearClientPage">
+          <Link to={'/crearClientPage'}>Crear Cliente</Link>
+        </Menu.Item>
+      </Menu.SubMenu>
+
       <Menu.Item key="/usuario" icon={<UserOutlined />}>
         <Link to={'/user'}>Usuario</Link>
       </Menu.Item>

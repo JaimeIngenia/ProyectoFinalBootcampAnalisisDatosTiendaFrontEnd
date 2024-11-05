@@ -1,56 +1,43 @@
-import React, { useEffect, useRef } from 'react';
-import { useState } from 'react';
 import {
-  Modal,
-  Button,
-  Form,
-  Input,
-  Select,
-  Table,
-  InputNumber,
   ConfigProvider,
-  theme,
-  Spin,
+  Form,
   FormInstance,
   message,
+  Modal,
+  Select,
 } from 'antd';
-import { CustomButtonn, GeneralContainer } from 'app/components/containers';
+import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
-import CustomSelect from 'app/features/customSelect';
-import {
-  formClientSelectValidation,
-  formDetalleVentaValidation,
-  formRegisterValidation,
-} from '../agregarProducto/utils/formValidation';
-import { Entity, ResponseState } from 'app/features/slice/types';
 import { useSlice } from 'app/features/slice';
-import { useDispatch, useSelector } from 'react-redux';
+import { usuarioById_Empty } from 'app/features/slice/emptyTypes';
 import {
   LOAD_CLIENTES_LIST,
   LOAD_PRODUCTOS_LIST,
 } from 'app/features/slice/sagaActions';
-import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
-import { usuarioById_Empty } from 'app/features/slice/emptyTypes';
-import { rulesForm } from '../agregarProducto/utils/rulesForm';
-import { set } from 'shelljs';
+import { Entity, ResponseState } from 'app/features/slice/types';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
-  productosSelector,
-  productosSelectorLoading,
-} from 'app/features/slice/selectors';
+  formClientSelectValidation,
+  formDetalleVentaValidation,
+} from '../agregarProducto/utils/formValidation';
+import MainFormDetalleVenta from './features/MainFormDetalleVenta';
+import MainFormVenta from './features/mainFormVenta';
+import { generateGUID } from './features/utils/functions';
+import { ProductEntityGetAll } from 'app/api/products/types';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
 export default function CrearFacturaPage() {
-  //redux
+  // Redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
-  //   Context
+  const navigate = useNavigate();
+  // Context
   const {
-    darkMode,
-    categorias,
-    loadingCategorias,
     themeColors,
-    productosSaveLoading,
     clientes,
     loadinClientes,
     loadingusuarioSimpleGetById,
@@ -62,9 +49,29 @@ export default function CrearFacturaPage() {
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
+  // Estado para verificar si la venta ya ha sido creada
+  const [ventaCreada, setVentaCreada] = useState(false);
 
   const [visible, setVisible] = useState(false); // Modal para agregar producto
-  const [productosSeleccionados, setProductosSeleccionados] = useState([]); // Lista de productos seleccionados
+  const [productosListStateCompletos, setProductoListStateCompletos] = useState<
+    Array<ProductEntityGetAll>
+  >([]); // Lista de productos seleccionados
+  const [productosSeleccionados, setProductosSeleccionados] = useState<
+    {
+      id: string;
+      nombre: string;
+      cantidad: number;
+      precio: number;
+      total: number;
+    }[]
+  >([]);
+  const [nuevoProducto, setNuevoProducto] = useState<{
+    id: string;
+    nombre: string;
+    cantidad: number;
+    precio: number;
+    total: number;
+  } | null>(null);
   const [total, setTotal] = useState(0); // Total de la factura
 
   // Productos y clientes - Simulación de datos o consulta a la API
@@ -74,24 +81,93 @@ export default function CrearFacturaPage() {
     setVisible(false);
   };
 
+  useEffect(() => {
+    console.log('ventaCreada:', ventaCreada);
+  }, [ventaCreada]);
+
   // Guardar el producto seleccionado en el detalle de la factura
   const handleAgregarProducto = (producto, cantidad) => {
-    // Preparar el payload para la acción de guardar venta
     if (ventaId !== '') {
+      // Datos del producto seleccionados (puedes adaptar estos datos según tu estructura real)
+      const productoSeleccionado = productosListStateCompletos.find(
+        p => p.id === producto,
+      );
+
+      if (productoSeleccionado) {
+        if (productosListStateCompletos) {
+          const nuevoProducto = {
+            id: productoSeleccionado.id,
+            nombre: productoSeleccionado.nombre,
+            cantidad: cantidad,
+            precio: productoSeleccionado.precio,
+            total: productoSeleccionado.precio * cantidad,
+          };
+
+          // Actualizar productos seleccionados
+          setNuevoProducto(nuevoProducto);
+          setTotal(prevTotal => prevTotal + nuevoProducto.total);
+        }
+
+        // Actualizar el total general
+
+        // const payload = {
+        //   cantidad: cantidad,
+        //   productoId: producto,
+        //   ventaId: ventaId,
+        // };
+        // dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
+        // dispatch({
+        //   type: 'SAVE_DETALLE_VENTA',
+        //   payload: payload,
+        // });
+        closeModal();
+      }
+    }
+    if (detalleVentaFormRef.current) {
+      detalleVentaFormRef.current.resetFields();
+      setdetalleVentaFormData({
+        cantidad: 0,
+        productoId: '',
+        ventaId: '',
+      });
+    }
+  };
+
+  // Función para confirmar la factura y enviar los productos al backend
+  const handleConfirmarFactura = () => {
+    productosSeleccionados.forEach(producto => {
       const payload = {
-        cantidad: cantidad,
-        productoId: producto,
+        cantidad: producto.cantidad,
+        productoId: producto.id,
         ventaId: ventaId,
       };
-      debugger;
-      dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
+
+      // Enviar cada producto al backend
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress));
       dispatch({
         type: 'SAVE_DETALLE_VENTA',
         payload: payload,
       });
-      closeModal();
-    }
+    });
+
+    // Puedes agregar un reset aquí si deseas limpiar los productos seleccionados y el total después de confirmar
+    setProductosSeleccionados([]);
+    setTotal(0);
+    setVentaCreada(false);
+    navigate(`/listaProductos`);
   };
+
+  useEffect(() => {
+    if (nuevoProducto) {
+      setProductosSeleccionados(prev => [...prev, nuevoProducto]);
+      setNuevoProducto(null); // Restablecer el estado de nuevoProducto
+    }
+    if (setProductosSeleccionados.length > 0) {
+      setIsButtonConfrimarFacturaisabled(false);
+    } else {
+      setIsButtonConfrimarFacturaisabled(true);
+    }
+  }, [nuevoProducto]);
 
   // Columnas de la tabla para el resumen de productos
   const columns = [
@@ -188,7 +264,6 @@ export default function CrearFacturaPage() {
     detalleVentaFormRef.current
       ?.validateFields([name]) // Valida solo el campo actual
       .then(() => {
-        // debugger;
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
@@ -196,12 +271,13 @@ export default function CrearFacturaPage() {
       });
   };
 
+  // useEffect para validar el formulario solo la primera vez
   useEffect(() => {
-    const errors = formClientSelectValidation(clientFormData); // Ejecuta la validación completa
-
-    setIsButtonAgregarProductoDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
-    console.log('isButtonRegisterDisabled:', Object.keys(errors).length > 0);
-  }, [clientFormData]);
+    const errors = formClientSelectValidation(clientFormData);
+    if (!ventaCreada) {
+      setIsButtonAgregarProductoDisabled(Object.keys(errors).length > 0);
+    }
+  }, [clientFormData, ventaCreada]);
 
   useEffect(() => {
     const errors = formDetalleVentaValidation(detalleVentaFormData); // Ejecuta la validación completa
@@ -272,6 +348,19 @@ export default function CrearFacturaPage() {
           });
           setProductosListStateSelect(dataList);
 
+          let dataList2: Array<ProductEntityGetAll> = [];
+
+          productos?.forEach(r => {
+            dataList2.push({
+              id: r.id,
+              nombre: r.nombre,
+              descripcion: r.descripcion,
+              precio: r.precio,
+              categoriaNombre: r.categoriaNombre,
+            });
+          });
+          setProductoListStateCompletos(dataList2);
+
           if (loadingSpinProductos) setLoadingSpinProductos(false);
         }
       } else {
@@ -306,47 +395,42 @@ export default function CrearFacturaPage() {
       }
     }
   }, [loadingusuarioSimpleGetById, usuarioSimpleGetById]);
-  function generateGUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
 
-  // Función para abrir el modal
   const openModal = () => {
-    // Genera el ID en el frontend
-    const ventaId = generateGUID();
-    setVentaId(ventaId);
-    // aqui esta el id del empleado
-    const idEmpleado = productByIdListState.empleadoId;
-    // aquí esta el id del cliente
-    if (!clientFormRef.current) {
-      return;
+    if (!ventaCreada) {
+      // Genera el ID en el frontend
+      const ventaId = generateGUID();
+      setVentaId(ventaId);
+
+      if (!clientFormRef.current) {
+        return;
+      }
+      const formValues = clientFormRef.current.getFieldsValue();
+      const idCliente = formValues.clienteId;
+      const idEmpleado = productByIdListState.empleadoId;
+
+      // Obtiene la fecha actual en el formato necesario
+      const fecha = new Date().toISOString();
+
+      // Preparar el payload para la acción de guardar venta
+      const payload = {
+        id: ventaId,
+        clienteId: idCliente,
+        empleadoId: idEmpleado,
+        fecha: fecha,
+      };
+
+      // Enviar la acción de guardar venta solo la primera vez
+      dispatch(actions.loadSaveVenta(ResponseState.InProgress));
+      dispatch({
+        type: 'SAVE_VENTA',
+        payload: payload,
+      });
+      // Marcar que la venta ha sido creada
+      setVentaCreada(true);
     }
-    const formValues = clientFormRef.current.getFieldsValue();
 
-    const idCliente = formValues.clienteId;
-
-    // Obtiene la fecha actual en el formato necesario
-    const fecha = new Date().toISOString();
-
-    // Preparar el payload para la acción de guardar venta
-    const payload = {
-      id: ventaId,
-      clienteId: idCliente,
-      empleadoId: idEmpleado,
-      fecha: fecha,
-    };
-
-    debugger;
-    dispatch(actions.loadSaveVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
-    dispatch({
-      type: 'SAVE_VENTA',
-      payload: payload,
-    });
-
+    // Abre el modal para agregar productos
     setVisible(true);
   };
 
@@ -413,88 +497,27 @@ export default function CrearFacturaPage() {
             colorPrimary: themeColors.colorPrimary,
             colorTextBase: themeColors.colorTextBase,
             colorTextLightSolid: themeColors.colorTextLightSolid,
-            // Otros tokens personalizados
-            colorBgBase: themeColors.background, // Fondo general
+            colorBgBase: themeColors.background,
             colorBorder: themeColors.colorBorderCustom,
           },
         }}
       >
-        <Form
-          form={clientForm}
-          //   layout="vertical"
-          ref={clientFormRef}
-          name="clientFormularioName"
-        >
-          <Form.Item
-            required
-            label="Cliente"
-            name="clienteId"
-            rules={rulesForm.rulesVentaId}
-            validateTrigger="onBlur"
-          >
-            <Spin spinning={loadingSpinClientes}>
-              <CustomSelect
-                list={clienteListState}
-                onChange={handleSelectChange}
-                label="Un Cliente"
-                value={clientFormData.clienteId}
-              ></CustomSelect>
-            </Spin>
-          </Form.Item>
-        </Form>
-
-        <ConfigProvider
-          theme={{
-            ...(darkMode
-              ? {
-                  token: {
-                    colorPrimary: themeColors.colorPrimary,
-                    colorText: themeColors.colorTextBase,
-                    colorTextHeading: themeColors.colorTextBase,
-                    colorBgContainer: themeColors.background,
-                    colorBgElevated: themeColors.background,
-                    colorBorder: themeColors.colorPrimary,
-                    colorTextBase: themeColors.colorTextBase,
-                    colorTextPlaceholder: themeColors.colorTextLightSolid,
-                  },
-                  algorithm: theme.darkAlgorithm,
-                }
-              : {}),
-          }}
-        >
-          <Table
-            dataSource={productosSeleccionados}
-            columns={columns}
-            rowKey="id"
-            pagination={false}
-          />
-        </ConfigProvider>
-        <div
-          style={{
-            marginTop: '20px',
-            fontWeight: 'bold',
-            color: themeColors.text,
-          }}
-        >
-          Total: {total}
-        </div>
-        <CustomButtonn
-          type="primary"
-          onClick={openModal}
-          disabled={isButtonAgregarProductoDisabled}
-        >
-          Agregar Producto
-        </CustomButtonn>
-        <CustomButtonn
-          type="primary"
-          style={{ marginLeft: '10px' }}
-          onClick={() => {
-            /* Guardar factura */
-          }}
-          disabled={isButtonConfrimarFacturaDisabled}
-        >
-          Confirmar Factura
-        </CustomButtonn>
+        <MainFormVenta
+          clientForm={clientForm}
+          clientFormRef={clientFormRef}
+          loadingSpinClientes={loadingSpinClientes}
+          clienteListState={clienteListState}
+          handleSelectChange={handleSelectChange}
+          clientFormData={clientFormData}
+          productosSeleccionados={productosSeleccionados}
+          columns={columns}
+          openModal={openModal}
+          total={total}
+          isButtonAgregarProductoDisabled={isButtonAgregarProductoDisabled}
+          isButtonConfrimarFacturaDisabled={isButtonConfrimarFacturaDisabled}
+          handleConfirmarFactura={handleConfirmarFactura}
+          ventaCreada
+        />
       </ConfigProvider>
 
       {/* Modal para agregar productos */}
@@ -504,62 +527,19 @@ export default function CrearFacturaPage() {
         onCancel={closeModal}
         footer={null}
       >
-        <Form
-          form={detalleVentaForm}
-          layout="vertical"
-          ref={detalleVentaFormRef}
-          name={'detalleVentaForm'}
-          onFinish={values =>
-            handleAgregarProducto(values.productoId, values.cantidad)
+        <MainFormDetalleVenta
+          detalleVentaForm={detalleVentaForm}
+          detalleVentaFormRef={detalleVentaFormRef}
+          detalleVentaFormData={detalleVentaFormData}
+          handleAgregarProducto={handleAgregarProducto}
+          loadingSpinProductos={loadingSpinProductos}
+          productosListStateSelect={productosListStateSelect}
+          handleSelectProductoChange={handleSelectProductoChange}
+          handleProductoChange={handleProductoChange}
+          isButtonConfrimarDetalleVentaDisabled={
+            isButtonConfrimarDetalleVentaDisabled
           }
-        >
-          <Form.Item
-            required
-            label="Pdoducto"
-            name="productoId"
-            rules={rulesForm.rulesProductoId}
-            validateTrigger="onBlur"
-          >
-            <Spin spinning={loadingSpinProductos}>
-              <CustomSelect
-                list={productosListStateSelect}
-                onChange={handleSelectProductoChange}
-                label="Un Producto"
-                value={detalleVentaFormData.productoId}
-              ></CustomSelect>
-            </Spin>
-          </Form.Item>
-          <Form.Item
-            required
-            label="Cantidad"
-            name="cantidad"
-            // rules={[{ required: true, message: 'Ingrese la cantidad' }]}
-            rules={rulesForm.rulesPrecio}
-            validateTrigger="onBlur"
-          >
-            <Input
-              type="number"
-              //   min={1}
-              placeholder="Cantidad del Producto"
-              onChange={handleProductoChange}
-              name="cantidad"
-              style={
-                darkMode
-                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
-                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
-              }
-            />
-          </Form.Item>
-          <Form.Item>
-            <CustomButtonn
-              type="primary"
-              htmlType="submit"
-              disabled={isButtonConfrimarDetalleVentaDisabled}
-            >
-              Agregar
-            </CustomButtonn>
-          </Form.Item>
-        </Form>
+        />
       </Modal>
     </GeneralContainer>
   );

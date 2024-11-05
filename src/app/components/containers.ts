@@ -10,15 +10,61 @@ export const GeneralContainer = styled.div<{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: solid red 3px;
+  // border: solid red 3px;
   margin-right: 32px;
 `;
+
+export const CustomTitleGeneal = styled.h1<{
+  theme: { background: string; text: string };
+}>`
+  // border: 3px solid red;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+export const CustomContainerForm = styled.div`
+  height: 60vh;
+  // width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 3px solid blue;
+`;
+
+export const ContainerImagesGeneral = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin-bottom: 50px;
+  height: 20vh;
+`;
+
+export const SubGeneralContainer = styled.div`
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // border: 3px solid green;
+`;
+
 export const GeneralContainer2 = styled.div<{
   theme: { background: string; text: string };
 }>`
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
 `;
+
 export const CustomButtonn = styled(Button)`
   background-color: ${({ theme }) => theme.colorPrimary} !important;
   color: ${({ theme }) => theme.colorTextLightSolid} !important;

@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { GetUsuarioSimpleResponse } from './api/usuarios/types';
 import { usuarioById_Empty } from './features/slice/emptyTypes';
 import CrearFacturaPage from './pages/crearFacturaPage';
+import CrearClientPage from './pages/crearClientPage';
 
 export function App() {
   //Genral flow redux
@@ -124,6 +125,8 @@ export function App() {
               <Route path="/agregarProductos" element={<AgregarProducto />} />
               <Route path="/editarProducto/:id" element={<AgregarProducto />} />
               <Route path="/crearFactura" element={<CrearFacturaPage />} />
+              <Route path="/crearClientPage" element={<CrearClientPage />} />
+              {/* <Route path="/crearClientes" element={<CrearClientPage />} /> */}
               {/* <Route path="/crearFactura/:id" element={<CrearFacturaPage />} /> */}
             </Route>
           </Routes>
