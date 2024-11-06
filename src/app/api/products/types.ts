@@ -6,6 +6,7 @@ export interface ProductEntityGetAll {
   descripcion: string;
   precio: number;
   categoriaNombre: string;
+  imagen?: string;
 }
 export interface ProductEntityGetById {
   id: string;

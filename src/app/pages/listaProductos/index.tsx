@@ -15,7 +15,7 @@ import {
   theme,
 } from 'antd';
 import { ProductEntityGetAll } from 'app/api/products/types';
-import { GeneralContainer } from 'app/components/containers';
+import { CustomTitleGeneal, GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
 import {
@@ -35,6 +35,7 @@ import { useNavigate } from 'react-router-dom';
 import FilterSection from './features/filterSection';
 import type { ColumnsType } from 'antd/es/table';
 import { FilterDropdownProps } from 'antd/es/table/interface';
+import ImageWithLoading from './features/imageWithLoading';
 
 const { darkAlgorithm } = theme;
 
@@ -124,7 +125,30 @@ export function ListaProductos() {
     confirm();
   };
 
+  // Estado para controlar si la imagen está cargando
+  const [loading, setLoading] = useState(true);
+
   const columns: ColumnsType<ProductEntityGetAll> = [
+    {
+      key: '1',
+      title: 'Imagen',
+      dataIndex: 'imagen',
+      render: imagen => (
+        <ImageWithLoading src={imagen} alt="Imagen del producto" width={100} />
+      ),
+    },
+    // {
+    //   key: '1',
+    //   title: 'Imagen',
+    //   dataIndex: 'imagen',
+    //   render: (imagen: string) => (
+    //     <img
+    //       src={imagen}
+    //       alt="Imagen del producto"
+    //       style={{ width: 100, height: 'auto' }}
+    //     />
+    //   ),
+    // },
     {
       key: '2',
       title: 'Nombre',
@@ -458,18 +482,7 @@ export function ListaProductos() {
   return (
     <>
       <GeneralContainer>
-        <h1
-          style={{
-            height: '20vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            border: 'solid red 3px',
-          }}
-        >
-          ListaProductos de la tienda
-        </h1>
+        <CustomTitleGeneal>ListaProductos de la tienda</CustomTitleGeneal>
 
         {/* <FilterSection
           onFilterChange={filters => {}}
@@ -481,7 +494,7 @@ export function ListaProductos() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: 'solid blue 3px',
+            // border: 'solid blue 3px',
             width: '100%',
             height: '80vh',
           }}
@@ -535,7 +548,12 @@ export function ListaProductos() {
                   : {}),
               }}
             >
-              <Table columns={columns} dataSource={productosListState}></Table>
+              <Table
+                columns={columns}
+                dataSource={productosListState}
+                size="small"
+                pagination={{ pageSize: 3 }}
+              ></Table>
             </ConfigProvider>
           </Spin>
         </div>
@@ -543,21 +561,3 @@ export function ListaProductos() {
     </>
   );
 }
-
-// <ConfigProvider
-//   theme={{
-//     token: {
-//       colorPrimary: '0C9999',
-//     },
-
-//     // 1. Use dark algorithm
-
-//     algorithm: theme.darkAlgorithm,
-
-//     // 2. Combine dark algorithm and compact algorithm darkAlgorithm
-
-//     // algorithm: [theme.lightAlgorithm, theme.compactAlgorithm],
-//   }}
-// >
-//   <Table columns={columns} dataSource={productosListState}></Table>
-// </ConfigProvider>;

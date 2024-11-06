@@ -14,8 +14,8 @@ import { DetalleVentaForm } from 'app/api/detalleVenta/types';
 export function formValidation(values: ProductoFormValues) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
 
-  const maxLength = 15; // Asigna la longitud máxima para los campos
-  const minLength = 2; // Longitud mínima para nombre y descripción
+  const maxLength = 150; // Asigna la longitud máxima para los campos
+  const minLength = 1; // Longitud mínima para nombre y descripción
 
   // Validación de "nombre"
   if (!values.nombre || values.nombre.trim().length === 0) {

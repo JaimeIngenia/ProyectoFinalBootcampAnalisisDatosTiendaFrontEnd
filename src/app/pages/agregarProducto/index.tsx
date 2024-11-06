@@ -73,6 +73,7 @@ export default function AgregarProducto() {
     descripcion: '',
     precio: 0,
     categoriaId: '',
+    imagen: '',
   });
 
   const saveProduct = () => {
@@ -83,6 +84,7 @@ export default function AgregarProducto() {
     const productData = {
       ...formValues,
     };
+    debugger;
 
     dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
@@ -212,6 +214,7 @@ export default function AgregarProducto() {
         descripcion: '',
         precio: 0,
         categoriaId: '',
+        imagen: '',
       });
     }
   }, [productoGetById, loadingProductoGetById, id, dispatch]);
@@ -231,6 +234,7 @@ export default function AgregarProducto() {
         descripcion: productoGetById.descripcion,
         precio: productoGetById.precio,
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
+        imagen: '',
       };
 
       formRef.current?.setFieldsValue(productoConCategoriaId);
@@ -257,6 +261,7 @@ export default function AgregarProducto() {
             descripcion: '',
             precio: 0,
             categoriaId: '',
+            imagen: '',
           });
         }
         navigate(`/listaProductos`);

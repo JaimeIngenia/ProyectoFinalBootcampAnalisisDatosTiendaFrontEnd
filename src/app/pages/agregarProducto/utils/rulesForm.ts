@@ -16,12 +16,12 @@ import {
 
 export const rulesForm = {
   rulesNombre: funcionGeneradoraValidaciones({
-    maxLength: 15,
+    maxLength: 30,
     label: 'Nombre',
     field: 'nombre',
   }),
   rulesDescripcion: funcionGeneradoraValidaciones({
-    maxLength: 15,
+    maxLength: 150,
     label: 'Descripcion',
     field: 'descripcion',
   }),

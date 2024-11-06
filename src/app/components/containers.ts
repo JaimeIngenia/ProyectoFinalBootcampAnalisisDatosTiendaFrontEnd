@@ -37,7 +37,7 @@ export const CustomContainerForm = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 3px solid blue;
+  // border: 3px solid blue;
 `;
 
 export const ContainerImagesGeneral = styled.div`

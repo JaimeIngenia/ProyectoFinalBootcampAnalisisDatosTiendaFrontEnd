@@ -134,6 +134,29 @@ export default function MainForm({
           </Item>
         </Col>
       </Row>
+      <Row>
+        {/* Campo Imagen */}
+        <Col xs={24}>
+          <Form.Item
+            label="Imagen"
+            name="imagen"
+            rules={rulesForm.rulesDescripcion}
+            validateTrigger="onBlur"
+          >
+            <Input
+              placeholder="Imagen del Producto"
+              onChange={handleChange}
+              name="imagen"
+              // style={{ border: `2px solid ${themeColors.colorBorderCustom}` }}
+              style={
+                darkMode
+                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
+                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
+              }
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Row>
         <Col xs={24}>

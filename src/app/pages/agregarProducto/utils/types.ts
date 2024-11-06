@@ -11,4 +11,5 @@ export interface ProductEntitySave {
   descripcion?: string;
   precio?: number;
   categoriaId?: string;
+  imagen?: string;
 }
