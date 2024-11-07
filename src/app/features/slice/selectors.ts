@@ -162,3 +162,8 @@ export const movimientoInventarioSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.movimientoInventarioSaveLoading,
 );
+//Fidelización save
+export const fidelizacionSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.fidelizacionSaveLoading,
+);

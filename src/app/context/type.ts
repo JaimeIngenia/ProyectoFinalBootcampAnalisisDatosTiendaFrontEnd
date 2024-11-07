@@ -42,4 +42,5 @@ export type GeneralContextType = {
   detalleVentaSaveLoading: LoadingState;
   clienteSaveLoading: LoadingState;
   movimientoInventarioSaveLoading: LoadingState;
+  fidelizacionSaveLoading: LoadingState;
 };

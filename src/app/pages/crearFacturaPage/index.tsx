@@ -48,6 +48,7 @@ export default function CrearFacturaPage() {
     loadingProductos,
     detalleVentaSaveLoading,
     movimientoInventarioSaveLoading,
+    fidelizacionSaveLoading,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -83,6 +84,13 @@ export default function CrearFacturaPage() {
     tipoMovimientoId: '',
     fecha: '',
   });
+
+  const [fidelizacionData, setFidelizacionData] = useState({
+    puntos: 0,
+    clienteId: '',
+    membresiaId: '',
+  });
+
   const [total, setTotal] = useState(0); // Total de la factura
 
   // Productos y clientes - Simulación de datos o consulta a la API
@@ -170,7 +178,6 @@ export default function CrearFacturaPage() {
           tipoMovimientoId: '1b49d538-1317-4a53-b07e-196a80027dd1', //Salida de producto
           fecha: new Date().toISOString(),
         };
-        debugger;
 
         // Enviar cada producto al backend
         dispatch(
@@ -179,6 +186,47 @@ export default function CrearFacturaPage() {
         dispatch({
           type: 'SAVE_MOVIMIENTO_INVENTARIO',
           payload: payloadMovimientoInventario,
+        });
+      });
+    }
+    if (fidelizacionData.clienteId) {
+      // Calcular el total de productos seleccionados
+      const totalProductos = productosSeleccionados.reduce(
+        (total, producto) => total + producto.cantidad,
+        0,
+      );
+
+      // Determinar los puntos de fidelización según el total de productos
+      let puntos = 0;
+      if (totalProductos > 30) {
+        puntos = 50;
+      } else if (totalProductos > 25) {
+        puntos = 25;
+      } else if (totalProductos > 20) {
+        puntos = 20;
+      } else if (totalProductos > 15) {
+        puntos = 15;
+      } else if (totalProductos > 10) {
+        puntos = 10;
+      } else if (totalProductos > 5) {
+        puntos = 5;
+      }
+
+      productosSeleccionados.forEach(producto => {
+        const payloadFidelizacion = {
+          puntos: puntos,
+          clienteId: fidelizacionData.clienteId,
+          membresiaId: '9F3B5F63-618F-4E9D-8890-AB219C3C3586', //Basic
+        };
+        debugger;
+
+        // Enviar cada producto al backend
+        dispatch(
+          actions.loadSaveMovimientoInventario(ResponseState.InProgress),
+        );
+        dispatch({
+          type: 'SAVE_FIDELIZACION',
+          payload: payloadFidelizacion,
         });
       });
     }
@@ -462,6 +510,11 @@ export default function CrearFacturaPage() {
         empleadoId: productByIdListState.empleadoId, // Actualiza solo el idCliente
       }));
 
+      setFidelizacionData(prevState => ({
+        ...prevState,
+        clienteId: idCliente,
+      }));
+
       // Enviar la acción de guardar venta solo la primera vez
       dispatch(actions.loadSaveVenta(ResponseState.InProgress));
       dispatch({
@@ -539,6 +592,21 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
     }
   }, [movimientoInventarioSaveLoading, dispatch]);
+  // UseEffect para save Fidelización
+  useEffect(() => {
+    if (fidelizacionSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Fidelización...');
+    } else if (fidelizacionSaveLoading.state === ResponseState.Finished) {
+      if (fidelizacionSaveLoading.status) {
+        message.success('Fidelización guardado con éxito.');
+      } else {
+        message.error(
+          `Error al guardar Fidelización: ${fidelizacionSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveFidelizacion(ResponseState.Waiting));
+    }
+  }, [fidelizacionSaveLoading, dispatch]);
   //Productos Selectors
 
   const [loadingSpinProductos, setLoadingSpinProductos] =

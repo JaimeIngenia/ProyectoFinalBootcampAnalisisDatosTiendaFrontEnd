@@ -21,6 +21,7 @@ import {
   SAVE_DETALLE_VENTA,
   SAVE_CLIENTE,
   SAVE_MOVIMIENTO_INVENTARIO,
+  SAVE_FIDELIZACION,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -52,6 +53,8 @@ import { saveVenta } from 'app/api/venta';
 import { saveDetalleVenta } from 'app/api/detalleVenta';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 import { saveMovimientoInventario } from 'app/api/movimientoInventario';
+import { Fidelizacion } from 'app/api/fidelizacion/types';
+import { saveFidelizacion } from 'app/api/fidelizacion';
 
 function* fetchRolesSaga() {
   try {
@@ -325,6 +328,17 @@ function* saveMovimientoInventarioSaga(action: any) {
   }
 }
 
+// Fidelización
+
+function* saveFidelizacionSaga(action: any) {
+  try {
+    const savedFidelizacion = yield call(saveFidelizacion, action.payload);
+    yield put(actions.saveFidelizacionSuccess(savedFidelizacion));
+  } catch (error) {
+    yield put(actions.saveFidelizacionFailure(error));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -343,5 +357,5 @@ export function* Saga() {
   yield takeLatest(SAVE_VENTA, saveVentaSaga);
   yield takeLatest(SAVE_DETALLE_VENTA, saveDetalleVentaSaga);
   yield takeLatest(SAVE_CLIENTE, fetchSaveClienteSaga);
-  yield takeLatest(SAVE_MOVIMIENTO_INVENTARIO, saveMovimientoInventarioSaga);
+  yield takeLatest(SAVE_FIDELIZACION, saveFidelizacionSaga);
 }

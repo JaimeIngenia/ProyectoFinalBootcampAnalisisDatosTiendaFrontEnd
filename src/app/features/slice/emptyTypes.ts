@@ -89,5 +89,6 @@ export const GeneralStatesReduxSaga_empty = {
     detalleVentaSaveLoading: defaultLoadingState,
     clienteSaveLoading: defaultLoadingState,
     movimientoInventarioSaveLoading: defaultLoadingState,
+    fidelizacionSaveLoading: defaultLoadingState,
   },
 };

@@ -17,6 +17,7 @@ import {
   detalleVentaSaveSelectorLoading,
   empleadosSelector,
   empleadosSelectorLoading,
+  fidelizacionSaveSelectorLoading,
   loginLoadingSelector,
   LoginSelector,
   logoutLoadingSelector,
@@ -72,6 +73,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const movimientoInventarioSaveLoading = useSelector(
     movimientoInventarioSaveSelectorLoading,
   );
+  const fidelizacionSaveLoading = useSelector(fidelizacionSaveSelectorLoading);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -136,6 +138,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         detalleVentaSaveLoading,
         clienteSaveLoading,
         movimientoInventarioSaveLoading,
+        fidelizacionSaveLoading,
       }}
     >
       {children}

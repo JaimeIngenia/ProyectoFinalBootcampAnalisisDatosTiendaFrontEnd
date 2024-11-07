@@ -467,6 +467,28 @@ const slice = createSlice({
         state: action.payload,
       };
     },
+
+    // Fidelización save
+
+    saveFidelizacionSuccess(state, action) {
+      state.loadingStates.fidelizacionSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+        message: 'Fidelización guardada exitosamente',
+      };
+    },
+    saveFidelizacionFailure(state, action) {
+      state.loadingStates.fidelizacionSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+    loadSaveFidelizacion(state, action) {
+      state.loadingStates.fidelizacionSaveLoading = {
+        state: action.payload,
+      };
+    },
   },
 });
 
