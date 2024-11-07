@@ -128,6 +128,7 @@ export function App() {
               <Route path="/crearFactura" element={<CrearFacturaPage />} />
               <Route path="/crearClientPage" element={<CrearClientPage />} />
               <Route path="/listarClientes" element={<ListarClientes />} />
+              <Route path="/editarCliente/:id" element={<CrearClientPage />} />
               {/* <Route path="/crearClientes" element={<CrearClientPage />} /> */}
               {/* <Route path="/crearFactura/:id" element={<CrearFacturaPage />} /> */}
             </Route>

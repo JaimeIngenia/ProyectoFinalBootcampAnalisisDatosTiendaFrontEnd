@@ -27,3 +27,20 @@ export async function saveCliente(
     throw error;
   }
 }
+
+// Obtener un cliente por ID
+export async function getClientById(clientId: string): Promise<ClienteEntity> {
+  debugger;
+  try {
+    debugger;
+    const response = await axios.get<ClienteEntity>(
+      `https://localhost:7029/api/Cliente/GetClientById/${clientId}`,
+    );
+    debugger;
+    return response.data;
+  } catch (error) {
+    debugger;
+    console.error(`Error fetching client ${clientId}:`, error);
+    throw error;
+  }
+}

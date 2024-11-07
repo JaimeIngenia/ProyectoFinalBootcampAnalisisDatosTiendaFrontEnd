@@ -11,6 +11,8 @@ import { GeneralContextType } from './type';
 import {
   categoriasSelector,
   categoriasSelectorLoading,
+  clienteGetByIdLoadingSelector,
+  clienteGetByIdSelector,
   clienteSaveSelectorLoading,
   clientesSelector,
   clientesSelectorLoading,
@@ -74,6 +76,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
     movimientoInventarioSaveSelectorLoading,
   );
   const fidelizacionSaveLoading = useSelector(fidelizacionSaveSelectorLoading);
+
+  const clienteGetById = useSelector(clienteGetByIdSelector);
+  const loadingClienteGetById = useSelector(clienteGetByIdLoadingSelector);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -139,6 +144,8 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         clienteSaveLoading,
         movimientoInventarioSaveLoading,
         fidelizacionSaveLoading,
+        clienteGetById,
+        loadingClienteGetById,
       }}
     >
       {children}

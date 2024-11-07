@@ -218,7 +218,6 @@ export default function CrearFacturaPage() {
           clienteId: fidelizacionData.clienteId,
           membresiaId: '9F3B5F63-618F-4E9D-8890-AB219C3C3586', //Basic
         };
-        debugger;
 
         // Enviar cada producto al backend
         dispatch(

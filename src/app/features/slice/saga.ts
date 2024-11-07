@@ -22,6 +22,7 @@ import {
   SAVE_CLIENTE,
   SAVE_MOVIMIENTO_INVENTARIO,
   SAVE_FIDELIZACION,
+  GET_CLIENT_BY_ID,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -47,7 +48,7 @@ import { getAllSucursales } from 'app/api/sucursales';
 import { EmpleadoEntity } from 'app/api/empleados/types';
 import { getAllEmpleados } from 'app/api/empleados';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
-import { getAllClientes, saveCliente } from 'app/api/clientes';
+import { getAllClientes, getClientById, saveCliente } from 'app/api/clientes';
 import { SaveVentaRequest } from 'app/api/venta/types';
 import { saveVenta } from 'app/api/venta';
 import { saveDetalleVenta } from 'app/api/detalleVenta';
@@ -339,6 +340,19 @@ function* saveFidelizacionSaga(action: any) {
   }
 }
 
+// GetClientById
+
+function* fetchClientById(action: any) {
+  try {
+    const client = yield call(getClientById, action.payload); // Llama a la API con el ID
+    yield put(actions.reducerGetClientByIdSuccess(client)); // Acción de éxito
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred';
+    yield put(actions.reducerGetClientByIdFailure(errorMessage)); // Acción de fallo
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -358,4 +372,5 @@ export function* Saga() {
   yield takeLatest(SAVE_DETALLE_VENTA, saveDetalleVentaSaga);
   yield takeLatest(SAVE_CLIENTE, fetchSaveClienteSaga);
   yield takeLatest(SAVE_FIDELIZACION, saveFidelizacionSaga);
+  yield takeLatest(GET_CLIENT_BY_ID, fetchClientById);
 }

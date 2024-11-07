@@ -13,7 +13,7 @@ import {
   GetUsuarioSimpleResponse,
   UsuarioEntity,
 } from 'app/api/usuarios/types';
-import { ClienteEntitySave } from 'app/api/clientes/types';
+import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 
 export const initialState: GeneralStatesReduxSaga =
@@ -354,7 +354,7 @@ const slice = createSlice({
 
     // -> GetAll
 
-    fetchClientesSuccess(state, action: PayloadAction<Entity[]>) {
+    fetchClientesSuccess(state, action: PayloadAction<ClienteEntity[]>) {
       state.clientes = action.payload; // Actualiza el estado con los clientes obtenidos
       state.loadingStates.clientesLoading = {
         state: ResponseState.Finished,
@@ -486,6 +486,30 @@ const slice = createSlice({
     },
     loadSaveFidelizacion(state, action) {
       state.loadingStates.fidelizacionSaveLoading = {
+        state: action.payload,
+      };
+    },
+
+    // ClientById
+
+    reducerGetClientByIdSuccess(state, action: PayloadAction<ClienteEntity>) {
+      state.clienteById = action.payload;
+      state.loadingStates.clienteGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerGetClientByIdFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.clienteGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadGetClientById(state, action) {
+      state.loadingStates.clienteGetByIdLoading = {
         state: action.payload,
       };
     },

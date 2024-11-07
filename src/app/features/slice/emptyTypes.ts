@@ -8,6 +8,7 @@ import {
   GetUsuarioSimpleResponse,
   SaveUsuarioRequest,
 } from 'app/api/usuarios/types';
+import { ClienteEntity } from 'app/api/clientes/types';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -47,6 +48,14 @@ export const usuarioById_Empty: GetUsuarioSimpleResponse = {
   empleadoId: '',
 };
 
+export const clienteById_Empty: ClienteEntity = {
+  id: '',
+  nombre: '',
+  apellido: '',
+  email: '',
+  telefono: '',
+};
+
 export const GeneralStatesReduxSaga_empty = {
   roles: [],
 
@@ -70,6 +79,8 @@ export const GeneralStatesReduxSaga_empty = {
 
   usuariosGuardados: usuariosGuardados_Empty,
 
+  clienteById: clienteById_Empty,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -90,5 +101,6 @@ export const GeneralStatesReduxSaga_empty = {
     clienteSaveLoading: defaultLoadingState,
     movimientoInventarioSaveLoading: defaultLoadingState,
     fidelizacionSaveLoading: defaultLoadingState,
+    clienteGetByIdLoading: defaultLoadingState,
   },
 };

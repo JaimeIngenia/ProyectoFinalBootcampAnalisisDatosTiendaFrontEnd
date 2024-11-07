@@ -167,3 +167,14 @@ export const fidelizacionSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.fidelizacionSaveLoading,
 );
+
+// Get Client By Id
+export const clienteGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.clienteById,
+);
+
+export const clienteGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.clienteGetByIdLoading,
+);

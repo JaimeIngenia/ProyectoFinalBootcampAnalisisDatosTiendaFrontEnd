@@ -1,3 +1,4 @@
+import { ClienteEntity } from 'app/api/clientes/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -19,7 +20,8 @@ export interface GeneralStatesReduxSaga {
   userSimpleById: GetUsuarioSimpleResponse;
   sucursales: Entity[];
   empleados: Entity[];
-  clientes: Entity[];
+  clientes: ClienteEntity[];
+  clienteById: ClienteEntity;
   usuariosGuardados: SaveUsuarioRequest;
 }
 
@@ -44,6 +46,7 @@ export interface LoadingStates {
   clienteSaveLoading: LoadingState;
   movimientoInventarioSaveLoading: LoadingState;
   fidelizacionSaveLoading: LoadingState;
+  clienteGetByIdLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

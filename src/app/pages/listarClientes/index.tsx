@@ -47,7 +47,8 @@ export default function ListarClientes() {
 
   //Columns
 
-  const columns: ColumnsType<ClienteEntitySave> = [
+  // const columns: ColumnsType<ClienteEntitySave> = [
+  const columns: ColumnsType<ClienteEntity> = [
     {
       key: '2',
       title: 'Nombre',
@@ -232,7 +233,7 @@ export default function ListarClientes() {
       render: record => {
         return (
           <>
-            <EditOutlined onClick={() => handleEditProduct(record.id)} />
+            <EditOutlined onClick={() => handleEditClient(record.id)} />
             <DeleteOutlined
               onClick={() => onDeleteProduct(record)}
               style={{ color: 'red', marginLeft: 12 }}
@@ -246,8 +247,8 @@ export default function ListarClientes() {
   // Update client
   // -> Funciones
 
-  const handleEditProduct = id => {
-    navigate(`/editarProducto/${id}`); // Navega a la ruta con el ID como parámetro
+  const handleEditClient = id => {
+    navigate(`/editarCliente/${id}`);
   };
   // Delete client
   // -> Funciones
@@ -279,9 +280,7 @@ export default function ListarClientes() {
   const [loadingSpinClientes, setLoadingSpinClientes] =
     useState<boolean>(false);
 
-  const [clienteListState, setClienteListState] = useState<ClienteEntitySave[]>(
-    [],
-  );
+  const [clienteListState, setClienteListState] = useState<ClienteEntity[]>([]);
 
   // First Charge
   useEffect(() => {
@@ -302,10 +301,11 @@ export default function ListarClientes() {
     } else if (loadinClientes?.state === ResponseState.Finished) {
       if (loadinClientes?.status) {
         if (clientes && clientes.length > 0) {
-          let dataList: Array<ClienteEntitySave> = [];
+          let dataList: Array<ClienteEntity> = [];
 
           clientes?.forEach(r => {
             dataList.push({
+              id: r.id,
               nombre: r.nombre,
               apellido: r.apellido,
               email: r.email,
