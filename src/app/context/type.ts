@@ -41,4 +41,5 @@ export type GeneralContextType = {
   loadingProductos: LoadingState;
   detalleVentaSaveLoading: LoadingState;
   clienteSaveLoading: LoadingState;
+  movimientoInventarioSaveLoading: LoadingState;
 };

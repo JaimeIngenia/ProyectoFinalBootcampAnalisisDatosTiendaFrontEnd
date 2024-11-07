@@ -14,6 +14,7 @@ export interface ProductEntityGetById {
   descripcion: string;
   precio: number;
   categoria: Entity;
+  imagen: string;
 }
 
 // export interface ProductEntitySave {

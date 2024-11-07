@@ -35,6 +35,7 @@ export const productoById_Empty: ProductEntityGetById = {
   descripcion: '',
   precio: 0,
   categoria: { id: '', nombre: '' },
+  imagen: '',
 };
 export const usuarioById_Empty: GetUsuarioSimpleResponse = {
   id: '',
@@ -87,5 +88,6 @@ export const GeneralStatesReduxSaga_empty = {
     ventasSaveLoading: defaultLoadingState,
     detalleVentaSaveLoading: defaultLoadingState,
     clienteSaveLoading: defaultLoadingState,
+    movimientoInventarioSaveLoading: defaultLoadingState,
   },
 };

@@ -84,7 +84,6 @@ export default function AgregarProducto() {
     const productData = {
       ...formValues,
     };
-    debugger;
 
     dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
@@ -234,7 +233,7 @@ export default function AgregarProducto() {
         descripcion: productoGetById.descripcion,
         precio: productoGetById.precio,
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
-        imagen: '',
+        imagen: productoGetById.imagen,
       };
 
       formRef.current?.setFieldsValue(productoConCategoriaId);

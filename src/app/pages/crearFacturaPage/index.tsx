@@ -27,6 +27,7 @@ import MainFormVenta from './features/mainFormVenta';
 import { generateGUID } from './features/utils/functions';
 import { ProductEntityGetAll } from 'app/api/products/types';
 import { useNavigate } from 'react-router-dom';
+import { sucursalesSelector } from 'app/features/slice/selectors';
 
 const { Option } = Select;
 
@@ -46,6 +47,7 @@ export default function CrearFacturaPage() {
     productos,
     loadingProductos,
     detalleVentaSaveLoading,
+    movimientoInventarioSaveLoading,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -65,6 +67,7 @@ export default function CrearFacturaPage() {
       total: number;
     }[]
   >([]);
+
   const [nuevoProducto, setNuevoProducto] = useState<{
     id: string;
     nombre: string;
@@ -72,6 +75,14 @@ export default function CrearFacturaPage() {
     precio: number;
     total: number;
   } | null>(null);
+
+  const [movimientoInventario, setMovimientoInventario] = useState({
+    productoId: '',
+    cantidad: 0,
+    empleadoId: '',
+    tipoMovimientoId: '',
+    fecha: '',
+  });
   const [total, setTotal] = useState(0); // Total de la factura
 
   // Productos y clientes - Simulación de datos o consulta a la API
@@ -150,6 +161,28 @@ export default function CrearFacturaPage() {
       });
     });
 
+    if (movimientoInventario.empleadoId) {
+      productosSeleccionados.forEach(producto => {
+        const payloadMovimientoInventario = {
+          productoId: producto.id,
+          cantidad: producto.cantidad,
+          empleadoId: movimientoInventario.empleadoId,
+          tipoMovimientoId: '1b49d538-1317-4a53-b07e-196a80027dd1', //Salida de producto
+          fecha: new Date().toISOString(),
+        };
+        debugger;
+
+        // Enviar cada producto al backend
+        dispatch(
+          actions.loadSaveMovimientoInventario(ResponseState.InProgress),
+        );
+        dispatch({
+          type: 'SAVE_MOVIMIENTO_INVENTARIO',
+          payload: payloadMovimientoInventario,
+        });
+      });
+    }
+
     // Puedes agregar un reset aquí si deseas limpiar los productos seleccionados y el total después de confirmar
     setProductosSeleccionados([]);
     setTotal(0);
@@ -176,9 +209,9 @@ export default function CrearFacturaPage() {
     { title: 'Precio Unitario', dataIndex: 'precio', key: 'precio' },
     { title: 'Total', dataIndex: 'total', key: 'total' },
   ];
-  //----
+  //-------
   // form
-  //----
+  //-------
 
   const [clientFormData, setClientFormData] = useState({
     clienteId: '',
@@ -283,6 +316,7 @@ export default function CrearFacturaPage() {
     const errors = formDetalleVentaValidation(detalleVentaFormData); // Ejecuta la validación completa
     setIsButtonConfrimarDetalleVentaDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
   }, [detalleVentaFormData]);
+
   // Manejo estado de carga
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -291,6 +325,8 @@ export default function CrearFacturaPage() {
     useState<boolean>(false);
 
   const [clienteListState, setClienteListState] = useState<Entity[]>([]);
+
+  // useEffect para firstCharge
 
   useEffect(() => {
     if (firstCharge) {
@@ -329,7 +365,7 @@ export default function CrearFacturaPage() {
           clientes?.forEach(r => {
             dataList.push({
               id: r.id,
-              nombre: r.nombre,
+              nombre: r.nombre + ' ' + r.apellido,
             });
           });
           setClienteListState(dataList);
@@ -380,6 +416,7 @@ export default function CrearFacturaPage() {
     useState<GetUsuarioSimpleResponse>(usuarioById_Empty);
 
   // Efecto para cargar el usuario por ID
+
   useEffect(() => {
     if (loadingusuarioSimpleGetById.state === ResponseState.Started) {
       setLoadingSpinProductById(true);
@@ -419,6 +456,11 @@ export default function CrearFacturaPage() {
         empleadoId: idEmpleado,
         fecha: fecha,
       };
+      // Actualizar solo el campo clienteId en el estado movimientoInventario
+      setMovimientoInventario(prevState => ({
+        ...prevState, // Mantiene los valores previos en movimientoInventario
+        empleadoId: productByIdListState.empleadoId, // Actualiza solo el idCliente
+      }));
 
       // Enviar la acción de guardar venta solo la primera vez
       dispatch(actions.loadSaveVenta(ResponseState.InProgress));
@@ -480,7 +522,23 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
     }
   }, [detalleVentaSaveLoading, dispatch]);
-
+  // UseEffect para save Movimiento inventario
+  useEffect(() => {
+    if (movimientoInventarioSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Movimiento Inventario...');
+    } else if (
+      movimientoInventarioSaveLoading.state === ResponseState.Finished
+    ) {
+      if (movimientoInventarioSaveLoading.status) {
+        message.success('Movimiento Inventario guardado con éxito.');
+      } else {
+        message.error(
+          `Error al guardar Movimiento Inventario: ${movimientoInventarioSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
+    }
+  }, [movimientoInventarioSaveLoading, dispatch]);
   //Productos Selectors
 
   const [loadingSpinProductos, setLoadingSpinProductos] =

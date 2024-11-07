@@ -140,7 +140,7 @@ export default function MainForm({
           <Form.Item
             label="Imagen"
             name="imagen"
-            rules={rulesForm.rulesDescripcion}
+            rules={rulesForm.rulesImagenAgregarProducto}
             validateTrigger="onBlur"
           >
             <Input

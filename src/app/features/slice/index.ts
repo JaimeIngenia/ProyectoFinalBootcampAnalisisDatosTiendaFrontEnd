@@ -14,6 +14,7 @@ import {
   UsuarioEntity,
 } from 'app/api/usuarios/types';
 import { ClienteEntitySave } from 'app/api/clientes/types';
+import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -420,7 +421,6 @@ const slice = createSlice({
     },
 
     //Clientes
-
     // -> Save
     reducerSaveClienteSuccess(state, action: PayloadAction<ClienteEntitySave>) {
       // state.clientesGuardados = action.payload;
@@ -438,6 +438,32 @@ const slice = createSlice({
     },
     loadSaveCliente(state, action: PayloadAction<ResponseState>) {
       state.loadingStates.clienteSaveLoading = {
+        state: action.payload,
+      };
+    },
+
+    //Movimiento Inventario - Save
+
+    reducerSaveMovimientoInventarioSuccess(
+      state,
+      action: PayloadAction<MovimientoInventarioEntitySave>,
+    ) {
+      // state.savedMovimientoInventario = action.payload;
+      state.loadingStates.movimientoInventarioSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+    reducerSaveMovimientoInventarioFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.movimientoInventarioSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload.message,
+      };
+    },
+
+    loadSaveMovimientoInventario(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.movimientoInventarioSaveLoading = {
         state: action.payload,
       };
     },

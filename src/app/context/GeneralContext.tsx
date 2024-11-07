@@ -20,6 +20,7 @@ import {
   loginLoadingSelector,
   LoginSelector,
   logoutLoadingSelector,
+  movimientoInventarioSaveSelectorLoading,
   productoSaveSelectorLoading,
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
@@ -68,6 +69,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const loadingProductos = useSelector(productosSelectorLoading);
   const detalleVentaSaveLoading = useSelector(detalleVentaSaveSelectorLoading);
   const clienteSaveLoading = useSelector(clienteSaveSelectorLoading);
+  const movimientoInventarioSaveLoading = useSelector(
+    movimientoInventarioSaveSelectorLoading,
+  );
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -131,6 +135,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingProductos,
         detalleVentaSaveLoading,
         clienteSaveLoading,
+        movimientoInventarioSaveLoading,
       }}
     >
       {children}

@@ -52,7 +52,6 @@ export default function CrearClientPage() {
     const productData = {
       ...formValues,
     };
-    debugger;
 
     dispatch(actions.loadSaveCliente(ResponseState.InProgress));
     dispatch({

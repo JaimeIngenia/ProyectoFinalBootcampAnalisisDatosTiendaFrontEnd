@@ -195,7 +195,6 @@ export function formClientSaveValidation(values: ClienteEntitySave) {
   if (!values.telefono || values.telefono.trim().length === 0) {
     _errors['telefono'] = 'El telefono es obligatorio';
   }
-  debugger;
 
   return _errors;
 
@@ -286,6 +285,51 @@ export const funcionGeneradoraValidaciones = ({ maxLength, label, field }) => [
           new Error(`Maximum ${maxLength} characters allowed for ${label}`),
         );
       }
+
+      // Si pasa todas las validaciones, retornamos una promesa resuelta
+      return Promise.resolve();
+    },
+  },
+];
+
+// Agregar producto
+
+export const funcionGeneradoraValidacionesImagenAgregarProducto = ({
+  maxLength,
+  label,
+  field,
+}) => [
+  {
+    validator: async (rule, value, callback) => {
+      // Si el valor está vacío o solo contiene espacios
+
+      // Validar si el valor tiene menos de 2 caracteres
+      if (!minLengthRegexSkills.test(value)) {
+        return Promise.reject(
+          new Error('You should write at least 2 characters'),
+        );
+      }
+
+      // Validar si contiene solo números o símbolos permitidos
+      if (
+        containsOnlyNumbers(value) ||
+        containsAllowedSymbolsForSkills(value)
+      ) {
+        if (/[a-zA-Z]/.test(value)) {
+          return Promise.reject(new Error(`${label} is Required!`));
+        } else {
+          return Promise.reject(
+            new Error('Only numbers or symbols are not allowed'),
+          );
+        }
+      }
+
+      // Validar si excede la longitud máxima
+      // if (value.length > maxLength) {
+      //   return Promise.reject(
+      //     new Error(`Maximum ${maxLength} characters allowed for ${label}`),
+      //   );
+      // }
 
       // Si pasa todas las validaciones, retornamos una promesa resuelta
       return Promise.resolve();

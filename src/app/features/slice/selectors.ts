@@ -157,3 +157,8 @@ export const clienteSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.clienteSaveLoading,
 );
+//Movimiento Inventario
+export const movimientoInventarioSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.movimientoInventarioSaveLoading,
+);

@@ -42,6 +42,7 @@ export interface LoadingStates {
   ventasSaveLoading: LoadingState;
   detalleVentaSaveLoading: LoadingState;
   clienteSaveLoading: LoadingState;
+  movimientoInventarioSaveLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;
