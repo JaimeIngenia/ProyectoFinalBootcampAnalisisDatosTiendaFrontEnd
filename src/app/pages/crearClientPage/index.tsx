@@ -21,7 +21,10 @@ import MainForm from './features/mainForm';
 import styles from './features/mainForm/styles/CrearCliente.module.css';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
 import { clienteById_Empty } from 'app/features/slice/emptyTypes';
-import { GET_CLIENT_BY_ID } from 'app/features/slice/sagaActions';
+import {
+  GET_CLIENT_BY_ID,
+  UPDATE_CLIENT,
+} from 'app/features/slice/sagaActions';
 
 export default function CrearClientPage() {
   // Hook para navegar entre rutas
@@ -34,6 +37,7 @@ export default function CrearClientPage() {
     themeColors,
     clienteGetById,
     loadingClienteGetById,
+    loadingUpdateClient,
   } = useGeneralContext();
 
   //Genral flow redux
@@ -55,7 +59,7 @@ export default function CrearClientPage() {
     telefono: '',
   });
 
-  const saveProduct = () => {
+  const saveCliente = () => {
     if (!clienteSaveformRef.current) {
       return;
     }
@@ -71,22 +75,28 @@ export default function CrearClientPage() {
     });
   };
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
+  const onUpdateCliente = () => {
+    if (!clienteSaveformRef.current) {
+      return;
+    }
+    // Obtenemos los valores del formulario
+    const formValues = clienteSaveformRef.current.getFieldsValue();
 
-  //   // Actualizar el Form y el estado local
-  //   clienteSaveformRef.current?.setFieldsValue({});
+    const clienteDataUpdated = {
+      ...formValues,
+    };
+    debugger;
+    dispatch(actions.loadUpdateClient(ResponseState.InProgress));
+    dispatch({
+      type: UPDATE_CLIENT,
+      payload: {
+        id: id,
+        clientData: clienteDataUpdated,
+      },
+    });
+    navigate(`/listarClientes`);
+  };
 
-  //   setClienteSaveFormData(prev => ({
-  //     ...prev,
-  //   }));
-
-  //   // Validar solo el campo que ha cambiado
-  //   clienteSaveformRef.current
-  //     ?.validateFields([name]) // Valida solo el campo actual
-  //     .then(() => {})
-  //     .catch(() => {});
-  // };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -110,9 +120,13 @@ export default function CrearClientPage() {
 
   const [loadingSpinClienteById, setLoadingSpinClienteById] =
     useState<boolean>(false);
-
   const [clienteByIdListState, setClienteByIdListState] =
     useState<ClienteEntity>(clienteById_Empty);
+
+  //Para Guardar el cliente
+
+  const [loadingSpinSaveCliente, setLoadingSpinSaveCliente] =
+    useState<boolean>(false);
 
   // Para la carga
 
@@ -121,7 +135,7 @@ export default function CrearClientPage() {
 
   const [a, setA] = useState<boolean>(false);
 
-  //UseEffect para getProductById
+  //UseEffect para getProductById son dos
 
   useEffect(() => {
     if (id) {
@@ -135,7 +149,6 @@ export default function CrearClientPage() {
             type: GET_CLIENT_BY_ID,
             payload: id,
           });
-          debugger;
         }
       }
       if (loadingClienteGetById?.state === ResponseState.InProgress) {
@@ -161,12 +174,31 @@ export default function CrearClientPage() {
     }
   }, [clienteGetById, loadingClienteGetById, id, dispatch]);
 
-  //Para Guardar el cliente
+  // El dos UseEffect necesario para getProductById
 
-  const [loadingSpinSaveCliente, setLoadingSpinSaveCliente] =
-    useState<boolean>(false);
+  useEffect(() => {
+    if (
+      id &&
+      clienteByIdListState !== clienteById_Empty
+      // && a
+    ) {
+      const clienteConCategoriaId = {
+        nombre: clienteGetById.nombre,
+        apellido: clienteGetById.apellido,
+        email: clienteGetById.email,
+        telefono: clienteGetById.telefono,
+      };
 
-  // UseEffect para save products son dos
+      clienteSaveformRef.current?.setFieldsValue(clienteConCategoriaId);
+
+      setClienteSaveFormData(clienteConCategoriaId);
+    } else {
+      // Resetear todos los campos
+      clienteSaveformRef.current?.resetFields();
+    }
+  }, [id, clienteByIdListState]);
+
+  // UseEffect para save Cliente
 
   useEffect(() => {
     if (clienteSaveLoading.state === ResponseState.InProgress) {
@@ -194,28 +226,6 @@ export default function CrearClientPage() {
     }
   }, [clienteSaveLoading, dispatch]);
 
-  // El dos
-  useEffect(() => {
-    if (
-      id &&
-      clienteByIdListState !== clienteById_Empty
-      // && a
-    ) {
-      const clienteConCategoriaId = {
-        nombre: clienteGetById.nombre,
-        apellido: clienteGetById.apellido,
-        email: clienteGetById.email,
-        telefono: clienteGetById.telefono,
-      };
-
-      clienteSaveformRef.current?.setFieldsValue(clienteConCategoriaId);
-
-      setClienteSaveFormData(clienteConCategoriaId);
-    } else {
-      // Resetear todos los campos
-      clienteSaveformRef.current?.resetFields();
-    }
-  }, [id, clienteByIdListState, a]);
   return (
     <GeneralContainer>
       <CustomTitleGeneal>
@@ -245,8 +255,10 @@ export default function CrearClientPage() {
                 clienteSaveformRef={clienteSaveformRef}
                 clientSaveform={clientSaveform}
                 isButtonDisabled={isButtonDisabled}
-                saveProduct={saveProduct}
+                saveCliente={saveCliente}
                 handleChange={handleChange}
+                onUpdateCliente={onUpdateCliente}
+                id={id}
               />
             </Spin>
           </ConfigProvider>

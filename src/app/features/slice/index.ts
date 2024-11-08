@@ -15,6 +15,7 @@ import {
 } from 'app/api/usuarios/types';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
+import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -169,6 +170,7 @@ const slice = createSlice({
         state: action.payload,
       };
     },
+
     // Get Product By ID
 
     reducerGetProductByIdSuccess(
@@ -275,7 +277,8 @@ const slice = createSlice({
       };
     },
 
-    // Reducer para éxito en el guardado del usuario
+    //SaveUsuario
+
     saveUsuarioSuccess(state) {
       state.loadingStates.usuariosSaveLoading = {
         state: ResponseState.Finished,
@@ -283,7 +286,6 @@ const slice = createSlice({
       };
     },
 
-    // Reducer para fallo en el guardado del usuario
     saveUsuarioFailed(state, action: PayloadAction<any>) {
       state.loadingStates.usuariosSaveLoading = {
         state: ResponseState.Finished,
@@ -292,7 +294,6 @@ const slice = createSlice({
       };
     },
 
-    // Reducer para iniciar la acción de guardado de usuario
     loadSaveUsuario(state, action: PayloadAction<ResponseState>) {
       state.loadingStates.usuariosSaveLoading = {
         state: action.payload,
@@ -301,7 +302,6 @@ const slice = createSlice({
 
     //Sucrusales
 
-    // Acción para manejar la carga exitosa de sucursales
     fetchSucursalesSuccess(state, action: PayloadAction<Entity[]>) {
       state.sucursales = action.payload;
       state.loadingStates.sucursalesLoading = {
@@ -310,7 +310,6 @@ const slice = createSlice({
       };
     },
 
-    // Acción para manejar errores al cargar sucursales
     getAllSucursalesFailed(state, action: PayloadAction<any>) {
       state.loadingStates.sucursalesLoading = {
         state: ResponseState.Finished,
@@ -325,7 +324,7 @@ const slice = createSlice({
       };
     },
     // Empleados
-    // Éxito al cargar empleados
+
     fetchEmpleadosSuccess(state, action: PayloadAction<Entity[]>) {
       state.empleados = action.payload; // Asume que hay un campo empleados en el estado
       state.loadingStates.empleadosLoading = {
@@ -510,6 +509,60 @@ const slice = createSlice({
 
     loadGetClientById(state, action) {
       state.loadingStates.clienteGetByIdLoading = {
+        state: action.payload,
+      };
+    },
+
+    // Update Client
+
+    reducerUpdateClientSuccess(state, action: PayloadAction<ClienteEntity>) {
+      const updatedClient = action.payload;
+      state.clientes = state.clientes.map(cliente =>
+        cliente.id === updatedClient.id ? updatedClient : cliente,
+      );
+      state.loadingStates.clienteUpdateLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerUpdateClientFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.clienteUpdateLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadUpdateClient(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.clienteUpdateLoading = {
+        state: action.payload,
+      };
+    },
+
+    // Get Detalle Venta By Id
+
+    reducerGetDetalleVentaByIdSuccess(
+      state,
+      action: PayloadAction<IDetalleVentaSimple>,
+    ) {
+      state.detalleVentaById = action.payload;
+      state.loadingStates.detalleVentaGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerGetDetalleVentaByIdFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.detalleVentaGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadGetDetalleVentaById(state, action) {
+      state.loadingStates.detalleVentaGetByIdLoading = {
         state: action.payload,
       };
     },

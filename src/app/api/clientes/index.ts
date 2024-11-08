@@ -30,17 +30,30 @@ export async function saveCliente(
 
 // Obtener un cliente por ID
 export async function getClientById(clientId: string): Promise<ClienteEntity> {
-  debugger;
   try {
-    debugger;
     const response = await axios.get<ClienteEntity>(
       `https://localhost:7029/api/Cliente/GetClientById/${clientId}`,
     );
-    debugger;
     return response.data;
   } catch (error) {
-    debugger;
     console.error(`Error fetching client ${clientId}:`, error);
+    throw error;
+  }
+}
+
+// Actualizar un cliente existente
+export async function updateClient(
+  id: string,
+  clientData: ClienteEntity,
+): Promise<ClienteEntity> {
+  try {
+    const response = await axios.put<ClienteEntity>(
+      `https://localhost:7029/api/Cliente/UpdateCliente/${id}`,
+      clientData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating client ${id}:`, error);
     throw error;
   }
 }

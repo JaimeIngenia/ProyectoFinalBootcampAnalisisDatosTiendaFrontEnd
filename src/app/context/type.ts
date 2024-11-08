@@ -1,4 +1,5 @@
 import { ClienteEntity } from 'app/api/clientes/types';
+import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -46,4 +47,7 @@ export type GeneralContextType = {
   fidelizacionSaveLoading: LoadingState;
   clienteGetById: ClienteEntity;
   loadingClienteGetById: LoadingState;
+  loadingUpdateClient: LoadingState;
+  detalleVentaGetById: IDetalleVentaSimple;
+  loadingDetalleVentaGetById: LoadingState;
 };

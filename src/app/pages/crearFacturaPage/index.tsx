@@ -26,16 +26,19 @@ import MainFormDetalleVenta from './features/MainFormDetalleVenta';
 import MainFormVenta from './features/mainFormVenta';
 import { generateGUID } from './features/utils/functions';
 import { ProductEntityGetAll } from 'app/api/products/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { sucursalesSelector } from 'app/features/slice/selectors';
 
 const { Option } = Select;
 
 export default function CrearFacturaPage() {
+  // Hook para navegar entre rutas
+  const navigate = useNavigate();
+  // Obtén el ID de los parámetros de la URL
+  const { id } = useParams();
   // Redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   // Context
   const {
     themeColors,
@@ -49,6 +52,8 @@ export default function CrearFacturaPage() {
     detalleVentaSaveLoading,
     movimientoInventarioSaveLoading,
     fidelizacionSaveLoading,
+    detalleVentaGetById,
+    loadingDetalleVentaGetById,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -127,18 +132,6 @@ export default function CrearFacturaPage() {
           setTotal(prevTotal => prevTotal + nuevoProducto.total);
         }
 
-        // Actualizar el total general
-
-        // const payload = {
-        //   cantidad: cantidad,
-        //   productoId: producto,
-        //   ventaId: ventaId,
-        // };
-        // dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress)); // Cambiamos el estado a Started
-        // dispatch({
-        //   type: 'SAVE_DETALLE_VENTA',
-        //   payload: payload,
-        // });
         closeModal();
       }
     }
@@ -237,6 +230,8 @@ export default function CrearFacturaPage() {
     navigate(`/listaProductos`);
   };
 
+  //UseEffect para productos seleccionados
+
   useEffect(() => {
     if (nuevoProducto) {
       setProductosSeleccionados(prev => [...prev, nuevoProducto]);
@@ -256,6 +251,7 @@ export default function CrearFacturaPage() {
     { title: 'Precio Unitario', dataIndex: 'precio', key: 'precio' },
     { title: 'Total', dataIndex: 'total', key: 'total' },
   ];
+
   //-------
   // form
   //-------
@@ -295,16 +291,12 @@ export default function CrearFacturaPage() {
       clienteId: value,
     }));
 
-    // Validar solo el campo 'categoriaId'
     clientFormRef.current
-      ?.validateFields(['clienteId']) // Valida solo el campo de categoría
-      .then(() => {
-        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
+      ?.validateFields(['clienteId'])
+      .then(() => {})
+      .catch(() => {});
   };
+
   const handleSelectProductoChange = (value: string) => {
     // Actualizar el Form y el estado local
     detalleVentaFormRef.current?.setFieldsValue({
@@ -318,13 +310,9 @@ export default function CrearFacturaPage() {
 
     // Validar solo el campo 'categoriaId'
     detalleVentaFormRef.current
-      ?.validateFields(['productoId']) // Valida solo el campo de categoría
-      .then(() => {
-        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
+      ?.validateFields(['productoId'])
+      .then(() => {})
+      .catch(() => {});
   };
 
   const handleProductoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -352,6 +340,7 @@ export default function CrearFacturaPage() {
   };
 
   // useEffect para validar el formulario solo la primera vez
+
   useEffect(() => {
     const errors = formClientSelectValidation(clientFormData);
     if (!ventaCreada) {
@@ -454,6 +443,52 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadProducts(ResponseState.Waiting));
     }
   }, [clientes, loadinClientes, productos, loadingProductos, dispatch]);
+
+  // Manejo estado de carga para GetByIdDetalleVenta
+
+  const [firstChargeDetalleVenta, setFirstChargeDetalleVenta] =
+    useState<boolean>(true);
+
+  //UseEffect para getProductById son dos
+
+  // useEffect(() => {
+  //   if (id) {
+  //     if (firstChargeClienteById) {
+  //       if (loadingClienteGetById?.state === ResponseState.Waiting) {
+  //         dispatch(actions.loadGetClientById(ResponseState.Started));
+  //       } else if (loadingClienteGetById?.state === ResponseState.Started) {
+  //         setFirstChargeClienteById(false);
+  //         dispatch(actions.loadGetClientById(ResponseState.InProgress));
+  //         dispatch({
+  //           type: GET_CLIENT_BY_ID,
+  //           payload: id,
+  //         });
+  //       }
+  //     }
+  //     if (loadingClienteGetById?.state === ResponseState.InProgress) {
+  //       setLoadingSpinClienteById(true);
+  //     } else if (loadingClienteGetById?.state === ResponseState.Finished) {
+  //       if (loadingClienteGetById?.status) {
+  //         if (clienteGetById && clienteSaveformRef.current) {
+  //           setClienteByIdListState(clienteGetById);
+  //           if (loadingSpinClienteById) setLoadingSpinClienteById(false);
+  //         }
+  //       } else {
+  //         alert(loadingClienteGetById?.message);
+  //       }
+  //       dispatch(actions.loadGetClientById(ResponseState.Waiting));
+  //     }
+  //   } else {
+  //     setClienteSaveFormData({
+  //       nombre: '',
+  //       apellido: '',
+  //       email: '',
+  //       telefono: '',
+  //     });
+  //   }
+  // }, [clienteGetById, loadingClienteGetById, id, dispatch]);
+
+  // All bien de aquí abajo
 
   // para traer el usuario y con el idEmpleado
 

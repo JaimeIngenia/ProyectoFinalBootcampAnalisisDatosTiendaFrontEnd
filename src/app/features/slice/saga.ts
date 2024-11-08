@@ -23,6 +23,8 @@ import {
   SAVE_MOVIMIENTO_INVENTARIO,
   SAVE_FIDELIZACION,
   GET_CLIENT_BY_ID,
+  UPDATE_CLIENT,
+  GET_DETALLE_VENTA_BY_ID,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -48,10 +50,15 @@ import { getAllSucursales } from 'app/api/sucursales';
 import { EmpleadoEntity } from 'app/api/empleados/types';
 import { getAllEmpleados } from 'app/api/empleados';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
-import { getAllClientes, getClientById, saveCliente } from 'app/api/clientes';
+import {
+  getAllClientes,
+  getClientById,
+  saveCliente,
+  updateClient,
+} from 'app/api/clientes';
 import { SaveVentaRequest } from 'app/api/venta/types';
 import { saveVenta } from 'app/api/venta';
-import { saveDetalleVenta } from 'app/api/detalleVenta';
+import { getDetalleVentaById, saveDetalleVenta } from 'app/api/detalleVenta';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 import { saveMovimientoInventario } from 'app/api/movimientoInventario';
 import { Fidelizacion } from 'app/api/fidelizacion/types';
@@ -114,6 +121,7 @@ function* fetchUpdateProductSaga(action) {
     yield put(actions.reducerUpdateProductFailure(errorMessage));
   }
 }
+
 // Saga para traer un producto existente por id
 function* fetchProductById(action) {
   try {
@@ -353,6 +361,33 @@ function* fetchClientById(action: any) {
   }
 }
 
+// Actualizar Cliente
+
+function* fetchUpdateClientSaga(action) {
+  try {
+    const { id, clientData } = action.payload;
+    const updatedClient = yield call(updateClient, id, clientData);
+    yield put(actions.reducerUpdateClientSuccess(updatedClient));
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred';
+    yield put(actions.reducerUpdateClientFailure(errorMessage));
+  }
+}
+
+//GetDetalleBentaById
+
+function* fetchDetalleVentaById(action: any) {
+  try {
+    const detalleVenta = yield call(getDetalleVentaById, action.payload);
+    yield put(actions.reducerGetDetalleVentaByIdSuccess(detalleVenta)); // Acción de éxito
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred';
+    yield put(actions.reducerGetDetalleVentaByIdFailure(errorMessage)); // Acción de fallo
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -373,4 +408,6 @@ export function* Saga() {
   yield takeLatest(SAVE_CLIENTE, fetchSaveClienteSaga);
   yield takeLatest(SAVE_FIDELIZACION, saveFidelizacionSaga);
   yield takeLatest(GET_CLIENT_BY_ID, fetchClientById);
+  yield takeLatest(UPDATE_CLIENT, fetchUpdateClientSaga);
+  yield takeLatest(GET_DETALLE_VENTA_BY_ID, fetchDetalleVentaById);
 }

@@ -16,6 +16,9 @@ import {
   clienteSaveSelectorLoading,
   clientesSelector,
   clientesSelectorLoading,
+  clienteUpdateLoadingSelector,
+  detalleVentaGetByIdLoadingSelector,
+  detalleVentaGetByIdSelector,
   detalleVentaSaveSelectorLoading,
   empleadosSelector,
   empleadosSelectorLoading,
@@ -76,9 +79,13 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
     movimientoInventarioSaveSelectorLoading,
   );
   const fidelizacionSaveLoading = useSelector(fidelizacionSaveSelectorLoading);
-
   const clienteGetById = useSelector(clienteGetByIdSelector);
   const loadingClienteGetById = useSelector(clienteGetByIdLoadingSelector);
+  const loadingUpdateClient = useSelector(clienteUpdateLoadingSelector);
+  const detalleVentaGetById = useSelector(detalleVentaGetByIdSelector);
+  const loadingDetalleVentaGetById = useSelector(
+    detalleVentaGetByIdLoadingSelector,
+  );
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -146,6 +153,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         fidelizacionSaveLoading,
         clienteGetById,
         loadingClienteGetById,
+        loadingUpdateClient,
+        detalleVentaGetById,
+        loadingDetalleVentaGetById,
       }}
     >
       {children}

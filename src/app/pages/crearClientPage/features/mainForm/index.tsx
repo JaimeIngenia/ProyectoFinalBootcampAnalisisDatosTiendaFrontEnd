@@ -10,8 +10,10 @@ export default function MainForm({
   clienteSaveformRef,
   clientSaveform,
   isButtonDisabled,
-  saveProduct,
+  saveCliente,
   handleChange,
+  onUpdateCliente,
+  id,
 }) {
   const { darkMode, themeColors } = useGeneralContext();
 
@@ -21,8 +23,8 @@ export default function MainForm({
       layout="vertical"
       ref={clienteSaveformRef}
       name="formularioCrearClientes"
-      //   onFinish={id ? onUpdateProduct : saveProduct}
-      onFinish={saveProduct}
+      onFinish={id ? onUpdateCliente : saveCliente}
+      // onFinish={saveProduct}
       //   initialValues={id ? formData : undefined}
     >
       <Row gutter={[16, 16]}>
@@ -126,8 +128,8 @@ export default function MainForm({
             disabled={isButtonDisabled}
             block
           >
-            Agregar Cliente
-            {/* {id ? 'Actualizar Producto' : 'Agregar Producto'} */}
+            {/* Agregar Cliente */}
+            {id ? 'Actualizar Cliente' : 'Agregar Cliente'}
           </CustomButtonn>
         </Col>
       </Row>

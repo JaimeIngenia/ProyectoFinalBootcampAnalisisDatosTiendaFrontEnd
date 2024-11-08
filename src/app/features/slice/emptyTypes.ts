@@ -9,6 +9,7 @@ import {
   SaveUsuarioRequest,
 } from 'app/api/usuarios/types';
 import { ClienteEntity } from 'app/api/clientes/types';
+import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -55,6 +56,12 @@ export const clienteById_Empty: ClienteEntity = {
   email: '',
   telefono: '',
 };
+export const detalleVentaById_Empty: IDetalleVentaSimple = {
+  id: '',
+  cantidad: 0,
+  productoId: '',
+  ventaId: '',
+};
 
 export const GeneralStatesReduxSaga_empty = {
   roles: [],
@@ -81,6 +88,8 @@ export const GeneralStatesReduxSaga_empty = {
 
   clienteById: clienteById_Empty,
 
+  detalleVentaById: detalleVentaById_Empty,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -102,5 +111,7 @@ export const GeneralStatesReduxSaga_empty = {
     movimientoInventarioSaveLoading: defaultLoadingState,
     fidelizacionSaveLoading: defaultLoadingState,
     clienteGetByIdLoading: defaultLoadingState,
+    clienteUpdateLoading: defaultLoadingState,
+    detalleVentaGetByIdLoading: defaultLoadingState,
   },
 };

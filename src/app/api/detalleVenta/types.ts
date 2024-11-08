@@ -8,3 +8,10 @@ export interface DetalleVentaPayload {
   productoId: string;
   ventaId: string;
 }
+
+export interface IDetalleVentaSimple {
+  id: string;
+  cantidad: number;
+  productoId: string;
+  ventaId: string;
+}

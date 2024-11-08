@@ -178,3 +178,20 @@ export const clienteGetByIdLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.clienteGetByIdLoading,
 );
+
+// Update Client
+export const clienteUpdateLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.clienteUpdateLoading,
+);
+
+// Get DetalleVenta By Id
+export const detalleVentaGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.detalleVentaById,
+);
+
+export const detalleVentaGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.detalleVentaGetByIdLoading,
+);
