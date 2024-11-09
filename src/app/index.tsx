@@ -22,6 +22,7 @@ import { usuarioById_Empty } from './features/slice/emptyTypes';
 import CrearFacturaPage from './pages/crearFacturaPage';
 import CrearClientPage from './pages/crearClientPage';
 import ListarClientes from './pages/listarClientes';
+import ListaVentasPage from './pages/listarVentasPage';
 
 export function App() {
   //Genral flow redux
@@ -129,7 +130,8 @@ export function App() {
               <Route path="/crearClientPage" element={<CrearClientPage />} />
               <Route path="/listarClientes" element={<ListarClientes />} />
               <Route path="/editarCliente/:id" element={<CrearClientPage />} />
-              <Route path="/editarFactura/:id" element={<CrearClientPage />} />
+              <Route path="/editarFactura/:id" element={<CrearFacturaPage />} />
+              <Route path="/listarVentas" element={<ListaVentasPage />} />
               {/* <Route path="/crearClientes" element={<CrearClientPage />} /> */}
               {/* <Route path="/crearFactura/:id" element={<CrearFacturaPage />} /> */}
             </Route>

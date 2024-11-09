@@ -1,7 +1,7 @@
 // api/ventas.ts
 
 import axios from 'axios';
-import { SaveVentaRequest } from './types';
+import { SaveVentaRequest, VentaGetByIdEntity } from './types';
 
 export async function saveVenta(data: SaveVentaRequest): Promise<void> {
   try {
@@ -17,6 +17,22 @@ export async function saveVenta(data: SaveVentaRequest): Promise<void> {
     } else {
       console.error('Error desconocido:', error);
     }
+    throw error;
+  }
+}
+
+// GetById
+
+export async function getVentaById(
+  ventaId: string,
+): Promise<VentaGetByIdEntity> {
+  try {
+    const response = await axios.get<VentaGetByIdEntity>(
+      `https://localhost:7029/api/Venta/GetById/${ventaId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching venta ${ventaId}:`, error);
     throw error;
   }
 }

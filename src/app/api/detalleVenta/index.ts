@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { DetalleVentaPayload, IDetalleVentaSimple } from './types';
+import {
+  DetalleVentaPayload,
+  DetalleVentaSpecialEntity,
+  IDetalleVentaSimple,
+  VentaSimplifyEntity,
+} from './types';
 
 // Función para guardar el detalle de venta
 export async function saveDetalleVenta(payload: DetalleVentaPayload) {
@@ -34,6 +39,35 @@ export async function getDetalleVentaById(
     return response.data;
   } catch (error) {
     console.error(`Error fetching DetalleVenta ${id}:`, error);
+    throw error;
+  }
+}
+
+// Llama al endpoint para obtener todas las ventas simplificadas
+export async function getAllVentasSimplify(): Promise<VentaSimplifyEntity[]> {
+  try {
+    const response = await axios.get<VentaSimplifyEntity[]>(
+      'https://localhost:7029/api/Venta/GetAllSimplify',
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching ventas:', error);
+    throw error;
+  }
+}
+
+// Special ById
+
+export async function getDetalleVentaSpecialById(
+  ventaId: string,
+): Promise<DetalleVentaSpecialEntity[]> {
+  try {
+    const response = await axios.get<DetalleVentaSpecialEntity[]>(
+      `https://localhost:7029/api/DetalleVenta/GetAllDetalleVentaSpecialById/${ventaId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching DetalleVentaSpecial by ventaId:', error);
     throw error;
   }
 }

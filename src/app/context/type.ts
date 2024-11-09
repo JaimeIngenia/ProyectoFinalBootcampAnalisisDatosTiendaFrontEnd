@@ -1,10 +1,15 @@
 import { ClienteEntity } from 'app/api/clientes/types';
-import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
+import {
+  DetalleVentaSpecialEntity,
+  IDetalleVentaSimple,
+  VentaSimplifyEntity,
+} from 'app/api/detalleVenta/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
 } from 'app/api/products/types';
 import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import { VentaGetByIdEntity } from 'app/api/venta/types';
 import { LoadingState } from 'app/features/slice/types';
 
 export type GeneralContextType = {
@@ -50,4 +55,10 @@ export type GeneralContextType = {
   loadingUpdateClient: LoadingState;
   detalleVentaGetById: IDetalleVentaSimple;
   loadingDetalleVentaGetById: LoadingState;
+  ventas: VentaSimplifyEntity[];
+  loadinVentas: LoadingState;
+  ventaGetById: VentaGetByIdEntity;
+  loadingVentaGetById: LoadingState;
+  detalleVentaGetAllById: DetalleVentaSpecialEntity[];
+  loadingDetalleVentaGetAllById: LoadingState;
 };

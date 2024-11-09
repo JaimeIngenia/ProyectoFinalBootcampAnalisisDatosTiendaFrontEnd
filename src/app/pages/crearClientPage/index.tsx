@@ -85,7 +85,6 @@ export default function CrearClientPage() {
     const clienteDataUpdated = {
       ...formValues,
     };
-    debugger;
     dispatch(actions.loadUpdateClient(ResponseState.InProgress));
     dispatch({
       type: UPDATE_CLIENT,

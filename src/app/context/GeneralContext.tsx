@@ -20,6 +20,8 @@ import {
   detalleVentaGetByIdLoadingSelector,
   detalleVentaGetByIdSelector,
   detalleVentaSaveSelectorLoading,
+  detalleVentaSpecialGetByIdLoadingSelector,
+  detalleVentaSpecialGetByIdSelector,
   empleadosSelector,
   empleadosSelectorLoading,
   fidelizacionSaveSelectorLoading,
@@ -40,7 +42,11 @@ import {
   usuarioSaveSelectorLoading,
   ususarioSimpleGetByIdLoadingSelector,
   ususarioSimpleGetByIdSelector,
+  ventaGetByIdLoadingSelector,
+  ventaGetByIdSelector,
   ventaSaveSelectorLoading,
+  ventasSelector,
+  ventasSelectorLoading,
 } from 'app/features/slice/selectors';
 
 export const GeneralContext = createContext<GeneralContextType | undefined>(
@@ -85,6 +91,16 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const detalleVentaGetById = useSelector(detalleVentaGetByIdSelector);
   const loadingDetalleVentaGetById = useSelector(
     detalleVentaGetByIdLoadingSelector,
+  );
+  const ventas = useSelector(ventasSelector);
+  const loadinVentas = useSelector(ventasSelectorLoading);
+  const ventaGetById = useSelector(ventaGetByIdSelector);
+  const loadingVentaGetById = useSelector(ventaGetByIdLoadingSelector);
+  const detalleVentaGetAllById = useSelector(
+    detalleVentaSpecialGetByIdSelector,
+  );
+  const loadingDetalleVentaGetAllById = useSelector(
+    detalleVentaSpecialGetByIdLoadingSelector,
   );
 
   // Estado y función para el modo oscuro
@@ -156,6 +172,12 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingUpdateClient,
         detalleVentaGetById,
         loadingDetalleVentaGetById,
+        ventas,
+        loadinVentas,
+        ventaGetById,
+        loadingVentaGetById,
+        detalleVentaGetAllById,
+        loadingDetalleVentaGetAllById,
       }}
     >
       {children}

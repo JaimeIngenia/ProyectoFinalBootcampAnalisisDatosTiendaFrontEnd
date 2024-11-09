@@ -9,7 +9,11 @@ import {
   SaveUsuarioRequest,
 } from 'app/api/usuarios/types';
 import { ClienteEntity } from 'app/api/clientes/types';
-import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
+import {
+  DetalleVentaSpecialEntity,
+  IDetalleVentaSimple,
+} from 'app/api/detalleVenta/types';
+import { VentaGetByIdEntity } from 'app/api/venta/types';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -62,7 +66,23 @@ export const detalleVentaById_Empty: IDetalleVentaSimple = {
   productoId: '',
   ventaId: '',
 };
-
+export const ventaById_Empty: VentaGetByIdEntity = {
+  id: '',
+  clienteId: '',
+  empleadoId: '',
+  fecha: '',
+};
+export const DetalleVentaGetAllById_EmptyList: DetalleVentaSpecialEntity[] = [
+  {
+    id: '',
+    ventaId: '',
+    cantidad: 0,
+    producto: {
+      nombre: '',
+      precio: 0,
+    },
+  },
+];
 export const GeneralStatesReduxSaga_empty = {
   roles: [],
 
@@ -84,11 +104,17 @@ export const GeneralStatesReduxSaga_empty = {
 
   clientes: [],
 
+  ventas: [],
+
+  ventaById: ventaById_Empty,
+
   usuariosGuardados: usuariosGuardados_Empty,
 
   clienteById: clienteById_Empty,
 
   detalleVentaById: detalleVentaById_Empty,
+
+  detallesVenta: [],
 
   loadingStates: {
     rolesLoading: defaultLoadingState,
@@ -113,5 +139,8 @@ export const GeneralStatesReduxSaga_empty = {
     clienteGetByIdLoading: defaultLoadingState,
     clienteUpdateLoading: defaultLoadingState,
     detalleVentaGetByIdLoading: defaultLoadingState,
+    ventasLoading: defaultLoadingState,
+    ventaGetByIdLoading: defaultLoadingState,
+    detalleVentaSpecialLoading: defaultLoadingState,
   },
 };

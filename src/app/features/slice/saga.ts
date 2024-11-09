@@ -25,6 +25,9 @@ import {
   GET_CLIENT_BY_ID,
   UPDATE_CLIENT,
   GET_DETALLE_VENTA_BY_ID,
+  LOAD_VENTAS_LIST,
+  GET_VENTA_BY_ID,
+  GET_DETALLE_VENTA_SPECIAL_BY_ID,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -56,13 +59,22 @@ import {
   saveCliente,
   updateClient,
 } from 'app/api/clientes';
-import { SaveVentaRequest } from 'app/api/venta/types';
-import { saveVenta } from 'app/api/venta';
-import { getDetalleVentaById, saveDetalleVenta } from 'app/api/detalleVenta';
+import { SaveVentaRequest, VentaGetByIdEntity } from 'app/api/venta/types';
+import { getVentaById, saveVenta } from 'app/api/venta';
+import {
+  getAllVentasSimplify,
+  getDetalleVentaById,
+  getDetalleVentaSpecialById,
+  saveDetalleVenta,
+} from 'app/api/detalleVenta';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 import { saveMovimientoInventario } from 'app/api/movimientoInventario';
 import { Fidelizacion } from 'app/api/fidelizacion/types';
 import { saveFidelizacion } from 'app/api/fidelizacion';
+import {
+  DetalleVentaSpecialEntity,
+  VentaSimplifyEntity,
+} from 'app/api/detalleVenta/types';
 
 function* fetchRolesSaga() {
   try {
@@ -258,20 +270,10 @@ function* fetchEmpleadosSaga() {
 // Saga para obtener y transformar los datos de clientes
 function* fetchClientesSaga() {
   try {
-    // Llamada a la API para obtener todos los clientes
     const clientes: ClienteEntity[] = yield call(getAllClientes);
 
-    // Desestructuración y conversión de los datos en el formato ClienteSimple
-    // const clientesFiltrados: Entity[] = clientes.map(cliente => ({
-    //   id: cliente.id,
-    //   nombre: cliente.nombre, // Usar solo el nombre completo sin apellido
-    // }));
-
-    // Enviar los datos procesados al reducer
     yield put(actions.fetchClientesSuccess(clientes));
-    // yield put(actions.fetchClientesSuccess(clientesFiltrados));
   } catch (error) {
-    // Manejo del error y envío del mensaje al reducer
     let errorMessage = 'Unknown error occurred';
     if (error instanceof Error) {
       errorMessage = error.message;
@@ -388,6 +390,52 @@ function* fetchDetalleVentaById(action: any) {
   }
 }
 
+// GetAllVentas Simplify
+
+function* fetchVentasSaga() {
+  try {
+    const ventas: VentaSimplifyEntity[] = yield call(getAllVentasSimplify); // Llama a la API
+    yield put(actions.fetchVentasSuccess(ventas)); // Acción de éxito
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.getAllVentasFailed(errorMessage)); // Acción de fallo
+  }
+}
+
+// GetbVentaById
+
+function* fetchVentaById(action: any) {
+  try {
+    const venta: VentaGetByIdEntity = yield call(getVentaById, action.payload);
+    yield put(actions.reducerGetVentaByIdSuccess(venta));
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred';
+    yield put(actions.reducerGetVentaByIdFailure(errorMessage));
+  }
+}
+
+// GetAllDetalleVentaSpecialById
+
+function* fetchDetalleVentaSpecialByIdSaga(action: any) {
+  try {
+    const detallesVenta: DetalleVentaSpecialEntity[] = yield call(
+      getDetalleVentaSpecialById,
+      action.payload,
+    ); // Llama a la API con ventaId
+    yield put(actions.fetchDetalleVentaSpecialSuccess(detallesVenta)); // Acción de éxito
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.fetchDetalleVentaSpecialFailed(errorMessage)); // Acción de fallo
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -410,4 +458,10 @@ export function* Saga() {
   yield takeLatest(GET_CLIENT_BY_ID, fetchClientById);
   yield takeLatest(UPDATE_CLIENT, fetchUpdateClientSaga);
   yield takeLatest(GET_DETALLE_VENTA_BY_ID, fetchDetalleVentaById);
+  yield takeLatest(LOAD_VENTAS_LIST, fetchVentasSaga);
+  yield takeLatest(GET_VENTA_BY_ID, fetchVentaById);
+  yield takeLatest(
+    GET_DETALLE_VENTA_SPECIAL_BY_ID,
+    fetchDetalleVentaSpecialByIdSaga,
+  );
 }

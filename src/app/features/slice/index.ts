@@ -15,7 +15,12 @@ import {
 } from 'app/api/usuarios/types';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
-import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
+import {
+  DetalleVentaSpecialEntity,
+  IDetalleVentaSimple,
+  VentaSimplifyEntity,
+} from 'app/api/detalleVenta/types';
+import { VentaGetByIdEntity } from 'app/api/venta/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -564,6 +569,82 @@ const slice = createSlice({
     loadGetDetalleVentaById(state, action) {
       state.loadingStates.detalleVentaGetByIdLoading = {
         state: action.payload,
+      };
+    },
+
+    // Get All Ventas Simplify
+
+    fetchVentasSuccess(state, action: PayloadAction<VentaSimplifyEntity[]>) {
+      state.ventas = action.payload;
+      state.loadingStates.ventasLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    getAllVentasFailed(state, action: PayloadAction<string>) {
+      state.loadingStates.ventasLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadVentas(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.ventasLoading = {
+        state: action.payload,
+        status: false,
+      };
+    },
+
+    // Venta Get By Id
+
+    reducerGetVentaByIdSuccess(
+      state,
+      action: PayloadAction<VentaGetByIdEntity>,
+    ) {
+      state.ventaById = action.payload;
+      state.loadingStates.ventaGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+    reducerGetVentaByIdFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.ventaGetByIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+    loadGetVentaById(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.ventaGetByIdLoading = {
+        state: action.payload,
+      };
+    },
+
+    // Detalle Venta Special Get By Id
+
+    fetchDetalleVentaSpecialSuccess(
+      state,
+      action: PayloadAction<DetalleVentaSpecialEntity[]>,
+    ) {
+      state.detallesVenta = action.payload;
+      state.loadingStates.detalleVentaSpecialLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+    fetchDetalleVentaSpecialFailed(state, action: PayloadAction<string>) {
+      state.loadingStates.detalleVentaSpecialLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+    loadDetalleVentaSpecialById(state, action) {
+      state.loadingStates.detalleVentaSpecialLoading = {
+        state: action.payload,
+        status: false,
       };
     },
   },

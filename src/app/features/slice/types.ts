@@ -1,5 +1,9 @@
 import { ClienteEntity } from 'app/api/clientes/types';
-import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
+import {
+  DetalleVentaSpecialEntity,
+  IDetalleVentaSimple,
+  VentaSimplifyEntity as VentasGetAllSimplifyEntity,
+} from 'app/api/detalleVenta/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -8,6 +12,7 @@ import {
   GetUsuarioSimpleResponse,
   SaveUsuarioRequest,
 } from 'app/api/usuarios/types';
+import { VentaGetByIdEntity } from 'app/api/venta/types';
 import { ProductEntitySave } from 'app/pages/agregarProducto/utils/types';
 
 export interface GeneralStatesReduxSaga {
@@ -25,6 +30,9 @@ export interface GeneralStatesReduxSaga {
   clienteById: ClienteEntity;
   usuariosGuardados: SaveUsuarioRequest;
   detalleVentaById: IDetalleVentaSimple;
+  ventas: VentasGetAllSimplifyEntity[];
+  ventaById: VentaGetByIdEntity;
+  detallesVenta: DetalleVentaSpecialEntity[];
 }
 
 // Define una interfaz para centralizar los estados de carga
@@ -51,6 +59,9 @@ export interface LoadingStates {
   clienteGetByIdLoading: LoadingState;
   clienteUpdateLoading: LoadingState;
   detalleVentaGetByIdLoading: LoadingState;
+  ventasLoading: LoadingState;
+  ventaGetByIdLoading: LoadingState;
+  detalleVentaSpecialLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

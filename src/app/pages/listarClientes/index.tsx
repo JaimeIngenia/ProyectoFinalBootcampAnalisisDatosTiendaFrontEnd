@@ -138,7 +138,7 @@ export default function ListarClientes() {
           .includes(String(value).toLowerCase()),
     },
     {
-      key: '3',
+      key: '4',
       title: 'Email',
       dataIndex: 'email',
       filterDropdown: ({
@@ -184,7 +184,7 @@ export default function ListarClientes() {
           .includes(String(value).toLowerCase()),
     },
     {
-      key: '3',
+      key: '5',
       title: 'Telefono',
       dataIndex: 'telefono',
       filterDropdown: ({

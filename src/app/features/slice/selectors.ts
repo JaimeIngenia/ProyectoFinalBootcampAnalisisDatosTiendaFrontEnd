@@ -195,3 +195,39 @@ export const detalleVentaGetByIdLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.detalleVentaGetByIdLoading,
 );
+
+// ventas Simplyfy
+
+export const ventasSelector = createSelector(
+  [selectSlice],
+  state => state.ventas,
+);
+
+export const ventasSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.ventasLoading,
+);
+
+// Get Venta By Id
+
+export const ventaGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.ventaById,
+);
+
+export const ventaGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.ventaGetByIdLoading,
+);
+
+// Get AllDetalleVenta Special By Id
+
+export const detalleVentaSpecialGetByIdSelector = createSelector(
+  [selectSlice],
+  state => state.detallesVenta,
+);
+
+export const detalleVentaSpecialGetByIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.detalleVentaSpecialLoading,
+);
