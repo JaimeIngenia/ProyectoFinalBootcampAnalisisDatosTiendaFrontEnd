@@ -36,3 +36,16 @@ export async function getVentaById(
     throw error;
   }
 }
+
+// Delete and sons
+
+export async function deleteVenta(ventaId: string): Promise<void> {
+  try {
+    await axios.delete(
+      `https://localhost:7029/api/Venta/DeleteVenta/${ventaId}`,
+    );
+  } catch (error) {
+    console.error(`Error eliminando la venta ${ventaId}:`, error);
+    throw error;
+  }
+}

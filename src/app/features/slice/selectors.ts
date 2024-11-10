@@ -231,3 +231,10 @@ export const detalleVentaSpecialGetByIdLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.detalleVentaSpecialLoading,
 );
+
+// Delete Venta Loading
+
+export const ventasDeleteLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.ventaDeleteLoading,
+);

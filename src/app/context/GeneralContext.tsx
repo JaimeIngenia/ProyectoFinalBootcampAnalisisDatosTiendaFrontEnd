@@ -45,6 +45,7 @@ import {
   ventaGetByIdLoadingSelector,
   ventaGetByIdSelector,
   ventaSaveSelectorLoading,
+  ventasDeleteLoadingSelector,
   ventasSelector,
   ventasSelectorLoading,
 } from 'app/features/slice/selectors';
@@ -102,6 +103,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const loadingDetalleVentaGetAllById = useSelector(
     detalleVentaSpecialGetByIdLoadingSelector,
   );
+  const loadingDeleteVenta = useSelector(ventasDeleteLoadingSelector);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -178,6 +180,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingVentaGetById,
         detalleVentaGetAllById,
         loadingDetalleVentaGetAllById,
+        loadingDeleteVenta,
       }}
     >
       {children}

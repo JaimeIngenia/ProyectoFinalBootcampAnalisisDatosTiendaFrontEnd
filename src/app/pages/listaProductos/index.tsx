@@ -334,6 +334,7 @@ export function ListaProductos() {
   const dispatch = useDispatch();
 
   //Productos Selectors
+
   const productos = useSelector(productosSelector);
 
   const loadingProductos = useSelector(productosSelectorLoading);

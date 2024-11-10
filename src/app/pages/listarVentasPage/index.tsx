@@ -1,10 +1,13 @@
-import { ConfigProvider, Spin, Table, theme } from 'antd';
+import { ConfigProvider, Modal, notification, Spin, Table, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { DataItemVenta, VentaSimplifyEntity } from 'app/api/detalleVenta/types';
 import { CustomTitleGeneal, GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
-import { LOAD_VENTAS_LIST } from 'app/features/slice/sagaActions';
+import {
+  GET_DELETE_VENTA,
+  LOAD_VENTAS_LIST,
+} from 'app/features/slice/sagaActions';
 import { ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -49,10 +52,10 @@ export default function ListaVentasPage() {
         return (
           <>
             <EditOutlined onClick={() => handleEditClient(record.id)} />
-            {/* <DeleteOutlined
-              onClick={() => onDeleteProduct(record)}
+            <DeleteOutlined
+              onClick={() => onDeleteVenta(record)}
               style={{ color: 'red', marginLeft: 12 }}
-            /> */}
+            />
           </>
         );
       },
@@ -68,6 +71,7 @@ export default function ListaVentasPage() {
     clienteSaveLoading,
     ventas,
     loadinVentas,
+    loadingDeleteVenta,
   } = useGeneralContext();
 
   // Redux
@@ -83,6 +87,9 @@ export default function ListaVentasPage() {
   const [loadingSpinVentas, setLoadingSpinVentas] = useState<boolean>(false);
 
   const [clienteListState, setClienteListState] = useState<DataItemVenta[]>([]);
+
+  const [loadingSpinDeleteVenta, setLoadingSpinDeleteVenta] =
+    useState<boolean>(false);
 
   // First Charge
   useEffect(() => {
@@ -129,6 +136,57 @@ export default function ListaVentasPage() {
   const handleEditClient = id => {
     navigate(`/editarFactura/${id}`);
   };
+
+  // Delete ventas
+  // -> Funciones
+  //Delete products
+  const onDeleteVenta = record => {
+    Modal.confirm({
+      title: '¿Estás seguro de eliminar esta venta?',
+      onOk: () => {
+        dispatch(actions.loadDeleteVenta(ResponseState.InProgress));
+        dispatch({
+          type: GET_DELETE_VENTA,
+          payload: record.id,
+        });
+        // Actualizar la lista de productos en el estado local
+        setClienteListState(prevState =>
+          prevState.filter(product => product.id !== record.id),
+        );
+      },
+
+      onCancel: () => {
+        console.log('Eliminación cancelada');
+      },
+    });
+  };
+
+  //UseEffect para eliminar una Venta
+
+  useEffect(() => {
+    if (loadingDeleteVenta?.state === ResponseState.InProgress) {
+      setLoadingSpinDeleteVenta(true);
+    } else if (loadingDeleteVenta?.state === ResponseState.Finished) {
+      setLoadingSpinDeleteVenta(false);
+      if (loadingDeleteVenta) setLoadingSpinDeleteVenta(false);
+      if (loadingDeleteVenta?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Eliminación completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingDeleteVenta?.message || 'Error en la eliminación.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadDeleteVenta(ResponseState.Waiting));
+    }
+  }, [loadingDeleteVenta, dispatch]);
 
   return (
     <GeneralContainer>

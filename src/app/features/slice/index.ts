@@ -647,6 +647,33 @@ const slice = createSlice({
         status: false,
       };
     },
+
+    // Delete Venta
+
+    reducerDeleteVentaSuccess(state, action: PayloadAction<string>) {
+      state.ventas = state.ventas.filter(venta => venta.id !== action.payload);
+      state.loadingStates.ventaDeleteLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    // Reducer para acción de fallo
+    reducerDeleteVentaFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.ventaDeleteLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    // Reducer para iniciar la carga
+    loadDeleteVenta(state, action) {
+      state.loadingStates.ventaDeleteLoading = {
+        state: action.payload,
+        status: false,
+      };
+    },
   },
 });
 

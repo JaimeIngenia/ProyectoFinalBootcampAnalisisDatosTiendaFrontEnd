@@ -28,6 +28,7 @@ import {
   LOAD_VENTAS_LIST,
   GET_VENTA_BY_ID,
   GET_DETALLE_VENTA_SPECIAL_BY_ID,
+  GET_DELETE_VENTA,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -60,7 +61,7 @@ import {
   updateClient,
 } from 'app/api/clientes';
 import { SaveVentaRequest, VentaGetByIdEntity } from 'app/api/venta/types';
-import { getVentaById, saveVenta } from 'app/api/venta';
+import { deleteVenta, getVentaById, saveVenta } from 'app/api/venta';
 import {
   getAllVentasSimplify,
   getDetalleVentaById,
@@ -436,6 +437,17 @@ function* fetchDetalleVentaSpecialByIdSaga(action: any) {
   }
 }
 
+// DeleteVenta with sons
+
+function* fetchDeleteVentaSaga(action: any) {
+  try {
+    yield call(deleteVenta, action.payload);
+    yield put(actions.reducerDeleteVentaSuccess(action.payload));
+  } catch (error) {
+    yield put(actions.reducerDeleteVentaFailure(error));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -464,4 +476,5 @@ export function* Saga() {
     GET_DETALLE_VENTA_SPECIAL_BY_ID,
     fetchDetalleVentaSpecialByIdSaga,
   );
+  yield takeLatest(GET_DELETE_VENTA, fetchDeleteVentaSaga);
 }

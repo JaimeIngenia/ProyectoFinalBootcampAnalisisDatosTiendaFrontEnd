@@ -511,6 +511,7 @@ export default function CrearFacturaPage() {
       }
       if (loadingVentaGetById?.state === ResponseState.InProgress) {
         setLoadingSpinVentaById(true);
+        setLoadingSpinDetalleVentaSpecialById(true); //aqui
       } else if (loadingVentaGetById?.state === ResponseState.Finished) {
         if (loadingVentaGetById?.status) {
           if (ventaGetById && clientFormRef.current) {
@@ -622,6 +623,7 @@ export default function CrearFacturaPage() {
         });
       });
       setProductosSeleccionados(detalleVentaForTableList);
+      setLoadingSpinDetalleVentaSpecialById(false);
 
       debugger; // Debugger importante 2
       // clientFormRef.current?.setFieldsValue(ventaForTable);
@@ -856,22 +858,24 @@ export default function CrearFacturaPage() {
           },
         }}
       >
-        <MainFormVenta
-          clientForm={clientForm}
-          clientFormRef={clientFormRef}
-          loadingSpinClientes={loadingSpinClientes}
-          clienteListState={clienteListState}
-          handleSelectChange={handleSelectChange}
-          clientFormData={clientFormData}
-          productosSeleccionados={productosSeleccionados}
-          columns={columns}
-          openModal={openModal}
-          total={total}
-          isButtonAgregarProductoDisabled={isButtonAgregarProductoDisabled}
-          isButtonConfrimarFacturaDisabled={isButtonConfrimarFacturaDisabled}
-          handleConfirmarFactura={handleConfirmarFactura}
-          ventaCreada
-        />
+        <Spin spinning={loadingSpinDetalleVentaSpecialById}>
+          <MainFormVenta
+            clientForm={clientForm}
+            clientFormRef={clientFormRef}
+            loadingSpinClientes={loadingSpinClientes}
+            clienteListState={clienteListState}
+            handleSelectChange={handleSelectChange}
+            clientFormData={clientFormData}
+            productosSeleccionados={productosSeleccionados}
+            columns={columns}
+            openModal={openModal}
+            total={total}
+            isButtonAgregarProductoDisabled={isButtonAgregarProductoDisabled}
+            isButtonConfrimarFacturaDisabled={isButtonConfrimarFacturaDisabled}
+            handleConfirmarFactura={handleConfirmarFactura}
+            ventaCreada
+          />
+        </Spin>
       </ConfigProvider>
 
       {/* Modal para agregar productos */}
