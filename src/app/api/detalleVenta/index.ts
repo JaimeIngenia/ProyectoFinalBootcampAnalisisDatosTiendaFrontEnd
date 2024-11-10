@@ -33,11 +33,13 @@ export async function getDetalleVentaById(
   id: string,
 ): Promise<IDetalleVentaSimple> {
   try {
+    debugger;
     const response = await axios.get<IDetalleVentaSimple>(
       `https://localhost:7029/api/DetalleVenta/GetDetalleVentaByIdSimple/${id}`,
     );
     return response.data;
   } catch (error) {
+    debugger;
     console.error(`Error fetching DetalleVenta ${id}:`, error);
     throw error;
   }

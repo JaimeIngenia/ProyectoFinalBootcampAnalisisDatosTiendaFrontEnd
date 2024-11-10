@@ -381,7 +381,9 @@ function* fetchUpdateClientSaga(action) {
 //GetDetalleBentaById
 
 function* fetchDetalleVentaById(action: any) {
+  debugger;
   try {
+    debugger;
     const detalleVenta = yield call(getDetalleVentaById, action.payload);
     yield put(actions.reducerGetDetalleVentaByIdSuccess(detalleVenta)); // Acción de éxito
   } catch (error) {
@@ -477,4 +479,5 @@ export function* Saga() {
     fetchDetalleVentaSpecialByIdSaga,
   );
   yield takeLatest(GET_DELETE_VENTA, fetchDeleteVentaSaga);
+  yield takeLatest(SAVE_MOVIMIENTO_INVENTARIO, saveMovimientoInventarioSaga);
 }

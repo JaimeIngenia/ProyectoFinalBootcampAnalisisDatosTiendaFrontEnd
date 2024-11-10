@@ -7,7 +7,10 @@ import {
   Select,
   Spin,
 } from 'antd';
+import { IDetalleVentaSimple } from 'app/api/detalleVenta/types';
+import { ProductEntityGetAll } from 'app/api/products/types';
 import { GetUsuarioSimpleResponse } from 'app/api/usuarios/types';
+import { VentaGetByIdEntity } from 'app/api/venta/types';
 import { GeneralContainer } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { useSlice } from 'app/features/slice';
@@ -27,6 +30,7 @@ import {
 import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   formClientSelectValidation,
   formDetalleVentaValidation,
@@ -34,14 +38,11 @@ import {
 import MainFormDetalleVenta from './features/MainFormDetalleVenta';
 import MainFormVenta from './features/mainFormVenta';
 import { generateGUID } from './features/utils/functions';
-import { ProductEntityGetAll } from 'app/api/products/types';
-import { useNavigate, useParams } from 'react-router-dom';
-import { sucursalesSelector } from 'app/features/slice/selectors';
 import {
-  DetalleVentaSpecialEntity,
-  IDetalleVentaSimple,
-} from 'app/api/detalleVenta/types';
-import { VentaGetByIdEntity } from 'app/api/venta/types';
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -49,7 +50,7 @@ export default function CrearFacturaPage() {
   // Hook para navegar entre rutas
   const navigate = useNavigate();
   // Obtén el ID de los parámetros de la URL
-  const { id } = useParams();
+  const { id: idVentaParams } = useParams();
   // Redux
   const { actions } = useSlice();
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ export default function CrearFacturaPage() {
   const [visible, setVisible] = useState(false); // Modal para agregar producto
   const [productosListStateCompletos, setProductoListStateCompletos] = useState<
     Array<ProductEntityGetAll>
-  >([]); // Lista de productos seleccionados
+  >([]);
   const [productosSeleccionados, setProductosSeleccionados] = useState<
     {
       id: string;
@@ -114,20 +115,10 @@ export default function CrearFacturaPage() {
     membresiaId: '',
   });
 
-  const [total, setTotal] = useState(0); // Total de la factura
-
-  // Productos y clientes - Simulación de datos o consulta a la API
-
-  // Función para cerrar el modal
-  const closeModal = () => {
-    setVisible(false);
-  };
-
-  useEffect(() => {
-    console.log('ventaCreada:', ventaCreada);
-  }, [ventaCreada]);
+  const [total, setTotal] = useState(0);
 
   // Guardar el producto seleccionado en el detalle de la factura
+
   const handleAgregarProducto = (producto, cantidad) => {
     if (ventaId !== '') {
       // Datos del producto seleccionados (puedes adaptar estos datos según tu estructura real)
@@ -164,6 +155,7 @@ export default function CrearFacturaPage() {
   };
 
   // Función para confirmar la factura y enviar los productos al backend
+
   const handleConfirmarFactura = () => {
     productosSeleccionados.forEach(producto => {
       const payload = {
@@ -245,33 +237,113 @@ export default function CrearFacturaPage() {
     setProductosSeleccionados([]);
     setTotal(0);
     setVentaCreada(false);
-    navigate(`/listaProductos`);
+    navigate(`/listarVentas`);
   };
 
-  //UseEffect para productos seleccionados
+  // Fucnión para guardar venta al abrir el modal
 
-  useEffect(() => {
-    if (nuevoProducto) {
-      setProductosSeleccionados(prev => [...prev, nuevoProducto]);
-      setNuevoProducto(null); // Restablecer el estado de nuevoProducto
+  const openModal = () => {
+    if (!ventaCreada) {
+      // Genera el ID en el frontend
+      const ventaId = generateGUID();
+      setVentaId(ventaId);
+
+      if (!clientFormRef.current) {
+        return;
+      }
+      const formValues = clientFormRef.current.getFieldsValue();
+      const idCliente = formValues.clienteId;
+      const idEmpleado = productByIdListState.empleadoId;
+
+      // Obtiene la fecha actual en el formato necesario
+      const fecha = new Date().toISOString();
+
+      // Preparar el payload para la acción de guardar venta
+      const payload = {
+        id: ventaId,
+        clienteId: idCliente,
+        empleadoId: idEmpleado,
+        fecha: fecha,
+      };
+      // Actualizar solo el campo clienteId en el estado movimientoInventario
+      setMovimientoInventario(prevState => ({
+        ...prevState, // Mantiene los valores previos en movimientoInventario
+        empleadoId: productByIdListState.empleadoId, // Actualiza solo el idCliente
+      }));
+
+      setFidelizacionData(prevState => ({
+        ...prevState,
+        clienteId: idCliente,
+      }));
+
+      // Enviar la acción de guardar venta solo la primera vez
+      dispatch(actions.loadSaveVenta(ResponseState.InProgress));
+      dispatch({
+        type: 'SAVE_VENTA',
+        payload: payload,
+      });
+      // Marcar que la venta ha sido creada
+      setVentaCreada(true);
     }
-    if (setProductosSeleccionados.length > 0) {
-      setIsButtonConfrimarFacturaisabled(false);
-    } else {
-      setIsButtonConfrimarFacturaisabled(true);
-    }
-  }, [nuevoProducto]);
+
+    // Abre el modal para agregar productos
+    setVisible(true);
+  };
+  // Fucnión para actualizar Detallesventa al abrir el modal cuando se edita
+
+  const openModalUpdateDetalleVenta = ({ id }: { id: string }) => {
+    debugger;
+    dispatch(actions.loadGetDetalleVentaById(ResponseState.InProgress));
+    dispatch({
+      type: 'GET_DETALLE_VENTA_BY_ID',
+      payload: id,
+    });
+    setFirstChargeDetalleVentaById(true);
+
+    // Abre el modal para actualizar DetalleVenta
+    setVisible(true);
+  };
+
+  // Función para cerrar el modal
+
+  const closeModal = () => {
+    setVisible(false);
+  };
 
   // Columnas de la tabla para el resumen de productos
+
   const columns = [
     { title: 'Producto', dataIndex: 'nombre', key: 'nombre' },
     { title: 'Cantidad', dataIndex: 'cantidad', key: 'cantidad' },
     { title: 'Precio Unitario', dataIndex: 'precio', key: 'precio' },
     { title: 'Total', dataIndex: 'total', key: 'total' },
+    ...(idVentaParams
+      ? [
+          {
+            key: '5',
+            title: 'Actions',
+            render: (record: any) => {
+              return (
+                <>
+                  <EditOutlined
+                    onClick={() =>
+                      openModalUpdateDetalleVenta({ id: record.id })
+                    }
+                  />
+                  <DeleteOutlined
+                    // onClick={() => onDeleteProduct(record)}
+                    style={{ color: 'red', marginLeft: 12 }}
+                  />
+                </>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   //-------
-  // form
+  // Form
   //-------
 
   const [clientFormData, setClientFormData] = useState({
@@ -357,21 +429,9 @@ export default function CrearFacturaPage() {
       });
   };
 
-  // useEffect para validar el formulario solo la primera vez
-
-  useEffect(() => {
-    const errors = formClientSelectValidation(clientFormData);
-    if (!ventaCreada) {
-      setIsButtonAgregarProductoDisabled(Object.keys(errors).length > 0);
-    }
-  }, [clientFormData, ventaCreada]);
-
-  useEffect(() => {
-    const errors = formDetalleVentaValidation(detalleVentaFormData); // Ejecuta la validación completa
-    setIsButtonConfrimarDetalleVentaDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
-  }, [detalleVentaFormData]);
-
+  //------------------------
   // Manejo estado de carga
+  //------------------------
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
 
@@ -379,6 +439,57 @@ export default function CrearFacturaPage() {
     useState<boolean>(false);
 
   const [clienteListState, setClienteListState] = useState<Entity[]>([]);
+
+  // Manejo estado de carga para traer GetVentaById
+
+  const [firstChargeVenta, setFirstChargeVenta] = useState<boolean>(true);
+
+  const [loadingSpinVentaById, setLoadingSpinVentaById] =
+    useState<boolean>(false);
+
+  const [ventaByIdListState, setVentaByIdListState] =
+    useState<VentaGetByIdEntity>(ventaById_Empty);
+
+  // Manejo estado de carga para traer GetVentaBDetalleVentaSpecial llenado
+
+  const [firstChargeDetalleVentaSpecial, setFirstChargeDetalleVentaSpecial] =
+    useState<boolean>(true);
+
+  const [
+    loadingSpinDetalleVentaSpecialById,
+    setLoadingSpinDetalleVentaSpecialById,
+  ] = useState<boolean>(false);
+
+  // Manejo de carga para traer el usuario y con el idEmpleado
+
+  const [loadingSpinProductById, setLoadingSpinProductById] =
+    useState<boolean>(false);
+  const [productByIdListState, setProductByIdListState] =
+    useState<GetUsuarioSimpleResponse>(usuarioById_Empty);
+
+  // Manejor de carga de Productos
+
+  const [loadingSpinProductos, setLoadingSpinProductos] =
+    useState<boolean>(false);
+
+  const [productosListStateSelect, setProductosListStateSelect] = useState<
+    Entity[]
+  >([]);
+
+  // Manejo estado de carga para traer GetByIdDetalleVenta
+
+  const [firstChargeDetalleVentaById, setFirstChargeDetalleVentaById] =
+    useState<boolean>(true);
+
+  const [loadingSpinDetalleVentaById, setLoadingSpinDetalleVentaById] =
+    useState<boolean>(false);
+
+  const [detalleVentaByIdNoListState, setDetalleVentaByIdNoListState] =
+    useState<IDetalleVentaSimple>(detalleVentaById_Empty);
+
+  //------------------------
+  // useEffects
+  //------------------------
 
   // useEffect para firstCharge
 
@@ -462,41 +573,38 @@ export default function CrearFacturaPage() {
     }
   }, [clientes, loadinClientes, productos, loadingProductos, dispatch]);
 
-  // Manejo estado de carga para traer GetByIdDetalleVenta
+  // useEffect para validaciones constantes del formulario
 
-  const [firstChargeDetalleVenta, setFirstChargeDetalleVenta] =
-    useState<boolean>(true);
+  useEffect(() => {
+    const errors = formClientSelectValidation(clientFormData);
+    if (!ventaCreada) {
+      setIsButtonAgregarProductoDisabled(Object.keys(errors).length > 0);
+    }
+  }, [clientFormData, ventaCreada]);
 
-  const [loadingSpinDetalleVentaById, setLoadingSpinDetalleVentaById] =
-    useState<boolean>(false);
+  useEffect(() => {
+    const errors = formDetalleVentaValidation(detalleVentaFormData); // Ejecuta la validación completa
+    setIsButtonConfrimarDetalleVentaDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
+  }, [detalleVentaFormData]);
 
-  const [detalleVentaByIdListState, setDetalleVentaByIdListState] =
-    useState<IDetalleVentaSimple>(detalleVentaById_Empty);
+  //UseEffect para productos seleccionados
 
-  // Manejo estado de carga para traer GetVentaById
-
-  const [firstChargeVenta, setFirstChargeVenta] = useState<boolean>(true);
-
-  const [loadingSpinVentaById, setLoadingSpinVentaById] =
-    useState<boolean>(false);
-
-  const [ventaByIdListState, setVentaByIdListState] =
-    useState<VentaGetByIdEntity>(ventaById_Empty);
-
-  // Manejo estado de carga para traer GetVentaBDetalleVentaSpecial llenado
-
-  const [firstChargeDetalleVentaSpecial, setFirstChargeDetalleVentaSpecial] =
-    useState<boolean>(true);
-
-  const [
-    loadingSpinDetalleVentaSpecialById,
-    setLoadingSpinDetalleVentaSpecialById,
-  ] = useState<boolean>(false);
+  useEffect(() => {
+    if (nuevoProducto) {
+      setProductosSeleccionados(prev => [...prev, nuevoProducto]);
+      setNuevoProducto(null); // Restablecer el estado de nuevoProducto
+    }
+    if (setProductosSeleccionados.length > 0) {
+      setIsButtonConfrimarFacturaisabled(false);
+    } else {
+      setIsButtonConfrimarFacturaisabled(true);
+    }
+  }, [nuevoProducto]);
 
   //UseEffect para getVentaById son dos
 
   useEffect(() => {
-    if (id) {
+    if (idVentaParams) {
       if (firstChargeVenta) {
         if (loadingVentaGetById?.state === ResponseState.Waiting) {
           dispatch(actions.loadGetVentaById(ResponseState.Started));
@@ -505,7 +613,7 @@ export default function CrearFacturaPage() {
           dispatch(actions.loadGetVentaById(ResponseState.InProgress));
           dispatch({
             type: GET_VENTA_BY_ID,
-            payload: id,
+            payload: idVentaParams,
           });
         }
       }
@@ -528,21 +636,18 @@ export default function CrearFacturaPage() {
         clienteId: '',
       });
     }
-  }, [ventaGetById, loadingVentaGetById, id, dispatch]);
+  }, [ventaGetById, loadingVentaGetById, idVentaParams, dispatch]);
 
   // El dos UseEffect necesario para getVentaById
 
   useEffect(() => {
     if (
-      id &&
+      idVentaParams &&
       ventaByIdListState !== ventaById_Empty
       // && a
     ) {
       const ventaForTable = {
         clienteId: ventaGetById.clienteId,
-        // clienteId: ventaGetById.clienteId,
-        // empleadoId: ventaGetById.empleadoId,
-        // fecha: ventaGetById.fecha,
       };
 
       dispatch(actions.loadDetalleVentaSpecialById(ResponseState.InProgress));
@@ -550,7 +655,6 @@ export default function CrearFacturaPage() {
         type: GET_DETALLE_VENTA_SPECIAL_BY_ID,
         payload: ventaGetById.id,
       });
-      debugger; // Debugger importante
       clientFormRef.current?.setFieldsValue(ventaForTable);
 
       setClientFormData(ventaForTable);
@@ -558,56 +662,15 @@ export default function CrearFacturaPage() {
       // Resetear todos los campos
       clientFormRef.current?.resetFields();
     }
-  }, [id, ventaByIdListState]);
+  }, [idVentaParams, ventaByIdListState]);
 
-  //UseEffect para DetalleVentaSpecial llenado son dos
-
-  // useEffect(() => {
-  //   if (id) {
-  //     fdsdfsd;
-  //     if (firstChargeDetalleVentaSpecial) {
-  //       if (loadingDetalleVentaGetAllById?.state === ResponseState.Waiting) {
-  //         dispatch(actions.loadDetalleVentaSpecialById(ResponseState.Started));
-  //       } else if (
-  //         loadingDetalleVentaGetAllById?.state === ResponseState.Started
-  //       ) {
-  //         setFirstChargeDetalleVentaSpecial(false);
-  //         dispatch(
-  //           actions.loadDetalleVentaSpecialById(ResponseState.InProgress),
-  //         );
-  //         dispatch({
-  //           type: GET_VENTA_BY_ID,
-  //           payload: id,
-  //         });
-  //       }
-  //     }
-  //     if (loadingDetalleVentaGetAllById?.state === ResponseState.InProgress) {
-  //       setLoadingSpinVentaById(true);
-  //     } else if (
-  //       loadingDetalleVentaGetAllById?.state === ResponseState.Finished
-  //     ) {
-  //       if (loadingDetalleVentaGetAllById?.status) {
-  //         if (ventaGetById && clientFormRef.current) {
-  //           setVentaByIdListState(ventaGetById);
-  //           if (loadingSpinVentaById) setLoadingSpinVentaById(false);
-  //         }
-  //       } else {
-  //         alert(loadingDetalleVentaGetAllById?.message);
-  //       }
-  //       dispatch(actions.loadDetalleVentaSpecialById(ResponseState.Waiting));
-  //     }
-  //   } else {
-  //     setClientFormData({
-  //       clienteId: '',
-  //     });
-  //   }
-  // }, [ventaGetById, loadingDetalleVentaGetAllById, id, dispatch]);
+  // UseEffect para DetalleVentaSpecial llenado son dos
 
   // El dos UseEffect necesario para DetalleVentaSpecial llenado
 
   useEffect(() => {
     if (
-      id &&
+      idVentaParams &&
       detalleVentaGetAllById !== DetalleVentaGetAllById_EmptyList
       // && a
     ) {
@@ -624,68 +687,71 @@ export default function CrearFacturaPage() {
       });
       setProductosSeleccionados(detalleVentaForTableList);
       setLoadingSpinDetalleVentaSpecialById(false);
-
-      debugger; // Debugger importante 2
-      // clientFormRef.current?.setFieldsValue(ventaForTable);
-
-      // setClientFormData(ventaForTable);
     } else {
-      // Resetear todos los campos
-      // clientFormRef.current?.resetFields();
+      setProductosSeleccionados([]);
     }
-  }, [id, ventaByIdListState]);
+  }, [idVentaParams, ventaByIdListState]);
 
-  //UseEffect para getDetalleVentaById son dos
+  // UseEffect para getDetalleVentaById son dos
+
+  useEffect(() => {
+    if (idVentaParams) {
+      if (firstChargeDetalleVentaById) {
+        if (loadingDetalleVentaGetById?.state === ResponseState.InProgress) {
+          debugger;
+          setLoadingSpinDetalleVentaById(true);
+        } else if (
+          loadingDetalleVentaGetById?.state === ResponseState.Finished
+        ) {
+          debugger;
+          if (loadingDetalleVentaGetById?.status) {
+            if (detalleVentaGetById && detalleVentaFormRef.current) {
+              detalleVentaFormRef.current?.setFieldsValue(detalleVentaGetById);
+              setdetalleVentaFormData(detalleVentaGetById);
+              debugger;
+              if (loadingSpinDetalleVentaById)
+                setLoadingSpinDetalleVentaById(false);
+            }
+          } else {
+            alert(loadingDetalleVentaGetById?.message);
+          }
+          dispatch(actions.loadGetDetalleVentaById(ResponseState.Waiting));
+        }
+      } else {
+        setdetalleVentaFormData({
+          cantidad: 0,
+          productoId: '',
+          ventaId: '',
+        });
+        setFirstChargeDetalleVentaById(false);
+      }
+    }
+  }, [
+    detalleVentaGetById,
+    loadingDetalleVentaGetById,
+    idVentaParams,
+    dispatch,
+  ]);
+
+  // El dos
 
   // useEffect(() => {
-  //   if (id) {
-  //     if (firstChargeDetalleVenta) {
-  //       if (loadingDetalleVentaGetById?.state === ResponseState.Waiting) {
-  //         dispatch(actions.loadGetDetalleVentaById(ResponseState.Started));
-  //       } else if (
-  //         loadingDetalleVentaGetById?.state === ResponseState.Started
-  //       ) {
-  //         setFirstChargeDetalleVenta(false);
-  //         dispatch(actions.loadGetDetalleVentaById(ResponseState.InProgress));
-  //         dispatch({
-  //           type: GET_DETALLE_VENTA_BY_ID,
-  //           payload: id,
-  //         });
-  //       }
-  //     }
-  //     if (loadingDetalleVentaGetById?.state === ResponseState.InProgress) {
-  //       setLoadingSpinDetalleVentaById(true);
-  //     } else if (loadingDetalleVentaGetById?.state === ResponseState.Finished) {
-  //       if (loadingDetalleVentaGetById?.status) {
-  //         if (detalleVentaGetById && detalleVentaFormRef.current) {
-  //           setDetalleVentaByIdListState(detalleVentaGetById);
-  //           if (loadingSpinDetalleVentaById)
-  //             setLoadingSpinDetalleVentaById(false);
-  //         }
-  //       } else {
-  //         alert(loadingDetalleVentaGetById?.message);
-  //       }
-  //       dispatch(actions.loadGetDetalleVentaById(ResponseState.Waiting));
-  //     }
+  //   if (
+  //     idVentaParams &&
+  //     detalleVentaByIdNoListState !== detalleVentaById_Empty &&
+  //     detalleVentaFormRef.current
+  //     // && a
+  //   ) {
+  //     debugger;
+  //     detalleVentaFormRef.current?.setFieldsValue(detalleVentaByIdNoListState);
+  //     setdetalleVentaFormData(detalleVentaByIdNoListState);
+  //     setLoadingSpinDetalleVentaSpecialById(false);
   //   } else {
-  //     setdetalleVentaFormData({
-  //       cantidad: 0,
-  //       productoId: '',
-  //       ventaId: '',
-  //     });
+  //     // setProductosSeleccionados([]);
   //   }
-  // }, [detalleVentaGetById, loadingDetalleVentaGetById, id, dispatch]);
+  // }, [idVentaParams, detalleVentaByIdNoListState]);
 
-  // All bien de aquí abajo
-
-  // para traer el usuario y con el idEmpleado
-
-  const [loadingSpinProductById, setLoadingSpinProductById] =
-    useState<boolean>(false);
-  const [productByIdListState, setProductByIdListState] =
-    useState<GetUsuarioSimpleResponse>(usuarioById_Empty);
-
-  // Efecto para cargar el usuario por ID
+  // UseEffect para cargar el usuario por ID
 
   useEffect(() => {
     if (loadingusuarioSimpleGetById.state === ResponseState.Started) {
@@ -703,59 +769,11 @@ export default function CrearFacturaPage() {
     }
   }, [loadingusuarioSimpleGetById, usuarioSimpleGetById]);
 
-  const openModal = () => {
-    if (!ventaCreada) {
-      // Genera el ID en el frontend
-      const ventaId = generateGUID();
-      setVentaId(ventaId);
-
-      if (!clientFormRef.current) {
-        return;
-      }
-      const formValues = clientFormRef.current.getFieldsValue();
-      const idCliente = formValues.clienteId;
-      const idEmpleado = productByIdListState.empleadoId;
-
-      // Obtiene la fecha actual en el formato necesario
-      const fecha = new Date().toISOString();
-
-      // Preparar el payload para la acción de guardar venta
-      const payload = {
-        id: ventaId,
-        clienteId: idCliente,
-        empleadoId: idEmpleado,
-        fecha: fecha,
-      };
-      // Actualizar solo el campo clienteId en el estado movimientoInventario
-      setMovimientoInventario(prevState => ({
-        ...prevState, // Mantiene los valores previos en movimientoInventario
-        empleadoId: productByIdListState.empleadoId, // Actualiza solo el idCliente
-      }));
-
-      setFidelizacionData(prevState => ({
-        ...prevState,
-        clienteId: idCliente,
-      }));
-
-      // Enviar la acción de guardar venta solo la primera vez
-      dispatch(actions.loadSaveVenta(ResponseState.InProgress));
-      dispatch({
-        type: 'SAVE_VENTA',
-        payload: payload,
-      });
-      // Marcar que la venta ha sido creada
-      setVentaCreada(true);
-    }
-
-    // Abre el modal para agregar productos
-    setVisible(true);
-  };
-
-  // UseEffect para save products
+  // UseEffect para save Venta
 
   useEffect(() => {
     if (ventasSaveLoading.state === ResponseState.InProgress) {
-      message.loading('Guardando producto...');
+      message.loading('Guardando Venta...');
     } else if (ventasSaveLoading.state === ResponseState.Finished) {
       if (ventasSaveLoading.status) {
         message.success('Venta guardada con éxito.');
@@ -801,50 +819,6 @@ export default function CrearFacturaPage() {
     }
   }, [detalleVentaSaveLoading, dispatch]);
 
-  // UseEffect para save Movimiento inventario
-
-  useEffect(() => {
-    if (movimientoInventarioSaveLoading.state === ResponseState.InProgress) {
-      message.loading('Guardando Movimiento Inventario...');
-    } else if (
-      movimientoInventarioSaveLoading.state === ResponseState.Finished
-    ) {
-      if (movimientoInventarioSaveLoading.status) {
-        message.success('Movimiento Inventario guardado con éxito.');
-      } else {
-        message.error(
-          `Error al guardar Movimiento Inventario: ${movimientoInventarioSaveLoading.message}`,
-        );
-      }
-      dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
-    }
-  }, [movimientoInventarioSaveLoading, dispatch]);
-
-  // UseEffect para save Fidelización
-
-  useEffect(() => {
-    if (fidelizacionSaveLoading.state === ResponseState.InProgress) {
-      message.loading('Guardando Fidelización...');
-    } else if (fidelizacionSaveLoading.state === ResponseState.Finished) {
-      if (fidelizacionSaveLoading.status) {
-        message.success('Fidelización guardado con éxito.');
-      } else {
-        message.error(
-          `Error al guardar Fidelización: ${fidelizacionSaveLoading.message}`,
-        );
-      }
-      dispatch(actions.loadSaveFidelizacion(ResponseState.Waiting));
-    }
-  }, [fidelizacionSaveLoading, dispatch]);
-
-  //Productos Selectors
-
-  const [loadingSpinProductos, setLoadingSpinProductos] =
-    useState<boolean>(false);
-
-  const [productosListStateSelect, setProductosListStateSelect] = useState<
-    Entity[]
-  >([]);
   return (
     <GeneralContainer>
       <ConfigProvider
@@ -885,11 +859,7 @@ export default function CrearFacturaPage() {
         onCancel={closeModal}
         footer={null}
       >
-        <Spin
-          tip="Cargando..."
-          size="large"
-          spinning={loadingSpinDetalleVentaById}
-        >
+        <Spin tip="Cargando..." size="large" spinning={loadingSpinVentaById}>
           <MainFormDetalleVenta
             detalleVentaForm={detalleVentaForm}
             detalleVentaFormRef={detalleVentaFormRef}

@@ -1,4 +1,12 @@
-import { ConfigProvider, Modal, notification, Spin, Table, theme } from 'antd';
+import {
+  ConfigProvider,
+  message,
+  Modal,
+  notification,
+  Spin,
+  Table,
+  theme,
+} from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { DataItemVenta, VentaSimplifyEntity } from 'app/api/detalleVenta/types';
 import { CustomTitleGeneal, GeneralContainer } from 'app/components/containers';
@@ -72,6 +80,8 @@ export default function ListaVentasPage() {
     ventas,
     loadinVentas,
     loadingDeleteVenta,
+    movimientoInventarioSaveLoading,
+    fidelizacionSaveLoading,
   } = useGeneralContext();
 
   // Redux
@@ -187,6 +197,48 @@ export default function ListaVentasPage() {
       dispatch(actions.loadDeleteVenta(ResponseState.Waiting));
     }
   }, [loadingDeleteVenta, dispatch]);
+
+  // ---------------------------------------/
+
+  // Respueta de otras paginas
+
+  // ---------------------------------------/
+
+  // UseEffect para save Movimiento inventario
+
+  useEffect(() => {
+    if (movimientoInventarioSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Movimiento Inventario...');
+    } else if (
+      movimientoInventarioSaveLoading.state === ResponseState.Finished
+    ) {
+      if (movimientoInventarioSaveLoading.status) {
+        message.success('Movimiento Inventario guardado con éxito.');
+      } else {
+        message.error(
+          `Error al guardar Movimiento Inventario: ${movimientoInventarioSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
+    }
+  }, [movimientoInventarioSaveLoading, dispatch]);
+
+  // UseEffect para save Fidelización
+
+  useEffect(() => {
+    if (fidelizacionSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Fidelización...');
+    } else if (fidelizacionSaveLoading.state === ResponseState.Finished) {
+      if (fidelizacionSaveLoading.status) {
+        message.success('Fidelización guardado con éxito.');
+      } else {
+        message.error(
+          `Error al guardar Fidelización: ${fidelizacionSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSaveFidelizacion(ResponseState.Waiting));
+    }
+  }, [fidelizacionSaveLoading, dispatch]);
 
   return (
     <GeneralContainer>
