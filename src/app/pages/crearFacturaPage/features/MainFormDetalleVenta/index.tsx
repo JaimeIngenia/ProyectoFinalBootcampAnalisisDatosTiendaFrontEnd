@@ -75,7 +75,7 @@ export default function MainFormDetalleVenta({
         label="Cantidad"
         name="cantidad"
         // rules={[{ required: true, message: 'Ingrese la cantidad' }]}
-        rules={rulesForm.rulesPrecio}
+        rules={rulesForm.rulesCantidad}
         validateTrigger="onBlur"
       >
         <Input

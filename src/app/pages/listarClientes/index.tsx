@@ -234,10 +234,10 @@ export default function ListarClientes() {
         return (
           <>
             <EditOutlined onClick={() => handleEditClient(record.id)} />
-            <DeleteOutlined
+            {/* <DeleteOutlined
               onClick={() => onDeleteProduct(record)}
               style={{ color: 'red', marginLeft: 12 }}
-            />
+            /> */}
           </>
         );
       },
@@ -349,9 +349,8 @@ export default function ListarClientes() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: 'solid blue 3px',
           width: '100%',
-          height: '80vh',
+          height: '50vh',
         }}
       >
         <Spin spinning={false}>
@@ -374,7 +373,11 @@ export default function ListarClientes() {
                 : {}),
             }}
           >
-            <Table columns={columns} dataSource={clienteListState}></Table>
+            <Table
+              columns={columns}
+              dataSource={clienteListState}
+              pagination={{ pageSize: 5 }}
+            ></Table>
           </ConfigProvider>
         </Spin>
       </div>

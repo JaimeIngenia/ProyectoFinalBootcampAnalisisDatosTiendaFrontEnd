@@ -7,6 +7,7 @@ import {
   funcionGeneradoraValidacionesVenta,
   funcionGeneradoraValidacionesProducto,
   funcionGeneradoraValidacionesImagenAgregarProducto,
+  funcionGeneradoraValidacionesCantidad,
 } from './formValidation';
 import {
   createMaxLengthRegex,
@@ -49,6 +50,11 @@ export const rulesForm = {
   }),
   rulesProductoId: funcionGeneradoraValidacionesProducto({
     label: 'Producto',
+  }),
+  rulesCantidad: funcionGeneradoraValidacionesCantidad({
+    maxLength: 15,
+    label: 'Cantidad',
+    field: 'cantidad',
   }),
   // Para la pagina de agregar producto
   rulesImagenAgregarProducto:

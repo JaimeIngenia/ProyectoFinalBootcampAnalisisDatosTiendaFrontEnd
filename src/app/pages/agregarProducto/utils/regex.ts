@@ -36,6 +36,8 @@ export const minLengthRegex = /^(.|\s){3,}$/;
 
 export const minLengthRegexSkills = /^(.|\s){2,}$/;
 
+export const minLengthRegexCantidad = /^(.|\s){1,}$/;
+
 export const containsAllowedSymbolsForSkills = value =>
   /[^a-zA-Z0-9\s.,áéíóúüÁÉÍÓÚÜñÑ\s#]+$/.test(value);
 

@@ -28,11 +28,11 @@ import {
 
 export default function ListaVentasPage() {
   const columns: ColumnsType<DataItemVenta> = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   key: 'id',
+    // },
     {
       title: 'Cliente',
       dataIndex: 'cliente',
@@ -249,12 +249,11 @@ export default function ListaVentasPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: 'solid blue 3px',
           width: '100%',
-          height: '80vh',
+          height: '50vh',
         }}
       >
-        <Spin spinning={false}>
+        <Spin spinning={loadingSpinVentas}>
           <ConfigProvider
             theme={{
               ...(darkMode
@@ -274,7 +273,11 @@ export default function ListaVentasPage() {
                 : {}),
             }}
           >
-            <Table columns={columns} dataSource={clienteListState}></Table>
+            <Table
+              columns={columns}
+              dataSource={clienteListState}
+              pagination={{ pageSize: 5 }}
+            ></Table>
           </ConfigProvider>
         </Spin>
       </div>

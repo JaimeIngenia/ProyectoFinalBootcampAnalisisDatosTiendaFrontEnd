@@ -50,13 +50,20 @@ const { Option } = Select;
 
 export default function CrearFacturaPage() {
   // Hook para navegar entre rutas
+
   const navigate = useNavigate();
+
   // Obtén el ID de los parámetros de la URL
+
   const { id: idVentaParams } = useParams();
+
   // Redux
+
   const { actions } = useSlice();
   const dispatch = useDispatch();
+
   // Context
+
   const {
     themeColors,
     clientes,
@@ -81,10 +88,12 @@ export default function CrearFacturaPage() {
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
+
   // Estado para verificar si la venta ya ha sido creada
+
   const [ventaCreada, setVentaCreada] = useState(false);
 
-  const [visible, setVisible] = useState(false); // Modal para agregar producto
+  const [visible, setVisible] = useState(false);
   const [productosListStateCompletos, setProductoListStateCompletos] = useState<
     Array<ProductEntityGetAll>
   >([]);
@@ -1174,32 +1183,44 @@ export default function CrearFacturaPage() {
       </ConfigProvider>
 
       {/* Modal para agregar productos */}
-      <Modal
-        title="Agregar Producto"
-        visible={visible}
-        onCancel={closeModal}
-        footer={null}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: themeColors.colorPrimary,
+            colorTextBase: themeColors.colorTextBase,
+            colorTextLightSolid: themeColors.colorTextLightSolid,
+            colorBgBase: themeColors.background,
+            colorBorder: themeColors.colorBorderCustom,
+          },
+        }}
       >
-        <Spin tip="Cargando..." size="large" spinning={loadingSpinVentaById}>
-          <MainFormDetalleVenta
-            detalleVentaForm={detalleVentaForm}
-            detalleVentaFormRef={detalleVentaFormRef}
-            detalleVentaFormData={detalleVentaFormData}
-            handleAgregarDetalleVenta={handleAgregarDetalleVenta}
-            loadingSpinProductos={loadingSpinProductos}
-            productosListStateSelect={productosListStateSelect}
-            handleSelectProductoChange={handleSelectProductoChange}
-            handleProductoChange={handleProductoChange}
-            isButtonConfrimarDetalleVentaDisabled={
-              isButtonConfrimarDetalleVentaDisabled
-            }
-            id={idVentaParams}
-            updateDetalleVenta={updateDetalleVenta}
-            addProductUpdate={addProductUpdate}
-            setAddProductUpdate={setAddProductUpdate}
-          />
-        </Spin>
-      </Modal>
+        <Modal
+          title="Agregar Producto"
+          visible={visible}
+          onCancel={closeModal}
+          footer={null}
+        >
+          <Spin tip="Cargando..." size="large" spinning={loadingSpinVentaById}>
+            <MainFormDetalleVenta
+              detalleVentaForm={detalleVentaForm}
+              detalleVentaFormRef={detalleVentaFormRef}
+              detalleVentaFormData={detalleVentaFormData}
+              handleAgregarDetalleVenta={handleAgregarDetalleVenta}
+              loadingSpinProductos={loadingSpinProductos}
+              productosListStateSelect={productosListStateSelect}
+              handleSelectProductoChange={handleSelectProductoChange}
+              handleProductoChange={handleProductoChange}
+              isButtonConfrimarDetalleVentaDisabled={
+                isButtonConfrimarDetalleVentaDisabled
+              }
+              id={idVentaParams}
+              updateDetalleVenta={updateDetalleVenta}
+              addProductUpdate={addProductUpdate}
+              setAddProductUpdate={setAddProductUpdate}
+            />
+          </Spin>
+        </Modal>
+      </ConfigProvider>
     </GeneralContainer>
   );
 }

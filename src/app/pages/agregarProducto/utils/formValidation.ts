@@ -5,6 +5,7 @@ import {
   createMaxLengthNoNumbersRegex,
   createMaxLengthRegex,
   emailRegex,
+  minLengthRegexCantidad,
   minLengthRegexSkills,
 } from './regex';
 import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo correctamente
@@ -370,6 +371,55 @@ export const funcionGeneradoraValidacionesPrecio = ({
       if (isNaN(value) || Number(value) <= 0) {
         return Promise.reject(
           new Error('El precio debe ser un número mayor que 0'),
+        );
+      }
+
+      // Validar si excede la longitud máxima
+      if (value.toString().length > maxLength) {
+        return Promise.reject(
+          new Error(`Maximum ${maxLength} characters allowed for ${label}`),
+        );
+      }
+
+      // Si pasa todas las validaciones, retornamos una promesa resuelta
+      return Promise.resolve();
+    },
+  },
+];
+
+export const funcionGeneradoraValidacionesCantidad = ({
+  maxLength,
+  label,
+  field,
+}) => [
+  {
+    required: true,
+    validator: async (rule, value) => {
+      // Si el valor está vacío o no está definido
+      if (
+        value === undefined ||
+        value === null ||
+        value.toString().trim().length === 0
+      ) {
+        return Promise.reject(new Error(`${label} is Required!`));
+      }
+
+      // Validar si el valor tiene menos de 2 caracteres
+      if (!minLengthRegexCantidad.test(value.toString())) {
+        return Promise.reject(
+          new Error('You should write at least 1 characters'),
+        );
+      }
+
+      // Validar si contiene solo símbolos
+      if (containsAllowedSymbolsForSkills(value.toString())) {
+        return Promise.reject(new Error('Only symbols are not allowed'));
+      }
+
+      // Validar que el valor sea un número y mayor que 0
+      if (isNaN(value) || Number(value) <= 0) {
+        return Promise.reject(
+          new Error('La cantidad debe ser un número mayor que 0'),
         );
       }
 
