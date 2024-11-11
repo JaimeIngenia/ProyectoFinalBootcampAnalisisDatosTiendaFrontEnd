@@ -302,6 +302,70 @@ export default function CrearFacturaPage() {
     setVisible(true);
   };
 
+  // Fucnión para guardar venta al abrir el modal cuando se actualiza
+
+  const [addProductUpdate, setAddProductUpdate] = useState(false);
+
+  const openModalUpdate = () => {
+    setAddProductUpdate(true);
+    setdetalleVentaFormData({
+      id: '',
+      cantidad: 0,
+      productoId: '',
+      ventaId: '',
+    });
+
+    detalleVentaFormRef.current?.setFieldsValue({
+      id: '',
+      cantidad: 0,
+      productoId: '',
+      ventaId: '',
+    });
+    // Genera el ID en el frontend
+    if (idVentaParams) {
+      const ventaId = idVentaParams;
+      setVentaId(ventaId);
+
+      if (!clientFormRef.current) {
+        return;
+      }
+      const formValues = clientFormRef.current.getFieldsValue();
+      const idCliente = formValues.clienteId;
+      const idEmpleado = productByIdListState.empleadoId;
+
+      // Obtiene la fecha actual en el formato necesario
+      const fecha = new Date().toISOString();
+
+      // Preparar el payload para la acción de guardar venta
+      const payload = {
+        id: ventaId,
+        clienteId: idCliente,
+        empleadoId: idEmpleado,
+        fecha: fecha,
+      };
+      // Actualizar solo el campo clienteId en el estado movimientoInventario
+      setMovimientoInventario(prevState => ({
+        ...prevState, // Mantiene los valores previos en movimientoInventario
+        empleadoId: productByIdListState.empleadoId, // Actualiza solo el idCliente
+      }));
+
+      setFidelizacionData(prevState => ({
+        ...prevState,
+        clienteId: idCliente,
+      }));
+
+      // Enviar la acción de guardar venta solo la primera vez
+      // dispatch(actions.loadSaveVenta(ResponseState.InProgress));
+      // dispatch({
+      //   type: 'SAVE_VENTA',
+      //   payload: payload,
+      // });
+      // Marcar que la venta ha sido creada
+    }
+    // Abre el modal para agregar productos
+    setVisible(true);
+  };
+
   // Fucnión para actualizar Detallesventa al abrir el modal cuando se edita
 
   const openModalUpdateDetalleVenta = ({ id }: { id: string }) => {
@@ -1104,6 +1168,7 @@ export default function CrearFacturaPage() {
             ventaCreada
             id={idVentaParams}
             updateVentaOnClick={updateVentaOnClick}
+            openModalUpdate={openModalUpdate}
           />
         </Spin>
       </ConfigProvider>
@@ -1130,6 +1195,8 @@ export default function CrearFacturaPage() {
             }
             id={idVentaParams}
             updateDetalleVenta={updateDetalleVenta}
+            addProductUpdate={addProductUpdate}
+            setAddProductUpdate={setAddProductUpdate}
           />
         </Spin>
       </Modal>

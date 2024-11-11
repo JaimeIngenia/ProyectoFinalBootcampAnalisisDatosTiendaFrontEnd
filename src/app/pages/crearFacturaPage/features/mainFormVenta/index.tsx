@@ -23,6 +23,7 @@ export default function MainFormVenta({
   ventaCreada,
   id,
   updateVentaOnClick,
+  openModalUpdate,
 }) {
   //   Context
   const { themeColors, darkMode } = useGeneralContext();
@@ -88,10 +89,10 @@ export default function MainFormVenta({
       </div>
       <CustomButtonn
         type="primary"
-        onClick={openModal}
+        onClick={id ? openModalUpdate : openModal}
         disabled={isButtonAgregarProductoDisabled}
       >
-        Agregar Producto
+        {id ? 'Agregar Producto Actualizado' : 'Agregar Producto'}
       </CustomButtonn>
       <CustomButtonn
         type="primary"

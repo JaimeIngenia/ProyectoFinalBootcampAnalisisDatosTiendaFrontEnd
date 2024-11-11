@@ -18,6 +18,8 @@ export default function MainFormDetalleVenta({
   isButtonConfrimarDetalleVentaDisabled,
   id,
   updateDetalleVenta,
+  addProductUpdate,
+  setAddProductUpdate,
 }) {
   //   Context
   const { themeColors, darkMode } = useGeneralContext();
@@ -25,6 +27,7 @@ export default function MainFormDetalleVenta({
   const saveDetalleVenta = (productoId: string, cantidad: number) => {
     // Lógica de guardado (manteniendo la lógica existente)
     handleAgregarDetalleVenta(productoId, cantidad);
+    setAddProductUpdate(false);
   };
 
   return (
@@ -33,14 +36,23 @@ export default function MainFormDetalleVenta({
       layout="vertical"
       ref={detalleVentaFormRef}
       name={'detalleVentaForm'}
-      onFinish={values =>
-        id
-          ? updateDetalleVenta()
-          : saveDetalleVenta(values.productoId, values.cantidad)
-      }
       // onFinish={values =>
-      //   handleAgregarDetalleVenta(values.productoId, values.cantidad)
+      //   id
+      //     ? updateDetalleVenta()
+      //     : saveDetalleVenta(values.productoId, values.cantidad)
       // }
+      onFinish={values => {
+        if (id && addProductUpdate) {
+          // Si existe id y addProductUpdate es true
+          saveDetalleVenta(values.productoId, values.cantidad);
+        } else if (id && !addProductUpdate) {
+          // Si existe id y addProductUpdate es false
+          updateDetalleVenta();
+        } else {
+          // Si no existe id
+          saveDetalleVenta(values.productoId, values.cantidad);
+        }
+      }}
     >
       <Form.Item
         required
