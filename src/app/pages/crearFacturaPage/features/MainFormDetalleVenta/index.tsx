@@ -10,15 +10,22 @@ export default function MainFormDetalleVenta({
   detalleVentaForm,
   detalleVentaFormRef,
   detalleVentaFormData,
-  handleAgregarProducto,
+  handleAgregarDetalleVenta,
   loadingSpinProductos,
   productosListStateSelect,
   handleSelectProductoChange,
   handleProductoChange,
   isButtonConfrimarDetalleVentaDisabled,
+  id,
+  updateDetalleVenta,
 }) {
   //   Context
   const { themeColors, darkMode } = useGeneralContext();
+
+  const saveDetalleVenta = (productoId: string, cantidad: number) => {
+    // Lógica de guardado (manteniendo la lógica existente)
+    handleAgregarDetalleVenta(productoId, cantidad);
+  };
 
   return (
     <Form
@@ -27,8 +34,13 @@ export default function MainFormDetalleVenta({
       ref={detalleVentaFormRef}
       name={'detalleVentaForm'}
       onFinish={values =>
-        handleAgregarProducto(values.productoId, values.cantidad)
+        id
+          ? updateDetalleVenta()
+          : saveDetalleVenta(values.productoId, values.cantidad)
       }
+      // onFinish={values =>
+      //   handleAgregarDetalleVenta(values.productoId, values.cantidad)
+      // }
     >
       <Form.Item
         required
@@ -73,7 +85,8 @@ export default function MainFormDetalleVenta({
           htmlType="submit"
           disabled={isButtonConfrimarDetalleVentaDisabled}
         >
-          Agregar
+          {id ? 'Actualizar' : 'Agregar'}
+          {/* Agregar */}
         </CustomButtonn>
       </Form.Item>
     </Form>

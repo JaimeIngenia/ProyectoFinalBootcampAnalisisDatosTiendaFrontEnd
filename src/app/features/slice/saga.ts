@@ -29,6 +29,7 @@ import {
   GET_VENTA_BY_ID,
   GET_DETALLE_VENTA_SPECIAL_BY_ID,
   GET_DELETE_VENTA,
+  UPDATE_DETALLE_VENTA,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -67,12 +68,14 @@ import {
   getDetalleVentaById,
   getDetalleVentaSpecialById,
   saveDetalleVenta,
+  updateDetalleVenta,
 } from 'app/api/detalleVenta';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 import { saveMovimientoInventario } from 'app/api/movimientoInventario';
 import { Fidelizacion } from 'app/api/fidelizacion/types';
 import { saveFidelizacion } from 'app/api/fidelizacion';
 import {
+  DetalleVentaPayload,
   DetalleVentaSpecialEntity,
   VentaSimplifyEntity,
 } from 'app/api/detalleVenta/types';
@@ -381,9 +384,7 @@ function* fetchUpdateClientSaga(action) {
 //GetDetalleBentaById
 
 function* fetchDetalleVentaById(action: any) {
-  debugger;
   try {
-    debugger;
     const detalleVenta = yield call(getDetalleVentaById, action.payload);
     yield put(actions.reducerGetDetalleVentaByIdSuccess(detalleVenta)); // Acción de éxito
   } catch (error) {
@@ -450,6 +451,39 @@ function* fetchDeleteVentaSaga(action: any) {
   }
 }
 
+// Update DetalleVenta
+
+function* fetchUpdateDetalleVentaSaga(action: any) {
+  try {
+    const { id, detalleVentaData } = action.payload;
+
+    const updatedDetalleVentaData = yield call(
+      updateDetalleVenta,
+      id,
+      detalleVentaData,
+    );
+
+    // Suponiendo que updatedDetalleVentaData es de tipo DetalleVentaPayload,
+    // transforma los datos al tipo DetalleVentaSpecialEntity
+    const detalleVentaSpecial: DetalleVentaSpecialEntity = {
+      ...updatedDetalleVentaData,
+      id: action.payload.id, // Asigna el ID correcto si no está en el payload
+      producto: {
+        ...updatedDetalleVentaData.producto, // Asegúrate de que contenga todas las propiedades necesarias
+        nombre: updatedDetalleVentaData.producto.nombre,
+      },
+    };
+
+    yield put(actions.reducerUpdateDetalleVentaSuccess(detalleVentaSpecial));
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.reducerUpdateDetalleVentaFailure(errorMessage));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -480,4 +514,5 @@ export function* Saga() {
   );
   yield takeLatest(GET_DELETE_VENTA, fetchDeleteVentaSaga);
   yield takeLatest(SAVE_MOVIMIENTO_INVENTARIO, saveMovimientoInventarioSaga);
+  yield takeLatest(UPDATE_DETALLE_VENTA, fetchUpdateDetalleVentaSaga);
 }

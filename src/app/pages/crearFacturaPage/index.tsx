@@ -73,6 +73,7 @@ export default function CrearFacturaPage() {
     loadingVentaGetById,
     detalleVentaGetAllById,
     loadingDetalleVentaGetAllById,
+    loadingUpdateDetalleVenta,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -119,12 +120,14 @@ export default function CrearFacturaPage() {
 
   // Guardar el producto seleccionado en el detalle de la factura
 
-  const handleAgregarProducto = (producto, cantidad) => {
+  const handleAgregarDetalleVenta = (producto, cantidad) => {
     if (ventaId !== '') {
+      // debugger;
       // Datos del producto seleccionados (puedes adaptar estos datos según tu estructura real)
       const productoSeleccionado = productosListStateCompletos.find(
         p => p.id === producto,
       );
+      // debugger;
 
       if (productoSeleccionado) {
         if (productosListStateCompletos) {
@@ -292,7 +295,6 @@ export default function CrearFacturaPage() {
   // Fucnión para actualizar Detallesventa al abrir el modal cuando se edita
 
   const openModalUpdateDetalleVenta = ({ id }: { id: string }) => {
-    debugger;
     dispatch(actions.loadGetDetalleVentaById(ResponseState.InProgress));
     dispatch({
       type: 'GET_DETALLE_VENTA_BY_ID',
@@ -302,6 +304,42 @@ export default function CrearFacturaPage() {
 
     // Abre el modal para actualizar DetalleVenta
     setVisible(true);
+  };
+
+  // Función para actualizar Detalle Venta
+
+  const updateDetalleVenta = () => {
+    // debugger;
+    if (!detalleVentaFormRef.current) {
+      return;
+    }
+    // debugger;
+
+    // Obtenemos los valores del formulario
+    const formValues = detalleVentaFormRef.current.getFieldsValue();
+
+    // Preparamos los datos que vamos a enviar con la acción
+    const detalleVentaDataUpdated = {
+      ...formValues,
+      producto: {
+        ...formValues.producto,
+        nombre: formValues.producto.nombre, // Asegúrate de que nombre esté aquí si es necesario
+      },
+    };
+
+    // debugger;
+    // Disparamos la acción para actualizar el detalle de venta
+    dispatch(actions.loadUpdateDetalleVenta(ResponseState.InProgress));
+    dispatch({
+      type: 'UPDATE_DETALLE_VENTA',
+      payload: {
+        id: idVentaParams, // ID obtenido de los parámetros
+        detalleVentaData: detalleVentaDataUpdated,
+      },
+    });
+
+    // Cierra el modal
+    setVisible(false);
   };
 
   // Función para cerrar el modal
@@ -679,7 +717,7 @@ export default function CrearFacturaPage() {
       detalleVentaGetAllById?.forEach(r => {
         detalleVentaForTableList.push({
           id: r.id,
-          producto: r.producto.nombre,
+          nombre: r.producto.nombre,
           cantidad: r.cantidad,
           precio: r.producto.precio,
           total: r.producto.precio * r.cantidad,
@@ -698,17 +736,14 @@ export default function CrearFacturaPage() {
     if (idVentaParams) {
       if (firstChargeDetalleVentaById) {
         if (loadingDetalleVentaGetById?.state === ResponseState.InProgress) {
-          debugger;
           setLoadingSpinDetalleVentaById(true);
         } else if (
           loadingDetalleVentaGetById?.state === ResponseState.Finished
         ) {
-          debugger;
           if (loadingDetalleVentaGetById?.status) {
             if (detalleVentaGetById && detalleVentaFormRef.current) {
               detalleVentaFormRef.current?.setFieldsValue(detalleVentaGetById);
               setdetalleVentaFormData(detalleVentaGetById);
-              debugger;
               if (loadingSpinDetalleVentaById)
                 setLoadingSpinDetalleVentaById(false);
             }
@@ -733,23 +768,7 @@ export default function CrearFacturaPage() {
     dispatch,
   ]);
 
-  // El dos
-
-  // useEffect(() => {
-  //   if (
-  //     idVentaParams &&
-  //     detalleVentaByIdNoListState !== detalleVentaById_Empty &&
-  //     detalleVentaFormRef.current
-  //     // && a
-  //   ) {
-  //     debugger;
-  //     detalleVentaFormRef.current?.setFieldsValue(detalleVentaByIdNoListState);
-  //     setdetalleVentaFormData(detalleVentaByIdNoListState);
-  //     setLoadingSpinDetalleVentaSpecialById(false);
-  //   } else {
-  //     // setProductosSeleccionados([]);
-  //   }
-  // }, [idVentaParams, detalleVentaByIdNoListState]);
+  // El dos no hizo falta porque la acción ya se hizo con el botón modal
 
   // UseEffect para cargar el usuario por ID
 
@@ -864,7 +883,7 @@ export default function CrearFacturaPage() {
             detalleVentaForm={detalleVentaForm}
             detalleVentaFormRef={detalleVentaFormRef}
             detalleVentaFormData={detalleVentaFormData}
-            handleAgregarProducto={handleAgregarProducto}
+            handleAgregarDetalleVenta={handleAgregarDetalleVenta}
             loadingSpinProductos={loadingSpinProductos}
             productosListStateSelect={productosListStateSelect}
             handleSelectProductoChange={handleSelectProductoChange}
@@ -872,6 +891,8 @@ export default function CrearFacturaPage() {
             isButtonConfrimarDetalleVentaDisabled={
               isButtonConfrimarDetalleVentaDisabled
             }
+            id={idVentaParams}
+            updateDetalleVenta={updateDetalleVenta}
           />
         </Spin>
       </Modal>

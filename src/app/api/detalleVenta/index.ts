@@ -33,19 +33,18 @@ export async function getDetalleVentaById(
   id: string,
 ): Promise<IDetalleVentaSimple> {
   try {
-    debugger;
     const response = await axios.get<IDetalleVentaSimple>(
       `https://localhost:7029/api/DetalleVenta/GetDetalleVentaByIdSimple/${id}`,
     );
     return response.data;
   } catch (error) {
-    debugger;
     console.error(`Error fetching DetalleVenta ${id}:`, error);
     throw error;
   }
 }
 
 // Llama al endpoint para obtener todas las ventas simplificadas
+
 export async function getAllVentasSimplify(): Promise<VentaSimplifyEntity[]> {
   try {
     const response = await axios.get<VentaSimplifyEntity[]>(
@@ -70,6 +69,24 @@ export async function getDetalleVentaSpecialById(
     return response.data;
   } catch (error) {
     console.error('Error fetching DetalleVentaSpecial by ventaId:', error);
+    throw error;
+  }
+}
+
+// Update Detalle Venta
+
+export async function updateDetalleVenta(
+  detalleVentaId: string,
+  detalleVentaData: DetalleVentaPayload,
+): Promise<DetalleVentaPayload> {
+  try {
+    const response = await axios.put<DetalleVentaPayload>(
+      `https://localhost:7029/api/DetalleVenta/UpdateDetalleVenta/${detalleVentaId}`,
+      detalleVentaData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating detalleVenta ${detalleVentaId}:`, error);
     throw error;
   }
 }

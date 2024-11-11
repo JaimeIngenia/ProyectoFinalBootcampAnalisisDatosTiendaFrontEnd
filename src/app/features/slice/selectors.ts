@@ -238,3 +238,10 @@ export const ventasDeleteLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.ventaDeleteLoading,
 );
+
+// Update Detalle Venta
+
+export const detalleVentaUpdateLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.detalleVentaUpdateLoading,
+);

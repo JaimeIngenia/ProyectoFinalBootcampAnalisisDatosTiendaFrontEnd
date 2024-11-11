@@ -63,6 +63,7 @@ export interface LoadingStates {
   ventaGetByIdLoading: LoadingState;
   detalleVentaSpecialLoading: LoadingState;
   ventaDeleteLoading: LoadingState;
+  detalleVentaUpdateLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

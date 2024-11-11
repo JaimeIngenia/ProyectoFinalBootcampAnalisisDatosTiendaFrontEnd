@@ -16,6 +16,7 @@ import {
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
 import { MovimientoInventarioEntitySave } from 'app/api/movimientoInventario/types';
 import {
+  DetalleVentaPayload,
   DetalleVentaSpecialEntity,
   IDetalleVentaSimple,
   VentaSimplifyEntity,
@@ -670,6 +671,43 @@ const slice = createSlice({
     // Reducer para iniciar la carga
     loadDeleteVenta(state, action) {
       state.loadingStates.ventaDeleteLoading = {
+        state: action.payload,
+        status: false,
+      };
+    },
+
+    // Update Detalle Venta
+
+    reducerUpdateDetalleVentaSuccess(
+      state,
+      action: PayloadAction<DetalleVentaSpecialEntity>,
+    ) {
+      const updatedDetalleVenta = action.payload;
+
+      // Recorremos detallesVenta y actualizamos el detalle de venta por su id
+      state.detallesVenta = state.detallesVenta.map(detalleVenta =>
+        detalleVenta.id === updatedDetalleVenta.id
+          ? updatedDetalleVenta
+          : detalleVenta,
+      );
+
+      // Actualizamos el estado de carga
+      state.loadingStates.detalleVentaUpdateLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerUpdateDetalleVentaFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.detalleVentaUpdateLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadUpdateDetalleVenta(state, action) {
+      state.loadingStates.detalleVentaUpdateLoading = {
         state: action.payload,
         status: false,
       };

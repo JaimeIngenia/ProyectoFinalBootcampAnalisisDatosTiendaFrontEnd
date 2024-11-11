@@ -22,6 +22,7 @@ import {
   detalleVentaSaveSelectorLoading,
   detalleVentaSpecialGetByIdLoadingSelector,
   detalleVentaSpecialGetByIdSelector,
+  detalleVentaUpdateLoadingSelector,
   empleadosSelector,
   empleadosSelectorLoading,
   fidelizacionSaveSelectorLoading,
@@ -104,6 +105,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
     detalleVentaSpecialGetByIdLoadingSelector,
   );
   const loadingDeleteVenta = useSelector(ventasDeleteLoadingSelector);
+  const loadingUpdateDetalleVenta = useSelector(
+    detalleVentaUpdateLoadingSelector,
+  );
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -181,6 +185,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         detalleVentaGetAllById,
         loadingDetalleVentaGetAllById,
         loadingDeleteVenta,
+        loadingUpdateDetalleVenta,
       }}
     >
       {children}

@@ -143,5 +143,6 @@ export const GeneralStatesReduxSaga_empty = {
     ventaGetByIdLoading: defaultLoadingState,
     detalleVentaSpecialLoading: defaultLoadingState,
     ventaDeleteLoading: defaultLoadingState,
+    detalleVentaUpdateLoading: defaultLoadingState,
   },
 };
