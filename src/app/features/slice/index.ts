@@ -683,15 +683,12 @@ const slice = createSlice({
       action: PayloadAction<DetalleVentaSpecialEntity>,
     ) {
       const updatedDetalleVenta = action.payload;
-
-      // Recorremos detallesVenta y actualizamos el detalle de venta por su id
       state.detallesVenta = state.detallesVenta.map(detalleVenta =>
         detalleVenta.id === updatedDetalleVenta.id
           ? updatedDetalleVenta
           : detalleVenta,
       );
 
-      // Actualizamos el estado de carga
       state.loadingStates.detalleVentaUpdateLoading = {
         state: ResponseState.Finished,
         status: true,

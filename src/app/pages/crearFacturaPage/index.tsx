@@ -4,6 +4,7 @@ import {
   FormInstance,
   message,
   Modal,
+  notification,
   Select,
   Spin,
 } from 'antd';
@@ -320,31 +321,13 @@ export default function CrearFacturaPage() {
     const ventaId = detalleVentaFormData.ventaId;
     const cantidad = detalleVentaFormData.cantidad;
     const productoId = detalleVentaFormData.productoId;
+
     const detalleVentaDataUpdated = {
       ventaId: ventaId,
       cantidad: cantidad,
       productoId: productoId,
     };
-    debugger;
-    if (!detalleVentaFormRef.current) {
-      return;
-    }
-    // debugger;
 
-    // Obtenemos los valores del formulario
-    // const formValues = detalleVentaFormRef.current.getFieldsValue();
-
-    // // Preparamos los datos que vamos a enviar con la acción
-    // const detalleVentaDataUpdated = {
-    //   ...formValues,
-    //   producto: {
-    //     ...formValues.producto,
-    //     nombre: formValues.producto.nombre, // Asegúrate de que nombre esté aquí si es necesario
-    //   },
-    // };
-
-    debugger;
-    // Disparamos la acción para actualizar el detalle de venta
     dispatch(actions.loadUpdateDetalleVenta(ResponseState.InProgress));
     dispatch({
       type: 'UPDATE_DETALLE_VENTA',
@@ -354,7 +337,6 @@ export default function CrearFacturaPage() {
       },
     });
 
-    // Cierra el modal
     setVisible(false);
   };
 
@@ -549,6 +531,11 @@ export default function CrearFacturaPage() {
 
   const [detalleVentaByIdNoListState, setDetalleVentaByIdNoListState] =
     useState<IDetalleVentaSimple>(detalleVentaById_Empty);
+
+  // Manejo estado de carga para ver la actualización de detalleVenta
+
+  const [loadingSpinUpdateDetalleVenta, setLoadingSpinUpdateDetalleVenta] =
+    useState<boolean>(false);
 
   //------------------------
   // useEffects
@@ -864,6 +851,50 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadSaveDetalleVenta(ResponseState.Waiting));
     }
   }, [detalleVentaSaveLoading, dispatch]);
+
+  //UseEffect de update products
+
+  useEffect(() => {
+    if (loadingUpdateDetalleVenta?.state === ResponseState.InProgress) {
+      setLoadingSpinUpdateDetalleVenta(true);
+    } else if (loadingUpdateDetalleVenta?.state === ResponseState.Finished) {
+      setLoadingSpinUpdateDetalleVenta(false);
+      if (loadingUpdateDetalleVenta) setLoadingSpinUpdateDetalleVenta(false);
+      if (loadingUpdateDetalleVenta?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Actualización completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingUpdateDetalleVenta?.message || 'Error en la Actualización.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadUpdateDetalleVenta(ResponseState.Waiting));
+    }
+  }, [loadingUpdateDetalleVenta, dispatch]);
+
+  // useEffect(() => {
+  //   if (loadingUpdateDetalleVenta.state === ResponseState.InProgress) {
+  //     message.loading('Actualizando Detalle Venta...');
+  //   } else if (
+  //     loadingUpdateDetalleVenta.state === ResponseState.Finished
+  //   ) {
+  //     if (loadingUpdateDetalleVenta.status) {
+  //       message.success('Detalle Venta actualizada con éxito.');
+  //     } else {
+  //       message.error(
+  //         `Error al actualizar la Detalle Venta: ${loadingUpdateDetalleVenta.message}`,
+  //       );
+  //     }
+  //     dispatch(actions.loadUpdateDetalleVenta(ResponseState.Waiting));
+  //   }
+  // }, [loadingUpdateDetalleVenta, dispatch]);
 
   return (
     <GeneralContainer>

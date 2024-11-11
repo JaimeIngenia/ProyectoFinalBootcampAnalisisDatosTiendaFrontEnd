@@ -452,29 +452,29 @@ function* fetchDeleteVentaSaga(action: any) {
 }
 
 // Update DetalleVenta
+// function* fetchUpdateClientSaga(action) {
+//   try {
+//     const { id, clientData } = action.payload;
+//     const updatedClient = yield call(updateClient, id, clientData);
+//     yield put(actions.reducerUpdateClientSuccess(updatedClient));
+//   } catch (error) {
+//     const errorMessage =
+//       error instanceof Error ? error.message : 'Unknown error occurred';
+//     yield put(actions.reducerUpdateClientFailure(errorMessage));
+//   }
+// }
 
 function* fetchUpdateDetalleVentaSaga(action: any) {
   try {
     const { id, detalleVentaData } = action.payload;
-
     const updatedDetalleVentaData = yield call(
       updateDetalleVenta,
       id,
       detalleVentaData,
     );
-
-    // Suponiendo que updatedDetalleVentaData es de tipo DetalleVentaPayload,
-    // transforma los datos al tipo DetalleVentaSpecialEntity
-    const detalleVentaSpecial: DetalleVentaSpecialEntity = {
-      ...updatedDetalleVentaData,
-      id: action.payload.id, // Asigna el ID correcto si no está en el payload
-      producto: {
-        ...updatedDetalleVentaData.producto, // Asegúrate de que contenga todas las propiedades necesarias
-        nombre: updatedDetalleVentaData.producto.nombre,
-      },
-    };
-
-    yield put(actions.reducerUpdateDetalleVentaSuccess(detalleVentaSpecial));
+    yield put(
+      actions.reducerUpdateDetalleVentaSuccess(updatedDetalleVentaData),
+    );
   } catch (error) {
     let errorMessage = 'Unknown error occurred';
     if (error instanceof Error) {
