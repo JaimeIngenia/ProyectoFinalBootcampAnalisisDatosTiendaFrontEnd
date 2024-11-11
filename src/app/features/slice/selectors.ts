@@ -245,3 +245,17 @@ export const detalleVentaUpdateLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.detalleVentaUpdateLoading,
 );
+
+// Delete Detalle Venta
+
+export const detalleVentaDeleteLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.detalleVentaDeleteLoading,
+);
+
+// Uptdate Venta
+
+export const ventaUpdateLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.ventaUpdateLoading,
+);

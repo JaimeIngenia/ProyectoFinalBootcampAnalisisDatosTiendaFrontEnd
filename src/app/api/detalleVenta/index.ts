@@ -90,3 +90,17 @@ export async function updateDetalleVenta(
     throw error;
   }
 }
+
+// Eliminar un DetalleVenta por ID
+export async function deleteDetalleVenta(
+  detalleVentaId: string,
+): Promise<void> {
+  try {
+    await axios.delete(
+      `https://localhost:7029/api/DetalleVenta/DeleteDetalleVenta/${detalleVentaId}`,
+    );
+  } catch (error) {
+    console.error(`Error eliminando el detalleVenta ${detalleVentaId}:`, error);
+    throw error;
+  }
+}

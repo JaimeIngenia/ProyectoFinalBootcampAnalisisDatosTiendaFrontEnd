@@ -22,6 +22,7 @@ import {
   ventaById_Empty,
 } from 'app/features/slice/emptyTypes';
 import {
+  DELETE_DETALLE_VENTA,
   GET_DETALLE_VENTA_BY_ID,
   GET_DETALLE_VENTA_SPECIAL_BY_ID,
   GET_VENTA_BY_ID,
@@ -75,6 +76,8 @@ export default function CrearFacturaPage() {
     detalleVentaGetAllById,
     loadingDetalleVentaGetAllById,
     loadingUpdateDetalleVenta,
+    loadingDeleteDetalleVenta,
+    loadingUpdateVenta,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -302,7 +305,6 @@ export default function CrearFacturaPage() {
   // Fucnión para actualizar Detallesventa al abrir el modal cuando se edita
 
   const openModalUpdateDetalleVenta = ({ id }: { id: string }) => {
-    debugger;
     dispatch(actions.loadGetDetalleVentaById(ResponseState.InProgress));
     dispatch({
       type: 'GET_DETALLE_VENTA_BY_ID',
@@ -310,7 +312,6 @@ export default function CrearFacturaPage() {
     });
     setFirstChargeDetalleVentaById(true);
 
-    // Abre el modal para actualizar DetalleVenta
     setVisible(true);
   };
 
@@ -349,8 +350,70 @@ export default function CrearFacturaPage() {
   // Función para actualizar detalleVenta
 
   const handleEditDetalleVentaClick = (id: string) => {
-    debugger;
     openModalUpdateDetalleVenta({ id });
+  };
+
+  //  Función para eliminar detalleVenta
+
+  const onDeleteDetalleVenta = record => {
+    Modal.confirm({
+      title: '¿Estás seguro de eliminar esta Detalle Venta?',
+      onOk: () => {
+        dispatch(actions.loadDeleteDetalleVenta(ResponseState.InProgress));
+        dispatch({
+          type: DELETE_DETALLE_VENTA,
+          payload: record.id,
+        });
+        // Actualizar la lista de productos en el estado local
+        setProductosSeleccionados(prevState =>
+          prevState.filter(dv => dv.id !== record.id),
+        );
+      },
+
+      onCancel: () => {
+        console.log('Eliminación cancelada');
+      },
+    });
+  };
+
+  // Función para actualizar venta
+
+  const updateVentaOnClick = () => {
+    if (!idVentaParams || !clientFormRef.current) {
+      return;
+    }
+
+    const formValues = clientFormRef.current.getFieldsValue();
+    const idCliente = formValues.clienteId;
+    const idEmpleado = productByIdListState.empleadoId;
+
+    // Obtiene la fecha actual en el formato necesario
+    const fecha = new Date().toISOString();
+
+    // Preparar el payload para la acción de actualización de venta
+    const payload = {
+      id: idVentaParams, // Utiliza el id existente para la actualización
+      clienteId: idCliente,
+      empleadoId: idEmpleado,
+      fecha: fecha,
+    };
+
+    // Actualizar el movimientoInventario y fidelizacionData si es necesario
+    // setMovimientoInventario(prevState => ({
+    //   ...prevState,
+    //   empleadoId: productByIdListState.empleadoId,
+    // }));
+
+    // setFidelizacionData(prevState => ({
+    //   ...prevState,
+    //   clienteId: idCliente,
+    // }));
+
+    dispatch(actions.loadUpdateVenta(ResponseState.InProgress));
+    dispatch({
+      type: 'UPDATE_VENTA',
+      payload: payload,
+    });
   };
 
   // Columnas de la tabla para el resumen de productos
@@ -375,7 +438,7 @@ export default function CrearFacturaPage() {
                     onClick={() => handleEditDetalleVentaClick(record.id)}
                   />
                   <DeleteOutlined
-                    // onClick={() => onDeleteProduct(record)}
+                    onClick={() => onDeleteDetalleVenta(record)}
                     style={{ color: 'red', marginLeft: 12 }}
                   />
                 </>
@@ -535,6 +598,16 @@ export default function CrearFacturaPage() {
   // Manejo estado de carga para ver la actualización de detalleVenta
 
   const [loadingSpinUpdateDetalleVenta, setLoadingSpinUpdateDetalleVenta] =
+    useState<boolean>(false);
+
+  // Manejo estado de carga para ver la eliminacion de detalleVenta
+
+  const [loadingSpinDeleteDetalleVenta, setLoadingSpinDeleteDetalleVenta] =
+    useState<boolean>(false);
+
+  // Manejo estado de carga para ver la actualización de Venta
+
+  const [loadingSpinUpdateVenta, setLoadingSpinUpdateVenta] =
     useState<boolean>(false);
 
   //------------------------
@@ -863,7 +936,7 @@ export default function CrearFacturaPage() {
       if (loadingUpdateDetalleVenta?.status) {
         notification.success({
           message: 'Éxito',
-          description: 'Actualización completada correctamente.',
+          description: 'Actualización Detalle Venta completada correctamente.',
           placement: 'bottomRight', // Puedes cambiar la posición si deseas
         });
       } else {
@@ -878,6 +951,33 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadUpdateDetalleVenta(ResponseState.Waiting));
     }
   }, [loadingUpdateDetalleVenta, dispatch]);
+
+  //UseEffect de update ventas
+
+  useEffect(() => {
+    if (loadingUpdateVenta?.state === ResponseState.InProgress) {
+      setLoadingSpinUpdateVenta(true);
+    } else if (loadingUpdateVenta?.state === ResponseState.Finished) {
+      setLoadingSpinUpdateVenta(false);
+      if (loadingUpdateVenta) setLoadingSpinUpdateVenta(false);
+      if (loadingUpdateVenta?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Actualización de venta completada correctamente.',
+          placement: 'bottomRight',
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingUpdateVenta?.message || 'Error en la Actualización.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadUpdateVenta(ResponseState.Waiting));
+    }
+  }, [loadingUpdateVenta, dispatch]);
 
   // useEffect(() => {
   //   if (loadingUpdateDetalleVenta.state === ResponseState.InProgress) {
@@ -895,6 +995,33 @@ export default function CrearFacturaPage() {
   //     dispatch(actions.loadUpdateDetalleVenta(ResponseState.Waiting));
   //   }
   // }, [loadingUpdateDetalleVenta, dispatch]);
+
+  //UseEffect para eliminar un DetalleVenta
+
+  useEffect(() => {
+    if (loadingDeleteDetalleVenta?.state === ResponseState.InProgress) {
+      setLoadingSpinDeleteDetalleVenta(true);
+    } else if (loadingDeleteDetalleVenta?.state === ResponseState.Finished) {
+      setLoadingSpinDeleteDetalleVenta(false);
+      if (loadingDeleteDetalleVenta) setLoadingSpinDeleteDetalleVenta(false);
+      if (loadingDeleteDetalleVenta?.status) {
+        notification.success({
+          message: 'Éxito',
+          description: 'Eliminación completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingDeleteDetalleVenta?.message || 'Error en la eliminación.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadDeleteDetalleVenta(ResponseState.Waiting));
+    }
+  }, [loadingDeleteDetalleVenta, dispatch]);
 
   return (
     <GeneralContainer>
@@ -925,6 +1052,8 @@ export default function CrearFacturaPage() {
             isButtonConfrimarFacturaDisabled={isButtonConfrimarFacturaDisabled}
             handleConfirmarFactura={handleConfirmarFactura}
             ventaCreada
+            id={idVentaParams}
+            updateVentaOnClick={updateVentaOnClick}
           />
         </Spin>
       </ConfigProvider>

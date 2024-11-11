@@ -11,3 +11,9 @@ export interface VentaGetByIdEntity {
   empleadoId: string;
   fecha: string;
 }
+
+export interface VentaUpdatePayload {
+  clienteId: string;
+  empleadoId: string;
+  fecha: string;
+}

@@ -63,4 +63,6 @@ export type GeneralContextType = {
   loadingDetalleVentaGetAllById: LoadingState;
   loadingDeleteVenta: LoadingState;
   loadingUpdateDetalleVenta: LoadingState;
+  loadingDeleteDetalleVenta: LoadingState;
+  loadingUpdateVenta: LoadingState;
 };

@@ -22,6 +22,7 @@ import {
   VentaSimplifyEntity,
 } from 'app/api/detalleVenta/types';
 import { VentaGetByIdEntity } from 'app/api/venta/types';
+import { mapVentaGetByIdToSimplify } from '../utils/functions';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -705,6 +706,65 @@ const slice = createSlice({
 
     loadUpdateDetalleVenta(state, action) {
       state.loadingStates.detalleVentaUpdateLoading = {
+        state: action.payload,
+        status: false,
+      };
+    },
+
+    // Delete DetalleVenta
+
+    reducerDeleteDetalleVentaSuccess(state, action: PayloadAction<string>) {
+      state.detallesVenta = state.detallesVenta.filter(
+        detalleVenta => detalleVenta.id !== action.payload,
+      );
+      state.loadingStates.detalleVentaDeleteLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerDeleteDetalleVentaFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.detalleVentaDeleteLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadDeleteDetalleVenta(state, action) {
+      state.loadingStates.detalleVentaDeleteLoading = {
+        state: action.payload,
+      };
+    },
+
+    // Update Venta
+
+    reducerUpdateVentaSuccess(
+      state,
+      action: PayloadAction<VentaGetByIdEntity>,
+    ) {
+      const updatedVenta = mapVentaGetByIdToSimplify(action.payload);
+
+      state.ventas = state.ventas.map(venta =>
+        venta.id === updatedVenta.id ? updatedVenta : venta,
+      );
+
+      state.loadingStates.ventaUpdateLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerUpdateVentaFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.ventaUpdateLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadUpdateVenta(state, action) {
+      state.loadingStates.ventaUpdateLoading = {
         state: action.payload,
         status: false,
       };

@@ -30,6 +30,8 @@ import {
   GET_DETALLE_VENTA_SPECIAL_BY_ID,
   GET_DELETE_VENTA,
   UPDATE_DETALLE_VENTA,
+  DELETE_DETALLE_VENTA,
+  UPDATE_VENTA,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -62,8 +64,14 @@ import {
   updateClient,
 } from 'app/api/clientes';
 import { SaveVentaRequest, VentaGetByIdEntity } from 'app/api/venta/types';
-import { deleteVenta, getVentaById, saveVenta } from 'app/api/venta';
 import {
+  deleteVenta,
+  getVentaById,
+  saveVenta,
+  updateVenta,
+} from 'app/api/venta';
+import {
+  deleteDetalleVenta,
   getAllVentasSimplify,
   getDetalleVentaById,
   getDetalleVentaSpecialById,
@@ -452,17 +460,6 @@ function* fetchDeleteVentaSaga(action: any) {
 }
 
 // Update DetalleVenta
-// function* fetchUpdateClientSaga(action) {
-//   try {
-//     const { id, clientData } = action.payload;
-//     const updatedClient = yield call(updateClient, id, clientData);
-//     yield put(actions.reducerUpdateClientSuccess(updatedClient));
-//   } catch (error) {
-//     const errorMessage =
-//       error instanceof Error ? error.message : 'Unknown error occurred';
-//     yield put(actions.reducerUpdateClientFailure(errorMessage));
-//   }
-// }
 
 function* fetchUpdateDetalleVentaSaga(action: any) {
   try {
@@ -481,6 +478,41 @@ function* fetchUpdateDetalleVentaSaga(action: any) {
       errorMessage = error.message;
     }
     yield put(actions.reducerUpdateDetalleVentaFailure(errorMessage));
+  }
+}
+
+// Delete DetalleVenta
+
+function* fetchDeleteDetalleVentaSaga(action: any) {
+  try {
+    yield call(deleteDetalleVenta, action.payload);
+
+    yield put(actions.reducerDeleteDetalleVentaSuccess(action.payload));
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    yield put(actions.reducerDeleteDetalleVentaFailure(errorMessage));
+  }
+}
+
+// update Detalle Venta
+
+function* fetchUpdateVentaSaga(action: any) {
+  try {
+    const { ventaId, ventaData } = action.payload;
+    const updatedVenta = yield call(updateVenta, ventaId, ventaData);
+
+    yield put(actions.reducerUpdateVentaSuccess(updatedVenta));
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    yield put(actions.reducerUpdateVentaFailure(errorMessage));
   }
 }
 
@@ -515,4 +547,6 @@ export function* Saga() {
   yield takeLatest(GET_DELETE_VENTA, fetchDeleteVentaSaga);
   yield takeLatest(SAVE_MOVIMIENTO_INVENTARIO, saveMovimientoInventarioSaga);
   yield takeLatest(UPDATE_DETALLE_VENTA, fetchUpdateDetalleVentaSaga);
+  yield takeLatest(DELETE_DETALLE_VENTA, fetchDeleteDetalleVentaSaga);
+  yield takeLatest(UPDATE_VENTA, fetchUpdateVentaSaga);
 }

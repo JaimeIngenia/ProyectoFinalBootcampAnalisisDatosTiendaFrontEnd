@@ -1,7 +1,11 @@
 // api/ventas.ts
 
 import axios from 'axios';
-import { SaveVentaRequest, VentaGetByIdEntity } from './types';
+import {
+  SaveVentaRequest,
+  VentaGetByIdEntity,
+  VentaUpdatePayload,
+} from './types';
 
 export async function saveVenta(data: SaveVentaRequest): Promise<void> {
   try {
@@ -37,7 +41,7 @@ export async function getVentaById(
   }
 }
 
-// Delete and sons
+// Delete
 
 export async function deleteVenta(ventaId: string): Promise<void> {
   try {
@@ -46,6 +50,25 @@ export async function deleteVenta(ventaId: string): Promise<void> {
     );
   } catch (error) {
     console.error(`Error eliminando la venta ${ventaId}:`, error);
+    throw error;
+  }
+}
+
+// Update
+
+// Actualizar una venta
+export async function updateVenta(
+  ventaId: string,
+  ventaData: VentaUpdatePayload,
+): Promise<VentaGetByIdEntity> {
+  try {
+    const response = await axios.put<VentaGetByIdEntity>(
+      `https://localhost:7029/api/Venta/UpdateVenta/${ventaId}`,
+      ventaData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating venta ${ventaId}:`, error);
     throw error;
   }
 }

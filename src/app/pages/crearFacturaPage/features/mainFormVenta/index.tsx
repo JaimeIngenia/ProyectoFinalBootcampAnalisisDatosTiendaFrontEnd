@@ -21,6 +21,8 @@ export default function MainFormVenta({
   isButtonConfrimarFacturaDisabled,
   handleConfirmarFactura,
   ventaCreada,
+  id,
+  updateVentaOnClick,
 }) {
   //   Context
   const { themeColors, darkMode } = useGeneralContext();
@@ -94,10 +96,10 @@ export default function MainFormVenta({
       <CustomButtonn
         type="primary"
         style={{ marginLeft: '10px' }}
-        onClick={handleConfirmarFactura}
+        onClick={id ? updateVentaOnClick : handleConfirmarFactura}
         disabled={isButtonConfrimarFacturaDisabled}
       >
-        Confirmar Factura
+        {id ? 'Actualizar Factura' : 'Confirmar Factura'}
       </CustomButtonn>
     </Form>
   );

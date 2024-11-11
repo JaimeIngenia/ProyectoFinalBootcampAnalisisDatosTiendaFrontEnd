@@ -378,6 +378,7 @@ export function ListaProductos() {
   }, [loadingUpdateProduct, dispatch]);
 
   //Delete products
+
   const onDeleteProduct = record => {
     Modal.confirm({
       title: '¿Estás seguro de eliminar este producto?',
