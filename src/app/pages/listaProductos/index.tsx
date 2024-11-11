@@ -427,29 +427,6 @@ export function ListaProductos() {
               loadingSpinUpdateProductos
             }
           >
-            {/* <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: '0C9999',
-                },
-                algorithm: theme.darkAlgorithm,
-              }}
-            > */}
-            {/* <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: themeColors.colorPrimary,
-                  colorText: themeColors.colorTextBase,
-                  colorTextHeading: themeColors.colorTextBase,
-                  colorBgContainer: themeColors.background, // Fondo de tabla y de celdas
-                  colorBgElevated: themeColors.background, // Fondo de encabezado
-                  colorBorder: themeColors.colorPrimary, // Color de bordes
-                  colorTextBase: themeColors.colorTextBase,
-                  colorTextPlaceholder: themeColors.colorTextLightSolid,
-                },
-                algorithm: theme.darkAlgorithm, // Combinación con darkAlgorithm
-              }}
-            > */}
             <ConfigProvider
               theme={{
                 ...(darkMode
@@ -465,6 +442,7 @@ export function ListaProductos() {
                         colorTextPlaceholder: themeColors.colorTextLightSolid,
                       },
                       algorithm: theme.darkAlgorithm,
+                      // algorithm: theme.compactAlgorithm,
                     }
                   : {}),
               }}
