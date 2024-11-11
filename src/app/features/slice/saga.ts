@@ -502,8 +502,14 @@ function* fetchDeleteDetalleVentaSaga(action: any) {
 
 function* fetchUpdateVentaSaga(action: any) {
   try {
-    const { ventaId, ventaData } = action.payload;
-    const updatedVenta = yield call(updateVenta, ventaId, ventaData);
+    const { id, clienteId, empleadoId, fecha } = action.payload;
+    const ventaData = {
+      clienteId,
+      empleadoId,
+      fecha,
+    };
+
+    const updatedVenta = yield call(updateVenta, id, ventaData);
 
     yield put(actions.reducerUpdateVentaSuccess(updatedVenta));
   } catch (error) {

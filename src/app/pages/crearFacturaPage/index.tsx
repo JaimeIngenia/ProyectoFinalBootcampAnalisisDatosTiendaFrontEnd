@@ -129,31 +129,37 @@ export default function CrearFacturaPage() {
   // Fucnion Guardar el producto seleccionado en el detalle de la factura
 
   const handleAgregarDetalleVenta = (producto, cantidad) => {
-    if (ventaId !== '') {
-      // debugger;
-      // Datos del producto seleccionados (puedes adaptar estos datos según tu estructura real)
-      const productoSeleccionado = productosListStateCompletos.find(
-        p => p.id === producto,
-      );
-      // debugger;
+    // Datos del producto seleccionados (puedes adaptar estos datos según tu estructura real)
+    const productoSeleccionado = productosListStateCompletos.find(
+      p => p.id === producto,
+    );
 
-      if (productoSeleccionado) {
-        if (productosListStateCompletos) {
-          const nuevoProducto = {
-            id: productoSeleccionado.id,
-            nombre: productoSeleccionado.nombre,
-            cantidad: cantidad,
-            precio: productoSeleccionado.precio,
-            total: productoSeleccionado.precio * cantidad,
-          };
+    if (productoSeleccionado) {
+      if (productosListStateCompletos) {
+        const nuevoProducto = {
+          id: productoSeleccionado.id,
+          nombre: productoSeleccionado.nombre,
+          cantidad: cantidad,
+          precio: productoSeleccionado.precio,
+          total: productoSeleccionado.precio * cantidad,
+        };
 
-          // Actualizar productos seleccionados
-          setNuevoProducto(nuevoProducto);
-          setTotal(prevTotal => prevTotal + nuevoProducto.total);
-        }
-
-        closeModal();
+        // Actualizar productos seleccionados
+        setNuevoProducto(nuevoProducto);
+        setTotal(prevTotal => prevTotal + nuevoProducto.total);
       }
+    }
+    if (idVentaParams !== undefined) {
+      const payload = {
+        cantidad: cantidad,
+        productoId: producto,
+        ventaId: ventaId,
+      };
+      dispatch(actions.loadSaveDetalleVenta(ResponseState.InProgress));
+      dispatch({
+        type: 'SAVE_DETALLE_VENTA',
+        payload: payload,
+      });
     }
     if (detalleVentaFormRef.current) {
       detalleVentaFormRef.current.resetFields();
@@ -164,6 +170,7 @@ export default function CrearFacturaPage() {
         ventaId: '',
       });
     }
+    closeModal();
   };
 
   // Función para confirmar la factura y enviar los productos al backend
@@ -250,6 +257,39 @@ export default function CrearFacturaPage() {
     setTotal(0);
     setVentaCreada(false);
     navigate(`/listarVentas`);
+  };
+
+  // Función para actualizar venta
+
+  const updateVentaOnClick = () => {
+    const idCliente = clientFormData.clienteId;
+    const idEmpleado = productByIdListState.empleadoId;
+
+    const fecha = new Date().toISOString();
+
+    const payload = {
+      id: idVentaParams,
+      clienteId: idCliente,
+      empleadoId: idEmpleado,
+      fecha: fecha,
+    };
+
+    // Actualizar el movimientoInventario y fidelizacionData si es necesario
+    // setMovimientoInventario(prevState => ({
+    //   ...prevState,
+    //   empleadoId: productByIdListState.empleadoId,
+    // }));
+
+    // setFidelizacionData(prevState => ({
+    //   ...prevState,
+    //   clienteId: idCliente,
+    // }));
+
+    dispatch(actions.loadUpdateVenta(ResponseState.InProgress));
+    dispatch({
+      type: 'UPDATE_VENTA',
+      payload: payload,
+    });
   };
 
   // Fucnión para guardar venta al abrir el modal
@@ -438,46 +478,6 @@ export default function CrearFacturaPage() {
       onCancel: () => {
         console.log('Eliminación cancelada');
       },
-    });
-  };
-
-  // Función para actualizar venta
-
-  const updateVentaOnClick = () => {
-    if (!idVentaParams || !clientFormRef.current) {
-      return;
-    }
-
-    const formValues = clientFormRef.current.getFieldsValue();
-    const idCliente = formValues.clienteId;
-    const idEmpleado = productByIdListState.empleadoId;
-
-    // Obtiene la fecha actual en el formato necesario
-    const fecha = new Date().toISOString();
-
-    // Preparar el payload para la acción de actualización de venta
-    const payload = {
-      id: idVentaParams, // Utiliza el id existente para la actualización
-      clienteId: idCliente,
-      empleadoId: idEmpleado,
-      fecha: fecha,
-    };
-
-    // Actualizar el movimientoInventario y fidelizacionData si es necesario
-    // setMovimientoInventario(prevState => ({
-    //   ...prevState,
-    //   empleadoId: productByIdListState.empleadoId,
-    // }));
-
-    // setFidelizacionData(prevState => ({
-    //   ...prevState,
-    //   clienteId: idCliente,
-    // }));
-
-    dispatch(actions.loadUpdateVenta(ResponseState.InProgress));
-    dispatch({
-      type: 'UPDATE_VENTA',
-      payload: payload,
     });
   };
 
@@ -837,6 +837,7 @@ export default function CrearFacturaPage() {
       setClientFormData({
         clienteId: '',
       });
+      setVentaId('');
     }
   }, [ventaGetById, loadingVentaGetById, idVentaParams, dispatch]);
 
@@ -872,7 +873,6 @@ export default function CrearFacturaPage() {
 
   useEffect(() => {
     if (idVentaParams) {
-      debugger;
       if (firstChargeDetalleVentaSpecial) {
         if (loadingDetalleVentaGetAllById?.state === ResponseState.Waiting) {
           dispatch(actions.loadDetalleVentaSpecialById(ResponseState.Started));
