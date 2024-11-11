@@ -4,7 +4,7 @@ import { CustomButtonn } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import CustomSelect from 'app/features/customSelect';
 import { rulesForm } from 'app/pages/agregarProducto/utils/rulesForm';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function MainFormVenta({
   clientForm,

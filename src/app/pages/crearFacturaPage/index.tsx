@@ -339,6 +339,7 @@ export default function CrearFacturaPage() {
     });
 
     setVisible(false);
+    setFirstChargeDetalleVentaSpecial(true); // Pilas
   };
 
   // Función para cerrar el modal
@@ -724,6 +725,10 @@ export default function CrearFacturaPage() {
     }
   }, [nuevoProducto]);
 
+  // --------------------------------
+  // Update UseEffects
+  // --------------------------------
+
   //UseEffect para getVentaById son dos
 
   useEffect(() => {
@@ -747,10 +752,20 @@ export default function CrearFacturaPage() {
         if (loadingVentaGetById?.status) {
           if (ventaGetById && clientFormRef.current) {
             setVentaByIdListState(ventaGetById);
+            // Estos dos no estaban antes
+            const ventaForTable = {
+              clienteId: ventaGetById.clienteId,
+            };
+            clientFormRef.current?.setFieldsValue(ventaForTable);
+
+            setClientFormData(ventaForTable);
+
             if (loadingSpinVentaById) setLoadingSpinVentaById(false);
           }
         } else {
           alert(loadingVentaGetById?.message);
+          // Resetear todos los campos
+          clientFormRef.current?.resetFields();
         }
         dispatch(actions.loadGetVentaById(ResponseState.Waiting));
       }
@@ -763,57 +778,90 @@ export default function CrearFacturaPage() {
 
   // El dos UseEffect necesario para getVentaById
 
-  useEffect(() => {
-    if (
-      idVentaParams &&
-      ventaByIdListState !== ventaById_Empty
-      // && a
-    ) {
-      const ventaForTable = {
-        clienteId: ventaGetById.clienteId,
-      };
+  // useEffect(() => {
+  //   if (
+  //     idVentaParams &&
+  //     ventaByIdListState !== ventaById_Empty
+  //     // && a
+  //   ) {
+  //     const ventaForTable = {
+  //       clienteId: ventaGetById.clienteId,
+  //     };
 
-      dispatch(actions.loadDetalleVentaSpecialById(ResponseState.InProgress));
-      dispatch({
-        type: GET_DETALLE_VENTA_SPECIAL_BY_ID,
-        payload: ventaGetById.id,
-      });
-      clientFormRef.current?.setFieldsValue(ventaForTable);
+  //     dispatch(actions.loadDetalleVentaSpecialById(ResponseState.InProgress));
+  //     dispatch({
+  //       type: GET_DETALLE_VENTA_SPECIAL_BY_ID,
+  //       payload: ventaGetById.id,
+  //     });
+  //     clientFormRef.current?.setFieldsValue(ventaForTable);
 
-      setClientFormData(ventaForTable);
-    } else {
-      // Resetear todos los campos
-      clientFormRef.current?.resetFields();
-    }
-  }, [idVentaParams, ventaByIdListState]);
+  //     setClientFormData(ventaForTable);
+  //   } else {
+  //     // Resetear todos los campos
+  //     clientFormRef.current?.resetFields();
+  //   }
+  // }, [idVentaParams, ventaByIdListState]);
 
   // UseEffect para DetalleVentaSpecial llenado son dos
 
-  // El dos UseEffect necesario para DetalleVentaSpecial llenado
+  // El dos UseEffect necesario para DetalleVentaSpecial llenado tabla
 
   useEffect(() => {
-    if (
-      idVentaParams &&
-      detalleVentaGetAllById !== DetalleVentaGetAllById_EmptyList
-      // && a
-    ) {
-      let detalleVentaForTableList: any[] = [];
+    if (idVentaParams) {
+      debugger;
+      if (firstChargeDetalleVentaSpecial) {
+        if (loadingDetalleVentaGetAllById?.state === ResponseState.Waiting) {
+          dispatch(actions.loadDetalleVentaSpecialById(ResponseState.Started));
+        } else if (
+          loadingDetalleVentaGetAllById?.state === ResponseState.Started
+        ) {
+          setFirstChargeDetalleVentaSpecial(false);
+          dispatch(
+            actions.loadDetalleVentaSpecialById(ResponseState.InProgress),
+          );
+          dispatch({
+            type: GET_DETALLE_VENTA_SPECIAL_BY_ID,
+            payload: idVentaParams,
+          });
+        }
+      }
+      if (loadingDetalleVentaGetAllById?.state === ResponseState.InProgress) {
+        setLoadingSpinDetalleVentaSpecialById(true);
+      } else if (
+        loadingDetalleVentaGetAllById?.state === ResponseState.Finished
+      ) {
+        if (loadingDetalleVentaGetAllById?.status) {
+          if (detalleVentaGetAllById) {
+            let detalleVentaForTableList: any[] = [];
 
-      detalleVentaGetAllById?.forEach(r => {
-        detalleVentaForTableList.push({
-          id: r.id,
-          nombre: r.producto.nombre,
-          cantidad: r.cantidad,
-          precio: r.producto.precio,
-          total: r.producto.precio * r.cantidad,
-        });
-      });
-      setProductosSeleccionados(detalleVentaForTableList);
-      setLoadingSpinDetalleVentaSpecialById(false);
+            detalleVentaGetAllById?.forEach(r => {
+              detalleVentaForTableList.push({
+                id: r.id,
+                nombre: r.producto.nombre,
+                cantidad: r.cantidad,
+                precio: r.producto.precio,
+                total: r.producto.precio * r.cantidad,
+              });
+            });
+            setProductosSeleccionados(detalleVentaForTableList);
+
+            if (loadingSpinDetalleVentaSpecialById)
+              setLoadingSpinDetalleVentaSpecialById(false);
+          }
+        } else {
+          alert(loadingDetalleVentaGetAllById?.message);
+        }
+        dispatch(actions.loadDetalleVentaSpecialById(ResponseState.Waiting));
+      }
     } else {
       setProductosSeleccionados([]);
     }
-  }, [idVentaParams, ventaByIdListState]);
+  }, [
+    idVentaParams,
+    loadingDetalleVentaGetAllById,
+    detalleVentaGetAllById,
+    dispatch,
+  ]);
 
   // UseEffect para getDetalleVentaById son dos
 
@@ -925,7 +973,7 @@ export default function CrearFacturaPage() {
     }
   }, [detalleVentaSaveLoading, dispatch]);
 
-  //UseEffect de update products
+  //UseEffect de update Detalle Venta
 
   useEffect(() => {
     if (loadingUpdateDetalleVenta?.state === ResponseState.InProgress) {
@@ -952,32 +1000,7 @@ export default function CrearFacturaPage() {
     }
   }, [loadingUpdateDetalleVenta, dispatch]);
 
-  //UseEffect de update ventas
-
-  useEffect(() => {
-    if (loadingUpdateVenta?.state === ResponseState.InProgress) {
-      setLoadingSpinUpdateVenta(true);
-    } else if (loadingUpdateVenta?.state === ResponseState.Finished) {
-      setLoadingSpinUpdateVenta(false);
-      if (loadingUpdateVenta) setLoadingSpinUpdateVenta(false);
-      if (loadingUpdateVenta?.status) {
-        notification.success({
-          message: 'Éxito',
-          description: 'Actualización de venta completada correctamente.',
-          placement: 'bottomRight',
-        });
-      } else {
-        notification.error({
-          message: 'Error',
-          description:
-            loadingUpdateVenta?.message || 'Error en la Actualización.',
-          placement: 'bottomRight',
-        });
-      }
-
-      dispatch(actions.loadUpdateVenta(ResponseState.Waiting));
-    }
-  }, [loadingUpdateVenta, dispatch]);
+  //UseEffect Detalle venta Update versión dos comentada
 
   // useEffect(() => {
   //   if (loadingUpdateDetalleVenta.state === ResponseState.InProgress) {
@@ -1022,6 +1045,33 @@ export default function CrearFacturaPage() {
       dispatch(actions.loadDeleteDetalleVenta(ResponseState.Waiting));
     }
   }, [loadingDeleteDetalleVenta, dispatch]);
+
+  //UseEffect de update ventas
+
+  // useEffect(() => {
+  //   if (loadingUpdateVenta?.state === ResponseState.InProgress) {
+  //     setLoadingSpinUpdateVenta(true);
+  //   } else if (loadingUpdateVenta?.state === ResponseState.Finished) {
+  //     setLoadingSpinUpdateVenta(false);
+  //     if (loadingUpdateVenta) setLoadingSpinUpdateVenta(false);
+  //     if (loadingUpdateVenta?.status) {
+  //       notification.success({
+  //         message: 'Éxito',
+  //         description: 'Actualización de venta completada correctamente.',
+  //         placement: 'bottomRight',
+  //       });
+  //     } else {
+  //       notification.error({
+  //         message: 'Error',
+  //         description:
+  //           loadingUpdateVenta?.message || 'Error en la Actualización.',
+  //         placement: 'bottomRight',
+  //       });
+  //     }
+
+  //     dispatch(actions.loadUpdateVenta(ResponseState.Waiting));
+  //   }
+  // }, [loadingUpdateVenta, dispatch]);
 
   return (
     <GeneralContainer>
