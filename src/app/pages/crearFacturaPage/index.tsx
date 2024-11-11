@@ -118,7 +118,11 @@ export default function CrearFacturaPage() {
 
   const [total, setTotal] = useState(0);
 
-  // Guardar el producto seleccionado en el detalle de la factura
+  // -----------------------------------
+  // Funciones
+  // -----------------------------------
+
+  // Fucnion Guardar el producto seleccionado en el detalle de la factura
 
   const handleAgregarDetalleVenta = (producto, cantidad) => {
     if (ventaId !== '') {
@@ -150,6 +154,7 @@ export default function CrearFacturaPage() {
     if (detalleVentaFormRef.current) {
       detalleVentaFormRef.current.resetFields();
       setdetalleVentaFormData({
+        id: '',
         cantidad: 0,
         productoId: '',
         ventaId: '',
@@ -292,9 +297,11 @@ export default function CrearFacturaPage() {
     // Abre el modal para agregar productos
     setVisible(true);
   };
+
   // Fucnión para actualizar Detallesventa al abrir el modal cuando se edita
 
   const openModalUpdateDetalleVenta = ({ id }: { id: string }) => {
+    debugger;
     dispatch(actions.loadGetDetalleVentaById(ResponseState.InProgress));
     dispatch({
       type: 'GET_DETALLE_VENTA_BY_ID',
@@ -309,31 +316,40 @@ export default function CrearFacturaPage() {
   // Función para actualizar Detalle Venta
 
   const updateDetalleVenta = () => {
-    // debugger;
+    const id = detalleVentaFormData.id;
+    const ventaId = detalleVentaFormData.ventaId;
+    const cantidad = detalleVentaFormData.cantidad;
+    const productoId = detalleVentaFormData.productoId;
+    const detalleVentaDataUpdated = {
+      ventaId: ventaId,
+      cantidad: cantidad,
+      productoId: productoId,
+    };
+    debugger;
     if (!detalleVentaFormRef.current) {
       return;
     }
     // debugger;
 
     // Obtenemos los valores del formulario
-    const formValues = detalleVentaFormRef.current.getFieldsValue();
+    // const formValues = detalleVentaFormRef.current.getFieldsValue();
 
-    // Preparamos los datos que vamos a enviar con la acción
-    const detalleVentaDataUpdated = {
-      ...formValues,
-      producto: {
-        ...formValues.producto,
-        nombre: formValues.producto.nombre, // Asegúrate de que nombre esté aquí si es necesario
-      },
-    };
+    // // Preparamos los datos que vamos a enviar con la acción
+    // const detalleVentaDataUpdated = {
+    //   ...formValues,
+    //   producto: {
+    //     ...formValues.producto,
+    //     nombre: formValues.producto.nombre, // Asegúrate de que nombre esté aquí si es necesario
+    //   },
+    // };
 
-    // debugger;
+    debugger;
     // Disparamos la acción para actualizar el detalle de venta
     dispatch(actions.loadUpdateDetalleVenta(ResponseState.InProgress));
     dispatch({
       type: 'UPDATE_DETALLE_VENTA',
       payload: {
-        id: idVentaParams, // ID obtenido de los parámetros
+        id: id,
         detalleVentaData: detalleVentaDataUpdated,
       },
     });
@@ -346,6 +362,13 @@ export default function CrearFacturaPage() {
 
   const closeModal = () => {
     setVisible(false);
+  };
+
+  // Función para actualizar detalleVenta
+
+  const handleEditDetalleVentaClick = (id: string) => {
+    debugger;
+    openModalUpdateDetalleVenta({ id });
   };
 
   // Columnas de la tabla para el resumen de productos
@@ -364,9 +387,10 @@ export default function CrearFacturaPage() {
               return (
                 <>
                   <EditOutlined
-                    onClick={() =>
-                      openModalUpdateDetalleVenta({ id: record.id })
-                    }
+                    // onClick={() =>
+                    //   openModalUpdateDetalleVenta({ id: record.id })
+                    // }
+                    onClick={() => handleEditDetalleVentaClick(record.id)}
                   />
                   <DeleteOutlined
                     // onClick={() => onDeleteProduct(record)}
@@ -388,6 +412,7 @@ export default function CrearFacturaPage() {
     clienteId: '',
   });
   const [detalleVentaFormData, setdetalleVentaFormData] = useState({
+    id: '',
     cantidad: 0,
     productoId: '',
     ventaId: '',
@@ -754,6 +779,7 @@ export default function CrearFacturaPage() {
         }
       } else {
         setdetalleVentaFormData({
+          id: '',
           cantidad: 0,
           productoId: '',
           ventaId: '',
@@ -824,6 +850,7 @@ export default function CrearFacturaPage() {
         if (detalleVentaFormRef.current) {
           detalleVentaFormRef.current.resetFields();
           setdetalleVentaFormData({
+            id: '',
             cantidad: 0,
             productoId: '',
             ventaId: '',
