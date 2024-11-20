@@ -23,6 +23,7 @@ import CrearFacturaPage from './pages/crearFacturaPage';
 import CrearClientPage from './pages/crearClientPage';
 import ListarClientes from './pages/listarClientes';
 import ListaVentasPage from './pages/listarVentasPage';
+import EstadisticasPage from './pages/estadisticasPage';
 
 export function App() {
   //Genral flow redux
@@ -132,6 +133,7 @@ export function App() {
               <Route path="/editarCliente/:id" element={<CrearClientPage />} />
               <Route path="/editarFactura/:id" element={<CrearFacturaPage />} />
               <Route path="/listarVentas" element={<ListaVentasPage />} />
+              <Route path="/estadisticas" element={<EstadisticasPage />} />
               {/* <Route path="/crearClientes" element={<CrearClientPage />} /> */}
               {/* <Route path="/crearFactura/:id" element={<CrearFacturaPage />} /> */}
             </Route>

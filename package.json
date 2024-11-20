@@ -37,6 +37,7 @@
     "lint-staged": "13.0.3",
     "node-plop": "0.26.3",
     "plop": "2.7.6",
+    "powerbi-client-react": "1.4.0",
     "prettier": "^3.0.0",
     "react": "18.2.0",
     "react-app-polyfill": "3.0.0",
