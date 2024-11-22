@@ -17,8 +17,13 @@ import CustomSelect from 'app/features/customSelect';
 import { agregarPuntoAlFinal } from 'app/utils';
 import SideBarMenuPage from 'app/features/sideBarMenuPage';
 import { GeneralContainer } from 'app/components/containers';
+import LogoLight from '../../../assets/logo/logoLightMercadoDosPuentes.svg';
+import LogoDark from '../../../assets/logo/logoDarkMercadoDosPuentes.svg';
+import { useGeneralContext } from 'app/context/GeneralContext';
 
 export function HomePage() {
+  //   Context
+  const { darkMode } = useGeneralContext();
   const { actions } = useSlice();
   const dispatch = useDispatch();
   //Roles Selectors
@@ -132,7 +137,30 @@ export function HomePage() {
       //   border: 'solid red 3px',
       // }}
       >
-        <h1>Home Page</h1>
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {/* <h1>Home Page</h1> */}
+          {darkMode ? (
+            <img
+              style={{ width: '50%' }}
+              src={LogoLight}
+              alt="Logo Mercado Dos Puentes"
+            />
+          ) : (
+            <img
+              style={{ width: '50%' }}
+              src={LogoDark}
+              alt="Logo Mercado Dos Puentes"
+            />
+          )}
+        </div>
+
         {/* <Spin spinning={loadingSpinRoles}>
         <CustomSelect
           list={roleListState}
