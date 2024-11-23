@@ -1,33 +1,8 @@
 // /* eslint-disable react/prop-types */
-// import React from 'react';
-// import { Select, Space } from 'antd';
 
-// function CustomSelect({ list, onChange, label, value }) {
-//   return (
-//     <>
-//       <Space style={{ width: '100%' }} direction="vertical">
-//         <Select
-//           value={value}
-//           onChange={onChange}
-//           allowClear
-//           style={{ width: '100%' }}
-//           placeholder={`Seleccione ${label}`}
-//         >
-//           {list.map(role => (
-//             <Select.Option key={role.id} value={role.id}>
-//               {role.nombre}
-//             </Select.Option>
-//           ))}
-//         </Select>
-//       </Space>
-//     </>
-//   );
-// }
-
-// export default CustomSelect;
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Select, Space } from 'antd';
+import { AutoComplete, Select, Space } from 'antd';
 import styled from 'styled-components';
 import { useGeneralContext } from 'app/context/GeneralContext';
 
@@ -53,12 +28,38 @@ const StyledSelect = styled(Select)`
   }
 `;
 
+const StyledAutoComplete = styled(AutoComplete)`
+  .ant-select-selector {
+    background-color: ${({ theme }) => theme.background} !important;
+    color: ${({ theme }) => theme.text} !important;
+    border: none !important;
+  }
+
+  .ant-select-item {
+    color: ${({ theme }) => theme.text} !important;
+  }
+
+  .ant-select-dropdown {
+    background-color: ${({ theme }) => theme.background} !important;
+  }
+
+  .ant-select-selector:hover,
+  .ant-select-selector:focus {
+    background-color: ${({ theme }) => theme.colorPrimary} !important;
+    color: ${({ theme }) => theme.colorTextBase} !important;
+  }
+`;
+
 function CustomSelect({ list, onChange, label, value, disableCustom = false }) {
   const { themeColors, darkMode } = useGeneralContext(); // Obtenemos los colores del contexto
-
+  // Transformar la lista para AutoComplete
+  const options = list.map(item => ({
+    value: item.id, // El valor enviado al backend
+    label: item.nombre, // Texto mostrado en el dropdown
+  }));
   return (
     <Space style={{ width: '100%' }} direction="vertical">
-      <StyledSelect
+      {/* <StyledSelect
         value={value}
         onChange={onChange}
         allowClear
@@ -88,7 +89,31 @@ function CustomSelect({ list, onChange, label, value, disableCustom = false }) {
             {role.nombre}
           </Select.Option>
         ))}
-      </StyledSelect>
+      </StyledSelect> */}
+
+      <StyledAutoComplete
+        value={value}
+        onChange={onChange}
+        allowClear
+        placeholder={`Seleccione ${label}`}
+        options={options} // Pasa las opciones transformadas
+        filterOption={(inputValue, option) =>
+          option?.label.toLowerCase().includes(inputValue.toLowerCase())
+        }
+        style={
+          darkMode
+            ? {
+                border: `2px solid ${themeColors.colorBorderCustom}`,
+                borderRadius: '5px',
+                width: '100%',
+              }
+            : {
+                border: `1px solid ${themeColors.colorBorderCustom}`,
+                borderRadius: '5px',
+                width: '100%',
+              }
+        }
+      />
     </Space>
   );
 }
