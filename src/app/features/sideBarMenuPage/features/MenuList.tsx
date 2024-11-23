@@ -4,6 +4,10 @@ import {
   HomeOutlined,
   PoweroffOutlined,
   UserOutlined,
+  DollarOutlined,
+  ShoppingOutlined,
+  AppstoreOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { Menu, Modal } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -108,7 +112,11 @@ const MenuList = () => {
         <Link to={'/estadisticas'}>Estadisticas</Link>
       </Menu.Item>
 
-      <Menu.SubMenu key="Productos" icon={<BarsOutlined />} title="Productos">
+      <Menu.SubMenu
+        key="Productos"
+        icon={<ShoppingCartOutlined />}
+        title="Productos"
+      >
         <Menu.Item key="/listaProductos">
           <Link to={'/listaProductos'}>Lista de productos</Link>
         </Menu.Item>
@@ -136,7 +144,7 @@ const MenuList = () => {
           </Menu.Item> */}
       </Menu.SubMenu>
 
-      <Menu.SubMenu key="Ventas" icon={<BarsOutlined />} title="Ventas">
+      <Menu.SubMenu key="Ventas" icon={<ShoppingOutlined />} title="Ventas">
         <Menu.Item key="/crearFactura">
           <Link to={'/crearFactura'}>Crear Factura</Link>
         </Menu.Item>
@@ -145,7 +153,7 @@ const MenuList = () => {
         </Menu.Item>
       </Menu.SubMenu>
 
-      <Menu.SubMenu key="Clientes" icon={<BarsOutlined />} title="Clientes">
+      <Menu.SubMenu key="Clientes" icon={<UserOutlined />} title="Clientes">
         <Menu.Item key="/listarClientes">
           <Link to={'/listarClientes'}>Listar Clientes</Link>
         </Menu.Item>
@@ -154,9 +162,9 @@ const MenuList = () => {
         </Menu.Item>
       </Menu.SubMenu>
 
-      <Menu.Item key="/usuario" icon={<UserOutlined />}>
+      {/* <Menu.Item key="/usuario" icon={<UserOutlined />}>
         <Link to={'/user'}>Usuario</Link>
-      </Menu.Item>
+      </Menu.Item> */}
 
       <Menu.Item
         key="/logout"

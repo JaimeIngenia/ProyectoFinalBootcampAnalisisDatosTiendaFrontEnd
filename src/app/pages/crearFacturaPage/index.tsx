@@ -51,6 +51,11 @@ import VentaDark from '../../../assets/ventas/ventasDark.svg';
 const { Option } = Select;
 
 export default function CrearFacturaPage() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleDateChange = date => {
+    setSelectedDate(date); // Actualiza el estado con la fecha seleccionada
+  };
   // Hook para navegar entre rutas
 
   const navigate = useNavigate();
@@ -319,8 +324,14 @@ export default function CrearFacturaPage() {
       const idCliente = formValues.clienteId;
       const idEmpleado = productByIdListState.empleadoId;
 
-      // Obtiene la fecha actual en el formato necesario
-      const fecha = new Date().toISOString();
+      // // Obtiene la fecha actual en el formato necesario
+      // const fecha = new Date().toISOString();
+
+      // Usar la fecha seleccionada o la fecha actual si no se selecciona ninguna
+      // Verificar si selectedDate es válido antes de llamar a toISOString
+      const fecha = selectedDate
+        ? selectedDate.toISOString()
+        : new Date().toISOString();
 
       // Preparar el payload para la acción de guardar venta
       const payload = {
@@ -1188,6 +1199,7 @@ export default function CrearFacturaPage() {
       >
         <Spin spinning={loadingSpinDetalleVentaSpecialById}>
           <MainFormVenta
+            handleDateChange={handleDateChange}
             clientForm={clientForm}
             clientFormRef={clientFormRef}
             loadingSpinClientes={loadingSpinClientes}

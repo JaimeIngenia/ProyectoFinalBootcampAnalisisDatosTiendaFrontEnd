@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { ConfigProvider, Form, Spin, Table, theme } from 'antd';
+import { ConfigProvider, DatePicker, Form, Spin, Table, theme } from 'antd';
 import { CustomButtonn } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import CustomSelect from 'app/features/customSelect';
@@ -24,6 +24,7 @@ export default function MainFormVenta({
   id,
   updateVentaOnClick,
   openModalUpdate,
+  handleDateChange,
 }) {
   //   Context
   const { themeColors, darkMode } = useGeneralContext();
@@ -52,6 +53,14 @@ export default function MainFormVenta({
         </Spin>
       </Form.Item>
       {/* )} */}
+
+      <Form.Item label="Selecciona la fecha" name="fecha">
+        <DatePicker
+          style={{ width: '100%' }}
+          onChange={handleDateChange} // Captura el cambio de la fecha
+          format="YYYY-MM-DD"
+        />
+      </Form.Item>
       <ConfigProvider
         theme={{
           ...(darkMode
