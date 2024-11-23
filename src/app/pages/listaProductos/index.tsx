@@ -36,6 +36,8 @@ import FilterSection from './features/filterSection';
 import type { ColumnsType } from 'antd/es/table';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import ImageWithLoading from './features/imageWithLoading';
+import ListaProductosLight from '../../../assets/listaProductos/ListaProductosLight.svg';
+import ListaProductosDark from '../../../assets/listaProductos/ListaProductosDark.svg';
 
 const { darkAlgorithm } = theme;
 
@@ -48,14 +50,14 @@ export function ListaProductos() {
   const [loading, setLoading] = useState(true);
 
   const columns: ColumnsType<ProductEntityGetAll> = [
-    {
-      key: '1',
-      title: 'Imagen',
-      dataIndex: 'imagen',
-      render: imagen => (
-        <ImageWithLoading src={imagen} alt="Imagen del producto" width={100} />
-      ),
-    },
+    // {
+    //   key: '1',
+    //   title: 'Imagen',
+    //   dataIndex: 'imagen',
+    //   render: imagen => (
+    //     <ImageWithLoading src={imagen} alt="Imagen del producto" width={100} />
+    //   ),
+    // },
     // {
     //   key: '1',
     //   title: 'Imagen',
@@ -409,6 +411,30 @@ export function ListaProductos() {
           onFilterChange={filters => {}}
           categoriaListState={categorias}
         /> */}
+
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {/* <h1>Home Page</h1> */}
+          {darkMode ? (
+            <img
+              style={{ width: '20%' }}
+              src={ListaProductosDark}
+              alt="Logo Mercado Dos Puentes"
+            />
+          ) : (
+            <img
+              style={{ width: '20%' }}
+              src={ListaProductosLight}
+              alt="Logo Mercado Dos Puentes"
+            />
+          )}
+        </div>
 
         <div
           style={{

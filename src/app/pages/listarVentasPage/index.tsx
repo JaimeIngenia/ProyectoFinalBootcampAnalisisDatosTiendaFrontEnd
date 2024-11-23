@@ -25,6 +25,8 @@ import {
   EditOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
+import ListaVentaLight from '../../../assets/listaVentas/listaVentasLight.svg';
+import ListaVentaDark from '../../../assets/listaVentas/listaVentasDark.svg';
 
 export default function ListaVentasPage() {
   const columns: ColumnsType<DataItemVenta> = [
@@ -246,6 +248,29 @@ export default function ListaVentasPage() {
       <CustomTitleGeneal>Lista de Ventas</CustomTitleGeneal>
       <div
         style={{
+          width: '90%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {darkMode ? (
+          <img
+            style={{ width: '20%' }}
+            src={ListaVentaDark}
+            alt="Logo Mercado Dos Puentes"
+          />
+        ) : (
+          <img
+            style={{ width: '20%' }}
+            src={ListaVentaLight}
+            alt="Logo Mercado Dos Puentes"
+          />
+        )}
+      </div>
+      <br />
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -276,7 +301,7 @@ export default function ListaVentasPage() {
             <Table
               columns={columns}
               dataSource={clienteListState}
-              pagination={{ pageSize: 5 }}
+              pagination={{ pageSize: 3 }}
             ></Table>
           </ConfigProvider>
         </Spin>

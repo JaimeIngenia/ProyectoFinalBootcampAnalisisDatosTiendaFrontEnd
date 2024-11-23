@@ -45,6 +45,8 @@ import {
   EditOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
+import VentaLight from '../../../assets/ventas/ventasLight.svg';
+import VentaDark from '../../../assets/ventas/ventasDark.svg';
 
 const { Option } = Select;
 
@@ -85,6 +87,7 @@ export default function CrearFacturaPage() {
     loadingUpdateDetalleVenta,
     loadingDeleteDetalleVenta,
     loadingUpdateVenta,
+    darkMode,
   } = useGeneralContext();
 
   const [ventaId, setVentaId] = useState('');
@@ -1148,6 +1151,30 @@ export default function CrearFacturaPage() {
 
   return (
     <GeneralContainer>
+      <div
+        style={{
+          width: '90%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {/* <h1>Home Page</h1> */}
+        {darkMode ? (
+          <img
+            style={{ width: '20%' }}
+            src={VentaDark}
+            alt="Logo Mercado Dos Puentes"
+          />
+        ) : (
+          <img
+            style={{ width: '20%' }}
+            src={VentaLight}
+            alt="Logo Mercado Dos Puentes"
+          />
+        )}
+      </div>
+      <br />
       <ConfigProvider
         theme={{
           token: {

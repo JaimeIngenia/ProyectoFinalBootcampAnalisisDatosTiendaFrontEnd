@@ -18,7 +18,8 @@ import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import agregarProducto from '../../../assets/agregarProducto.svg';
+import agregarProductoDark from '../../../assets/agregarProducto.svg';
+import agregarProductoLight from '../../../assets/products/productosLight.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
@@ -40,6 +41,7 @@ export default function AgregarProducto() {
     productoGetById,
     loadingProductoGetById,
     loadingUpdateProduct,
+    darkMode,
   } = useGeneralContext();
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -305,7 +307,22 @@ export default function AgregarProducto() {
         </CustomTitleGeneal>
         <SubGeneralContainer>
           <ContainerImagesGeneral>
-            <img style={{ width: '50%' }} src={agregarProducto} alt="" />
+            {/* <img style={{ width: '50%' }} src={agregarProducto} alt="" /> */}
+
+            {/* <h1>Home Page</h1> */}
+            {darkMode ? (
+              <img
+                style={{ width: '50%' }}
+                src={agregarProductoDark}
+                alt="Logo Mercado Dos Puentes"
+              />
+            ) : (
+              <img
+                style={{ width: '50%' }}
+                src={agregarProductoLight}
+                alt="Logo Mercado Dos Puentes"
+              />
+            )}
           </ContainerImagesGeneral>
           <div>
             <ConfigProvider

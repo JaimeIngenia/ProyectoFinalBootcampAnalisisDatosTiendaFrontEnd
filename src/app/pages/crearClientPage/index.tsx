@@ -16,7 +16,8 @@ import {
   formClientSaveValidation,
   formValidation,
 } from '../agregarProducto/utils/formValidation';
-import agregarCliente from '../../../assets/agregarCliente.svg';
+import agregarClienteDark from '../../../assets/agregarCliente.svg';
+import agregarClienteLight from '../../../assets/clientes/clientLight.svg';
 import MainForm from './features/mainForm';
 import styles from './features/mainForm/styles/CrearCliente.module.css';
 import { ClienteEntity, ClienteEntitySave } from 'app/api/clientes/types';
@@ -38,6 +39,7 @@ export default function CrearClientPage() {
     clienteGetById,
     loadingClienteGetById,
     loadingUpdateClient,
+    darkMode,
   } = useGeneralContext();
 
   //Genral flow redux
@@ -235,7 +237,30 @@ export default function CrearClientPage() {
       </CustomTitleGeneal>
       <SubGeneralContainer>
         <ContainerImagesGeneral>
-          <img style={{ width: '50%' }} src={agregarCliente} alt="" />
+          {/* <img style={{ width: '50%' }} src={agregarCliente} alt="" /> */}
+          <div
+            style={{
+              width: '90%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {darkMode ? (
+              <img
+                style={{ width: '50%' }}
+                src={agregarClienteDark}
+                alt="Logo Mercado Dos Puentes"
+              />
+            ) : (
+              <img
+                style={{ width: '50%' }}
+                src={agregarClienteLight}
+                alt="Logo Mercado Dos Puentes"
+              />
+            )}
+          </div>
+          <br />
         </ContainerImagesGeneral>
         <div className={styles.sub_container}>
           <ConfigProvider

@@ -25,6 +25,8 @@ import { useSlice } from 'app/features/slice';
 import { useDispatch } from 'react-redux';
 import { ResponseState } from 'app/features/slice/types';
 import { LOAD_CLIENTES_LIST } from 'app/features/slice/sagaActions';
+import ListaProductosLight from '../../../assets/listaProductos/ListaProductosLight.svg';
+import ListaProductosDark from '../../../assets/listaProductos/ListaProductosDark.svg';
 
 export default function ListarClientes() {
   //   Context
@@ -346,6 +348,29 @@ export default function ListarClientes() {
       <CustomTitleGeneal>Lista clientes de la tienda</CustomTitleGeneal>
       <div
         style={{
+          width: '90%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {/* <h1>Home Page</h1> */}
+        {darkMode ? (
+          <img
+            style={{ width: '20%' }}
+            src={ListaProductosDark}
+            alt="Logo Mercado Dos Puentes"
+          />
+        ) : (
+          <img
+            style={{ width: '20%' }}
+            src={ListaProductosLight}
+            alt="Logo Mercado Dos Puentes"
+          />
+        )}
+      </div>
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -376,7 +401,7 @@ export default function ListarClientes() {
             <Table
               columns={columns}
               dataSource={clienteListState}
-              pagination={{ pageSize: 5 }}
+              pagination={{ pageSize: 3 }}
             ></Table>
           </ConfigProvider>
         </Spin>
