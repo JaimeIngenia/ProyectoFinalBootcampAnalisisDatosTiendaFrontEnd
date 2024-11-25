@@ -27,7 +27,7 @@ export default function MainFormVenta({
   handleDateChange,
 }) {
   //   Context
-  const { themeColors, darkMode } = useGeneralContext();
+  const { themeColors, darkMode, isMenuCollapsed } = useGeneralContext();
   const displayStyle = true ? 'block' : 'none';
   console.log('Display style:', displayStyle);
 
@@ -84,7 +84,7 @@ export default function MainFormVenta({
           dataSource={productosSeleccionados}
           columns={columns}
           rowKey="id"
-          pagination={false}
+          pagination={{ pageSize: isMenuCollapsed ? 1 : 3 }}
         />
       </ConfigProvider>
       <div
@@ -96,21 +96,39 @@ export default function MainFormVenta({
       >
         Total: {total}
       </div>
-      <CustomButtonn
-        type="primary"
-        onClick={id ? openModalUpdate : openModal}
-        disabled={isButtonAgregarProductoDisabled}
+      <div
+        style={{
+          width: '100%',
+          // border: 'solid red 3px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        {id ? 'Agregar Producto Actualizado' : 'Agregar Producto'}
-      </CustomButtonn>
-      <CustomButtonn
-        type="primary"
-        style={{ marginLeft: '10px' }}
-        onClick={id ? updateVentaOnClick : handleConfirmarFactura}
-        disabled={isButtonConfrimarFacturaDisabled}
-      >
-        {id ? 'Actualizar Factura' : 'Confirmar Factura'}
-      </CustomButtonn>
+        <CustomButtonn
+          style={{
+            marginTop: isMenuCollapsed ? '10px' : '0px',
+          }}
+          type="primary"
+          onClick={id ? openModalUpdate : openModal}
+          disabled={isButtonAgregarProductoDisabled}
+        >
+          {id ? 'Agregar Producto Actualizado' : 'Agregar Producto'}
+        </CustomButtonn>
+        <CustomButtonn
+          type="primary"
+          // style={{ marginLeft: '10px' }}
+          style={{
+            marginLeft: isMenuCollapsed ? '0px' : '10px',
+            marginTop: isMenuCollapsed ? '10px' : '0px',
+          }}
+          onClick={id ? updateVentaOnClick : handleConfirmarFactura}
+          disabled={isButtonConfrimarFacturaDisabled}
+        >
+          {id ? 'Actualizar Factura' : 'Confirmar Factura'}
+        </CustomButtonn>
+      </div>
     </Form>
   );
 }
