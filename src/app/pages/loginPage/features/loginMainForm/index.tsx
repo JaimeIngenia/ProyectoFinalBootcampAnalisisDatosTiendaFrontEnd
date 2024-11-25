@@ -3,6 +3,8 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { rulesForm } from 'app/pages/agregarProducto/utils/rulesForm';
 import React from 'react';
+import '../../styles/styles.css';
+
 const { Item } = Form;
 export default function LoginMainForm({
   loginForm,
@@ -22,6 +24,8 @@ export default function LoginMainForm({
       name="LoginForm"
       onFinish={loginUser}
       initialValues={loginFormData}
+      // style={{ border: 'solid red 3px' }}
+      className="GeneralFormStyle"
     >
       <Row gutter={[16, 16]}>
         {/* Campo Correo */}

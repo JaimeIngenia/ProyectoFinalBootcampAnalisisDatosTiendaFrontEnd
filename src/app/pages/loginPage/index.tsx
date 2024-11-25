@@ -11,7 +11,10 @@ import { Entity, ResponseState } from 'app/features/slice/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { formRegisterValidation } from '../agregarProducto/utils/formValidation';
-import { GeneralContainer } from './components/containers';
+import {
+  GeneralContainer,
+  GeneralContainerLogin,
+} from './components/containers';
 import LoginMainForm from './features/loginMainForm';
 import RegistroMainForm from './features/registroMainForm';
 const { Item } = Form;
@@ -385,7 +388,7 @@ export default function LoginPage() {
   }, [usuariosSaveLoading, dispatch]);
 
   return (
-    <GeneralContainer>
+    <GeneralContainerLogin>
       <ConfigProvider
         theme={{
           token: {
@@ -436,6 +439,6 @@ export default function LoginPage() {
           </Spin>
         </Modal>
       </ConfigProvider>
-    </GeneralContainer>
+    </GeneralContainerLogin>
   );
 }

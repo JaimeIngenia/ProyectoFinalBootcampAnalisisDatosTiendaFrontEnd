@@ -1,0 +1,10 @@
+.GeneralFormStyle {
+  /* border: solid red 3px; */
+}
+
+@media (max-width: 600px) {
+  .GeneralFormStyle {
+    width: 100%;
+    /* border: solid blue 3px; */
+  }
+}
