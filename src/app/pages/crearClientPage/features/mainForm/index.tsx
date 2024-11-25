@@ -15,7 +15,7 @@ export default function MainForm({
   onUpdateCliente,
   id,
 }) {
-  const { darkMode, themeColors } = useGeneralContext();
+  const { darkMode, themeColors, isMenuCollapsed } = useGeneralContext();
 
   return (
     <Form
@@ -24,6 +24,11 @@ export default function MainForm({
       ref={clienteSaveformRef}
       name="formularioCrearClientes"
       onFinish={id ? onUpdateCliente : saveCliente}
+      style={{
+        maxHeight: '60vh', // Limitar altura al viewport
+        overflowY: isMenuCollapsed ? 'auto' : 'unset', // Habilitar scroll cuando isMenuCollapsed es true
+        padding: isMenuCollapsed ? '1rem' : '0', // Opcional, ajustar padding si hay menos espacio
+      }}
       // onFinish={saveProduct}
       //   initialValues={id ? formData : undefined}
     >
