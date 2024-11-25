@@ -116,6 +116,8 @@ export const GeneralStatesReduxSaga_empty = {
 
   detallesVenta: [],
 
+  isMenuCollapsed: false,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,

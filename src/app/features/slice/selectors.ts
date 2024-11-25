@@ -259,3 +259,10 @@ export const ventaUpdateLoadingSelector = createSelector(
   [selectSlice],
   state => state.loadingStates.ventaUpdateLoading,
 );
+
+// Collpase
+
+export const selectIsMenuCollapsedSelector = createSelector(
+  [selectSlice],
+  state => state.isMenuCollapsed,
+);

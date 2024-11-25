@@ -33,6 +33,7 @@ export interface GeneralStatesReduxSaga {
   ventas: VentasGetAllSimplifyEntity[];
   ventaById: VentaGetByIdEntity;
   detallesVenta: DetalleVentaSpecialEntity[];
+  isMenuCollapsed: boolean;
 }
 
 // Define una interfaz para centralizar los estados de carga

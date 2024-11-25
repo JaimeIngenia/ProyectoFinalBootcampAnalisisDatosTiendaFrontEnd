@@ -43,6 +43,7 @@ export function App() {
     loadingLogout,
     loadingusuarioSimpleGetById,
     usuarioSimpleGetById,
+    isMenuCollapsed,
   } = useGeneralContext();
 
   // let stateReduxAut = false;
@@ -107,6 +108,22 @@ export function App() {
       }
     }
   }, [loadingusuarioSimpleGetById, usuarioSimpleGetById]);
+
+  // Collapse
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Despachar la acción para actualizar el estado
+      dispatch(actions.reducerCollapseMenu(window.innerWidth < 700));
+    };
+
+    // Escuchar el cambio de tamaño de la ventana
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Verificar el tamaño al cargar la app
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <GeneralContainer2 theme={themeColors}>

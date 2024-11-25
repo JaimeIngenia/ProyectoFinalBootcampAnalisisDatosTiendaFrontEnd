@@ -38,6 +38,7 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import ImageWithLoading from './features/imageWithLoading';
 import ListaProductosLight from '../../../assets/listaProductos/ListaProductosLight.svg';
 import ListaProductosDark from '../../../assets/listaProductos/ListaProductosDark.svg';
+import { StyledTable, StyledTableCustom } from './components/containers';
 
 const { darkAlgorithm } = theme;
 
@@ -249,6 +250,7 @@ export function ListaProductos() {
     loadingCategorias,
     themeColors,
     productosSaveLoading,
+    isMenuCollapsed,
   } = useGeneralContext();
 
   const { actions } = useSlice();
@@ -423,13 +425,13 @@ export function ListaProductos() {
           {/* <h1>Home Page</h1> */}
           {darkMode ? (
             <img
-              style={{ width: '20%' }}
+              style={{ width: isMenuCollapsed ? '60%' : '20%' }}
               src={ListaProductosDark}
               alt="Logo Mercado Dos Puentes"
             />
           ) : (
             <img
-              style={{ width: '20%' }}
+              style={{ width: isMenuCollapsed ? '60%' : '20%' }}
               src={ListaProductosLight}
               alt="Logo Mercado Dos Puentes"
             />
@@ -467,18 +469,30 @@ export function ListaProductos() {
                         colorTextBase: themeColors.colorTextBase,
                         colorTextPlaceholder: themeColors.colorTextLightSolid,
                       },
-                      algorithm: theme.darkAlgorithm,
+                      // algorithm: theme.darkAlgorithm,
                       // algorithm: theme.compactAlgorithm,
+                      algorithm: isMenuCollapsed
+                        ? theme.compactAlgorithm // Si isMenuCollapsed es true
+                        : theme.darkAlgorithm, // Si isMenuCollapsed es false
                     }
                   : {}),
               }}
             >
-              <Table
-                columns={columns}
-                dataSource={productosListState}
-                size="small"
-                pagination={{ pageSize: 3 }}
-              ></Table>
+              {isMenuCollapsed ? (
+                <StyledTableCustom
+                  columns={columns}
+                  dataSource={productosListState}
+                  size="small"
+                  pagination={{ pageSize: 3 }}
+                ></StyledTableCustom>
+              ) : (
+                <Table
+                  columns={columns}
+                  dataSource={productosListState}
+                  size="small"
+                  pagination={{ pageSize: 3 }}
+                ></Table>
+              )}
             </ConfigProvider>
           </Spin>
         </div>

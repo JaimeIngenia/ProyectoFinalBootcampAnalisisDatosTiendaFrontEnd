@@ -39,6 +39,7 @@ import {
   productosUpdateLoadingSelector,
   rolesSelector,
   rolesSelectorLoading,
+  selectIsMenuCollapsedSelector,
   sucursalesSelector,
   sucursalesSelectorLoading,
   usuarioSaveSelectorLoading,
@@ -125,6 +126,10 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   const roles = useSelector(rolesSelector);
   const loadingRoles = useSelector(rolesSelectorLoading);
 
+  //Collapse
+
+  const isMenuCollapsed = useSelector(selectIsMenuCollapsedSelector);
+
   const lightTheme = {
     background: '#FFFFFF', // Fondo claro
     text: '#151837', // Letras oscuras 2
@@ -194,6 +199,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingUpdateDetalleVenta,
         loadingDeleteDetalleVenta,
         loadingUpdateVenta,
+        isMenuCollapsed,
       }}
     >
       {children}

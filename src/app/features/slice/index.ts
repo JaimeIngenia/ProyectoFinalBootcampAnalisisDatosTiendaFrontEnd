@@ -769,6 +769,13 @@ const slice = createSlice({
         status: false,
       };
     },
+
+    //collapse
+
+    // Acción para colapsar el menú
+    reducerCollapseMenu(state, action: PayloadAction<boolean>) {
+      state.isMenuCollapsed = action.payload;
+    },
   },
 });
 

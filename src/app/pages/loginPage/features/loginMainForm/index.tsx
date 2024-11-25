@@ -3,7 +3,7 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import { rulesForm } from 'app/pages/agregarProducto/utils/rulesForm';
 import React from 'react';
-import '../../styles/styles.css';
+import './loginStyles.css';
 
 const { Item } = Form;
 export default function LoginMainForm({

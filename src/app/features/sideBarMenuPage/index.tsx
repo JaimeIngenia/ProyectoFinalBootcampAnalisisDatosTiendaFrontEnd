@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import styles from './styles/SideBarMenuPage.module.css';
 import { Button, Layout } from 'antd';
@@ -14,6 +14,22 @@ const SideBarMenuPage = () => {
   const { darkMode, toggleDarkMode, themeColors } = useGeneralContext();
 
   const [collapsed, setCollapsed] = useState(false);
+
+  // Función para manejar el cambio de tamaño de la ventana
+  const handleResize = () => {
+    if (window.innerWidth < 700) {
+      setCollapsed(true);
+    } else {
+      setCollapsed(false);
+    }
+  };
+
+  // useEffect para agregar y limpiar el listener del evento resize
+  useEffect(() => {
+    handleResize(); // Comprobar el tamaño al cargar el componente
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <Layout>

@@ -65,4 +65,5 @@ export type GeneralContextType = {
   loadingUpdateDetalleVenta: LoadingState;
   loadingDeleteDetalleVenta: LoadingState;
   loadingUpdateVenta: LoadingState;
+  isMenuCollapsed: boolean;
 };
