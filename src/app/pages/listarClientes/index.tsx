@@ -27,6 +27,7 @@ import { ResponseState } from 'app/features/slice/types';
 import { LOAD_CLIENTES_LIST } from 'app/features/slice/sagaActions';
 import ListaProductosLight from '../../../assets/listaProductos/ListaProductosLight.svg';
 import ListaProductosDark from '../../../assets/listaProductos/ListaProductosDark.svg';
+import { StyledTableCustom } from './components/containers';
 
 export default function ListarClientes() {
   //   Context
@@ -39,6 +40,7 @@ export default function ListarClientes() {
     loadinClientes,
     clientes,
     clienteSaveLoading,
+    isMenuCollapsed,
   } = useGeneralContext();
 
   //redux
@@ -357,13 +359,13 @@ export default function ListarClientes() {
         {/* <h1>Home Page</h1> */}
         {darkMode ? (
           <img
-            style={{ width: '20%' }}
+            style={{ width: isMenuCollapsed ? '60%' : '20%' }}
             src={ListaProductosDark}
             alt="Logo Mercado Dos Puentes"
           />
         ) : (
           <img
-            style={{ width: '20%' }}
+            style={{ width: isMenuCollapsed ? '60%' : '20%' }}
             src={ListaProductosLight}
             alt="Logo Mercado Dos Puentes"
           />
@@ -393,16 +395,27 @@ export default function ListarClientes() {
                       colorTextBase: themeColors.colorTextBase,
                       colorTextPlaceholder: themeColors.colorTextLightSolid,
                     },
-                    algorithm: theme.darkAlgorithm,
+                    // algorithm: theme.darkAlgorithm,
+                    algorithm: isMenuCollapsed
+                      ? theme.compactAlgorithm // Si isMenuCollapsed es true
+                      : theme.darkAlgorithm, // Si isMenuCollapsed es false
                   }
                 : {}),
             }}
           >
-            <Table
-              columns={columns}
-              dataSource={clienteListState}
-              pagination={{ pageSize: 3 }}
-            ></Table>
+            {isMenuCollapsed ? (
+              <StyledTableCustom
+                columns={columns}
+                dataSource={clienteListState}
+                pagination={{ pageSize: 3 }}
+              ></StyledTableCustom>
+            ) : (
+              <Table
+                columns={columns}
+                dataSource={clienteListState}
+                pagination={{ pageSize: 3 }}
+              ></Table>
+            )}
           </ConfigProvider>
         </Spin>
       </div>
