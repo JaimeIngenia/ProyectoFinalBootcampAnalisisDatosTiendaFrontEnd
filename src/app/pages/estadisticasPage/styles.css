@@ -1,4 +1,25 @@
+/* .Embed-container {
+  width: 200% !important;
+  height: 100vh;
+  border: solid red 3px;
+  margin: auto;
+} */
+
 .Embed-container {
+  background-color: #090d1f !important;
+  width: 100%; /* Toma todo el ancho disponible del contenedor */
+  height: 100vh; /* Ajusta el alto al 100% del viewport */
+  /* border: solid red 3px; */
+  box-sizing: border-box; /* Incluye el borde en el tamaño total */
+  margin: 0 auto; /* Centra el contenedor si es necesario */
+}
+
+.App-header {
+  background-color: #090d1f !important;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
+  align-items: center; /* Centra verticalmente el contenido */
   width: 100%;
-  height: 100vh; /* Ajusta según lo necesites */
+  height: 100vh; /* Usa el alto completo del viewport */
+  overflow: hidden; /* Asegúrate de que no haya barras de desplazamiento inesperadas */
 }
