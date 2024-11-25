@@ -22,7 +22,7 @@ export default function MainForm({
   handleSelectChange,
 }) {
   const [form] = Form.useForm();
-  const { darkMode, themeColors } = useGeneralContext();
+  const { darkMode, themeColors, isMenuCollapsed } = useGeneralContext();
 
   return (
     <Form
@@ -32,6 +32,11 @@ export default function MainForm({
       name="Formulario"
       onFinish={id ? onUpdateProduct : saveProduct}
       initialValues={id ? formData : undefined}
+      style={{
+        maxHeight: '60vh', // Limitar altura al viewport
+        overflowY: isMenuCollapsed ? 'auto' : 'unset', // Habilitar scroll cuando isMenuCollapsed es true
+        padding: isMenuCollapsed ? '1rem' : '0', // Opcional, ajustar padding si hay menos espacio
+      }}
     >
       <Row gutter={[16, 16]}>
         {/* Campo Nombre */}

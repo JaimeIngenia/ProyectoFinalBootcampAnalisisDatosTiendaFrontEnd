@@ -42,6 +42,7 @@ export default function AgregarProducto() {
     loadingProductoGetById,
     loadingUpdateProduct,
     darkMode,
+    isMenuCollapsed,
   } = useGeneralContext();
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -307,9 +308,6 @@ export default function AgregarProducto() {
         </CustomTitleGeneal>
         <SubGeneralContainer>
           <ContainerImagesGeneral>
-            {/* <img style={{ width: '50%' }} src={agregarProducto} alt="" /> */}
-
-            {/* <h1>Home Page</h1> */}
             {darkMode ? (
               <img
                 style={{ width: '50%' }}
