@@ -84,6 +84,7 @@ export default function ListaVentasPage() {
     loadingDeleteVenta,
     movimientoInventarioSaveLoading,
     fidelizacionSaveLoading,
+    isMenuCollapsed,
   } = useGeneralContext();
 
   // Redux
@@ -245,29 +246,45 @@ export default function ListaVentasPage() {
   return (
     <GeneralContainer>
       {' '}
-      <CustomTitleGeneal>Lista de Ventas</CustomTitleGeneal>
       <div
         style={{
-          width: '90%',
+          // border: 'solid blue 3px',
+          width: '100%',
+          height: '40vh',
           display: 'flex',
+          flexDirection: isMenuCollapsed ? 'row' : 'column',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        {darkMode ? (
-          <img
-            style={{ width: '20%' }}
-            src={ListaVentaDark}
-            alt="Logo Mercado Dos Puentes"
-          />
-        ) : (
-          <img
-            style={{ width: '20%' }}
-            src={ListaVentaLight}
-            alt="Logo Mercado Dos Puentes"
-          />
-        )}
+        <CustomTitleGeneal>Lista de Ventas</CustomTitleGeneal>
+        <div
+          style={{
+            height: '20vh',
+            // border: 'solid red 3px',
+            width: isMenuCollapsed ? '50%' : '90%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {darkMode ? (
+            <img
+              style={{ width: isMenuCollapsed ? '50%' : '20%' }}
+              src={ListaVentaDark}
+              alt="Logo Mercado Dos Puentes"
+            />
+          ) : (
+            <img
+              style={{ width: isMenuCollapsed ? '50%' : '20%' }}
+              src={ListaVentaLight}
+              alt="Logo Mercado Dos Puentes"
+            />
+          )}
+        </div>
       </div>
+      <br />
+      <br />
       <br />
       <div
         style={{
@@ -299,6 +316,7 @@ export default function ListaVentasPage() {
             }}
           >
             <Table
+              style={{ height: '60vh' }}
               columns={columns}
               dataSource={clienteListState}
               pagination={{ pageSize: 3 }}
