@@ -24,6 +24,7 @@ import CrearClientPage from './pages/crearClientPage';
 import ListarClientes from './pages/listarClientes';
 import ListaVentasPage from './pages/listarVentasPage';
 import EstadisticasPage from './pages/estadisticasPage';
+import CrearFacturaCompraPage from './pages/crearFacturaCompraPage';
 
 export function App() {
   //Genral flow redux
@@ -145,6 +146,10 @@ export function App() {
               <Route path="/agregarProductos" element={<AgregarProducto />} />
               <Route path="/editarProducto/:id" element={<AgregarProducto />} />
               <Route path="/crearFactura" element={<CrearFacturaPage />} />
+              <Route
+                path="/crearFacturaCompra"
+                element={<CrearFacturaCompraPage />}
+              />
               <Route path="/crearClientPage" element={<CrearClientPage />} />
               <Route path="/listarClientes" element={<ListarClientes />} />
               <Route path="/editarCliente/:id" element={<CrearClientPage />} />

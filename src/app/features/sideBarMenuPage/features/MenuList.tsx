@@ -153,6 +153,15 @@ const MenuList = () => {
         </Menu.Item>
       </Menu.SubMenu>
 
+      <Menu.SubMenu key="Compras" icon={<ShoppingOutlined />} title="Compras">
+        <Menu.Item key="/crearFacturaCompra">
+          <Link to={'/crearFacturaCompra'}>Crear Compra</Link>
+        </Menu.Item>
+        {/* <Menu.Item key="/listarVentas">
+          <Link to={'/listarVentas'}>Listar Ventas</Link>
+        </Menu.Item> */}
+      </Menu.SubMenu>
+
       <Menu.SubMenu key="Clientes" icon={<UserOutlined />} title="Clientes">
         <Menu.Item key="/listarClientes">
           <Link to={'/listarClientes'}>Listar Clientes</Link>
