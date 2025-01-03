@@ -26,17 +26,17 @@ export default function RegistroMainForm({
   handleChange,
   registerFormData,
   isButtonRegistrerDisabled,
-  handleSelectChange,
   loadingSpinRoles,
   loadingSpinCategorias,
   categoriaListState,
   roleListState,
   surcursalListState,
   loadingSpinSucursales,
-  handleSelectChangeSucursal,
   empleadoListState,
   loadingSpinEmpleados,
-  handleSelectChangeEmpleado,
+  // handleSelectChangeEmpleado,
+  // handleSelectChange,
+  // handleSelectChangeSucursal,
 }) {
   const { darkMode, themeColors } = useGeneralContext();
   return (
@@ -105,7 +105,7 @@ export default function RegistroMainForm({
         />
       </Item>
 
-      <Item
+      {/* <Item
         required
         label="Rol"
         name="rolId"
@@ -152,7 +152,7 @@ export default function RegistroMainForm({
             value={registerFormData.empleadoId}
           />
         </Spin>
-      </Item>
+      </Item> */}
 
       <CustomButtonn
         type="primary"

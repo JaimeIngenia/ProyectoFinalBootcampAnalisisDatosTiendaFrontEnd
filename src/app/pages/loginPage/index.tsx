@@ -94,9 +94,12 @@ export default function LoginPage() {
   const [registerFormData, setRegisterFormData] = useState({
     nombre: '',
     contrasena: '',
-    empleadoId: '',
-    rolId: '',
-    sucursalId: '',
+    // empleadoId: '',
+    // rolId: '',
+    // sucursalId: '',
+    // empleadoId: null, // Cambiado a nullable
+    // rolId: null, // Cambiado a nullable
+    // sucursalId: null, // Cambiado a nullable
     correo: '',
     validationLogin: false,
     tiempoSesionActivo: undefined,
@@ -129,69 +132,69 @@ export default function LoginPage() {
       });
   };
 
-  const handleSelectChange = (value: string) => {
-    // Actualizar el Form y el estado local
-    registerFormRef.current?.setFieldsValue({
-      rolId: value,
-    });
+  // const handleSelectChange = (value: string) => {
+  //   // Actualizar el Form y el estado local
+  //   registerFormRef.current?.setFieldsValue({
+  //     rolId: value,
+  //   });
 
-    setRegisterFormData(prev => ({
-      ...prev,
-      rolId: value,
-    }));
+  //   setRegisterFormData(prev => ({
+  //     ...prev,
+  //     rolId: value,
+  //   }));
 
-    // Validar solo el campo 'categoriaId'
-    registerFormRef.current
-      ?.validateFields(['rolId']) // Valida solo el campo de categoría
-      .then(() => {
-        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
-  };
-  const handleSelectChangeSucursal = (value: string) => {
-    // Actualizar el Form y el estado local
-    registerFormRef.current?.setFieldsValue({
-      sucursalId: value,
-    });
+  //   // Validar solo el campo 'categoriaId'
+  //   registerFormRef.current
+  //     ?.validateFields(['rolId']) // Valida solo el campo de categoría
+  //     .then(() => {
+  //       // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
+  // const handleSelectChangeSucursal = (value: string) => {
+  //   // Actualizar el Form y el estado local
+  //   registerFormRef.current?.setFieldsValue({
+  //     sucursalId: value,
+  //   });
 
-    setRegisterFormData(prev => ({
-      ...prev,
-      sucursalId: value,
-    }));
+  //   setRegisterFormData(prev => ({
+  //     ...prev,
+  //     sucursalId: value,
+  //   }));
 
-    // Validar solo el campo 'categoriaId'
-    registerFormRef.current
-      ?.validateFields(['sucursalId']) // Valida solo el campo de categoría
-      .then(() => {
-        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
-  };
-  const handleSelectChangeEmpleado = (value: string) => {
-    // Actualizar el Form y el estado local
-    registerFormRef.current?.setFieldsValue({
-      empleadoId: value,
-    });
+  //   // Validar solo el campo 'categoriaId'
+  //   registerFormRef.current
+  //     ?.validateFields(['sucursalId']) // Valida solo el campo de categoría
+  //     .then(() => {
+  //       // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
+  // const handleSelectChangeEmpleado = (value: string) => {
+  //   // Actualizar el Form y el estado local
+  //   registerFormRef.current?.setFieldsValue({
+  //     empleadoId: value,
+  //   });
 
-    setRegisterFormData(prev => ({
-      ...prev,
-      empleadoId: value,
-    }));
+  //   setRegisterFormData(prev => ({
+  //     ...prev,
+  //     empleadoId: value,
+  //   }));
 
-    // Validar solo el campo 'categoriaId'
-    registerFormRef.current
-      ?.validateFields(['empleadoId']) // Valida solo el campo de categoría
-      .then(() => {
-        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
-      })
-      .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
-      });
-  };
+  //   // Validar solo el campo 'categoriaId'
+  //   registerFormRef.current
+  //     ?.validateFields(['empleadoId']) // Valida solo el campo de categoría
+  //     .then(() => {
+  //       // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+  //     })
+  //     .catch(() => {
+  //       // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+  //     });
+  // };
 
   useEffect(() => {
     const errors = formRegisterValidation(registerFormData); // Ejecuta la validación completa
@@ -368,9 +371,9 @@ export default function LoginPage() {
           setRegisterFormData({
             nombre: '',
             contrasena: '',
-            empleadoId: '',
-            rolId: '',
-            sucursalId: '',
+            // empleadoId: '',
+            // rolId: '',
+            // sucursalId: '',
             correo: '',
             validationLogin: false,
             tiempoSesionActivo: undefined,
@@ -424,17 +427,17 @@ export default function LoginPage() {
               registerFormData={registerFormData}
               handleChange={handleChangeRegistro}
               isButtonRegistrerDisabled={isButtonRegistrerDisabled}
-              handleSelectChange={handleSelectChange}
               loadingSpinRoles={loadingSpinRoles}
               loadingSpinCategorias={loadingSpinCategorias}
               categoriaListState={categoriaListState}
               roleListState={roleListState}
               surcursalListState={surcursalListState}
               loadingSpinSucursales={loadingSpinSucursales}
-              handleSelectChangeSucursal={handleSelectChangeSucursal}
               empleadoListState={empleadoListState}
               loadingSpinEmpleados={loadingSpinEmpleados}
-              handleSelectChangeEmpleado={handleSelectChangeEmpleado}
+              // handleSelectChange={handleSelectChange}
+              // handleSelectChangeSucursal={handleSelectChangeSucursal}
+              // handleSelectChangeEmpleado={handleSelectChangeEmpleado}
             />
           </Spin>
         </Modal>

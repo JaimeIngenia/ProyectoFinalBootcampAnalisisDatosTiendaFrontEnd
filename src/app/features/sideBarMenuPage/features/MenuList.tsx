@@ -8,6 +8,7 @@ import {
   ShoppingOutlined,
   AppstoreOutlined,
   ShoppingCartOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { Menu, Modal } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -174,6 +175,16 @@ const MenuList = () => {
       {/* <Menu.Item key="/usuario" icon={<UserOutlined />}>
         <Link to={'/user'}>Usuario</Link>
       </Menu.Item> */}
+
+      <Menu.SubMenu
+        key="Configuracion"
+        icon={<SettingOutlined />}
+        title="Configuracion"
+      >
+        <Menu.Item key="/agregarUsuariosAdmin">
+          <Link to={'/agregarUsuariosAdmin'}>Crear Usuario</Link>
+        </Menu.Item>
+      </Menu.SubMenu>
 
       <Menu.Item
         key="/logout"
