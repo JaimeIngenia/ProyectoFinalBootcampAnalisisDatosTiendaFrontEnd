@@ -136,7 +136,7 @@ export default function AgregarProducto() {
         // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
       })
       .catch(() => {
-        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errore
       });
   };
 
