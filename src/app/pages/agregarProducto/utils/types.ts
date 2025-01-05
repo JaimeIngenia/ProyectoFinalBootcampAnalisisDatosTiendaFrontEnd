@@ -1,6 +1,6 @@
 // Tipado del producto
 export interface ProductoFormValues {
-  // nota agregar el id
+  id: string;
   nombre: string;
   descripcion: string;
   // precio: number;
@@ -8,10 +8,13 @@ export interface ProductoFormValues {
 }
 
 export interface ProductEntitySave {
-  // nota agregar el id
+  id?: string;
+
   nombre?: string;
   descripcion?: string;
   // precio?: number;
   categoriaId?: string;
   imagen?: string;
+  // stockActual?: number; // nota
+  // porcentajeGanancia?: number; // nota
 }

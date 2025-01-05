@@ -61,14 +61,12 @@ export async function updateVenta(
   ventaId: string,
   ventaData: VentaUpdatePayload,
 ): Promise<VentaGetByIdEntity> {
-  debugger;
   try {
     const response = await axios.put<VentaGetByIdEntity>(
       `https://localhost:7029/api/Venta/UpdateVenta/${ventaId}`,
       ventaData,
     );
 
-    debugger;
     return response.data;
   } catch (error) {
     console.error(`Error updating venta ${ventaId}:`, error);

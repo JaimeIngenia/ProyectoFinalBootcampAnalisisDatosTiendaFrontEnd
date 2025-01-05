@@ -23,6 +23,7 @@ import agregarProductoLight from '../../../assets/products/productosLight.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
 import { formValidation } from './utils/formValidation';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AgregarProducto() {
   // Hook para navegar entre rutas
@@ -72,7 +73,8 @@ export default function AgregarProducto() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const [formData, setFormData] = useState({
-    // nota agregar el id
+    // nota agregar el id **
+    id: '',
     nombre: '',
     descripcion: '',
     // precio: 0,
@@ -85,7 +87,11 @@ export default function AgregarProducto() {
       return;
     }
     const formValues = formRef.current.getFieldsValue();
+    // const productData = {
+    //   ...formValues,
+    // };
     const productData = {
+      id: uuidv4(), // Generar un nuevo GUID
       ...formValues,
     };
 
@@ -213,7 +219,8 @@ export default function AgregarProducto() {
       }
     } else {
       setFormData({
-        // nota agregar el id
+        // nota agregar el id **
+        id: '',
         nombre: '',
         descripcion: '',
         // precio: 0,
@@ -234,7 +241,8 @@ export default function AgregarProducto() {
         categoria => categoria.id === productoGetById.categoria.id,
       );
       const productoConCategoriaId = {
-        // nota agregar el id
+        // nota agregar el id **
+        id: productoGetById.id,
         nombre: productoGetById.nombre,
         descripcion: productoGetById.descripcion,
         // precio: productoGetById.precio,
@@ -262,7 +270,8 @@ export default function AgregarProducto() {
         if (formRef.current) {
           formRef.current.resetFields();
           setFormData({
-            // nota agregar el id
+            // nota agregar el id **
+            id: '',
             nombre: '',
             descripcion: '',
             // precio: 0,
