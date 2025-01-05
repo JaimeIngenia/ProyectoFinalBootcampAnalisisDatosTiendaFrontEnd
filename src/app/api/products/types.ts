@@ -4,7 +4,7 @@ export interface ProductEntityGetAll {
   id: string;
   nombre: string;
   descripcion: string;
-  precio: number;
+  precio: number; // Ya está adaptado
   categoriaNombre: string;
   imagen?: string;
 }
