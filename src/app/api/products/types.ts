@@ -15,6 +15,7 @@ export interface ProductEntityGetById {
   precio: number;
   categoria: Entity;
   imagen: string;
+  stockActual?: number; // nota cuidado con este campo
 }
 
 // export interface ProductEntitySave {

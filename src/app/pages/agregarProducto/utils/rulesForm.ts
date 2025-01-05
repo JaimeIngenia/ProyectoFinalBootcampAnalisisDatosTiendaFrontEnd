@@ -8,6 +8,7 @@ import {
   funcionGeneradoraValidacionesProducto,
   funcionGeneradoraValidacionesImagenAgregarProducto,
   funcionGeneradoraValidacionesCantidad,
+  funcionGeneradoraValidacionesStockActual,
 } from './formValidation';
 import {
   createMaxLengthRegex,
@@ -31,6 +32,11 @@ export const rulesForm = {
     maxLength: 15,
     label: 'Precio',
     field: 'precio',
+  }),
+  rulesStockActual: funcionGeneradoraValidacionesStockActual({
+    maxLength: 15,
+    label: 'Stock Actual',
+    field: 'stockActual',
   }),
   rulesCategoriaId: funcionGeneradoraValidacionesRol({
     label: 'Categoría',

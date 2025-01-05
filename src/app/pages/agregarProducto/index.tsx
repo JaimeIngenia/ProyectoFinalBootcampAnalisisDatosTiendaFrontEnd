@@ -80,6 +80,7 @@ export default function AgregarProducto() {
     // precio: 0,
     categoriaId: '',
     imagen: '',
+    stockActual: 0,
   });
 
   const saveProduct = () => {
@@ -113,6 +114,16 @@ export default function AgregarProducto() {
     setFormData(prev => ({
       ...prev,
       [name]: name === 'precio' ? Number(value) : value,
+    }));
+
+    // Actualizar el Form y el estado local
+    formRef.current?.setFieldsValue({
+      [name]: name === 'stockActual' ? Number(value) : value,
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'stockActual' ? Number(value) : value,
     }));
 
     // Validar solo el campo que ha cambiado
@@ -226,6 +237,7 @@ export default function AgregarProducto() {
         // precio: 0,
         categoriaId: '',
         imagen: '',
+        stockActual: 0,
       });
     }
   }, [productoGetById, loadingProductoGetById, id, dispatch]);
@@ -248,6 +260,7 @@ export default function AgregarProducto() {
         // precio: productoGetById.precio,
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
         imagen: productoGetById.imagen,
+        stockActual: productoGetById.stockActual ?? 0,
       };
 
       formRef.current?.setFieldsValue(productoConCategoriaId);
@@ -277,6 +290,7 @@ export default function AgregarProducto() {
             // precio: 0,
             categoriaId: '',
             imagen: '',
+            stockActual: 0,
           });
         }
         navigate(`/listaProductos`);

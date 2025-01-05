@@ -5,6 +5,7 @@ export interface ProductoFormValues {
   descripcion: string;
   // precio: number;
   categoriaId: string;
+  stockActual?: number; // Nuevo campo opcional
 }
 
 export interface ProductEntitySave {
@@ -15,6 +16,7 @@ export interface ProductEntitySave {
   // precio?: number;
   categoriaId?: string;
   imagen?: string;
+  stockActual?: number; // Nuevo campo opcional
   // stockActual?: number; // nota
   // porcentajeGanancia?: number; // nota
 }

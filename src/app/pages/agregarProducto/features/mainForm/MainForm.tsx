@@ -84,30 +84,6 @@ export default function MainForm({
           </Form.Item>
         </Col>
 
-        {/* Campo Precio */}
-        {/* <Col xs={24} sm={12} md={12} lg={12}>
-          <Form.Item
-            required
-            label="Precio"
-            name="precio"
-            rules={rulesForm.rulesPrecio}
-            validateTrigger="onBlur"
-          >
-            <Input
-              type="number"
-              placeholder="Precio del Producto"
-              onChange={handleChange}
-              name="precio"
-              // style={{ border: `2px solid ${themeColors.colorBorderCustom}` }}
-              style={
-                darkMode
-                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
-                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
-              }
-            />
-          </Form.Item>
-        </Col> */}
-
         {/* Select Categoría */}
         <Col xs={24} sm={12} md={12} lg={12}>
           <Item
@@ -137,6 +113,27 @@ export default function MainForm({
               />
             </Spin>
           </Item>
+        </Col>
+        {/* Campo StockActual  */}
+        <Col xs={24} sm={12} md={12} lg={12}>
+          <Form.Item
+            label="Stock Actual"
+            name="stockActual"
+            rules={rulesForm.rulesStockActual}
+            validateTrigger="onBlur"
+          >
+            <Input
+              type="number"
+              placeholder="Stock Actual del Producto"
+              onChange={handleChange}
+              name="stockActual"
+              style={
+                darkMode
+                  ? { border: `2px solid ${themeColors.colorBorderCustom}` }
+                  : { border: `1px solid ${themeColors.colorBorderCustom}` }
+              }
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Row>

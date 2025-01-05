@@ -27,6 +27,7 @@ export const productosGuardados_Empty: ProductEntitySave = {
   descripcion: '',
   // precio: 0,
   categoriaId: '',
+  stockActual: 0,
 };
 export const usuariosGuardados_Empty: SaveUsuarioRequest = {
   nombre: '',
@@ -43,6 +44,7 @@ export const productoById_Empty: ProductEntityGetById = {
   precio: 0,
   categoria: { id: '', nombre: '' },
   imagen: '',
+  stockActual: 0, // nota cuidado con esta propiedad
 };
 export const usuarioById_Empty: GetUsuarioSimpleResponse = {
   id: '',
