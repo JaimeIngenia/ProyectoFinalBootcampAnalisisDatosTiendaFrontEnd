@@ -801,6 +801,62 @@ const slice = createSlice({
         state: actions.payload,
       };
     },
+
+    // Update precio
+
+    reducerUpdatePrecioSuccess(state, action: PayloadAction<PrecioEntitySave>) {
+      const updatedPrecio = action.payload;
+      state.precios = state.precios.map(precio =>
+        precio.id === updatedPrecio.id ? updatedPrecio : precio,
+      );
+
+      state.loadingStates.preciosUpdateLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerUpdatePrecioFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.preciosUpdateLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadUpdatePrecio(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.preciosUpdateLoading = {
+        state: action.payload,
+      };
+    },
+
+    // GetPrecioNyId
+
+    reducerGetPrecioByProductIdSuccess(
+      state,
+      action: PayloadAction<PrecioEntitySave>,
+    ) {
+      state.precioByProductId = action.payload;
+
+      state.loadingStates.preciosGetByProductIdLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerGetPrecioByProductIdFailure(state, action: PayloadAction<string>) {
+      state.loadingStates.preciosGetByProductIdLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadGetPrecioByProductId(state, action: PayloadAction<ResponseState>) {
+      state.loadingStates.preciosGetByProductIdLoading = {
+        state: action.payload,
+      };
+    },
   },
 });
 

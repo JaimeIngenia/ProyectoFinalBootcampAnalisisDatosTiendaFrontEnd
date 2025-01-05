@@ -73,7 +73,6 @@ export function formModalPrecioValidation(values: PrecioFormValues) {
   // if ((values.precioVenta ?? 0) <= 0) {
   //   _errors['precioVenta'] = 'El precio debe ser mayor que 0';
   // }
-  debugger;
 
   return _errors;
 }

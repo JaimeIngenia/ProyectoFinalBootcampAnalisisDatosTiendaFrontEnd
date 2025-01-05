@@ -33,6 +33,8 @@ import {
   DELETE_DETALLE_VENTA,
   UPDATE_VENTA,
   SAVE_PRECIO,
+  UPDATE_PRECIO,
+  GET_PRECIO_BY_PRODUCT_ID,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -88,7 +90,7 @@ import {
   DetalleVentaSpecialEntity,
   VentaSimplifyEntity,
 } from 'app/api/detalleVenta/types';
-import { savePrecio } from 'app/api/precio';
+import { getPrecioByProductId, savePrecio, updatePrecio } from 'app/api/precio';
 
 function* fetchRolesSaga() {
   try {
@@ -534,6 +536,37 @@ function* fetchSavePrecioSaga(action: any) {
     yield put(actions.reducerSavePrecioFailure(error));
   }
 }
+
+// Update Precio
+
+function* fetchUpdatePrecioSaga(action) {
+  try {
+    const { id, precioData } = action.payload;
+    const updatedPrecio = yield call(updatePrecio, id, precioData);
+    yield put(actions.reducerUpdatePrecioSuccess(updatedPrecio));
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.reducerUpdatePrecioFailure(errorMessage));
+  }
+}
+
+// Saga para traer un precio existente por productoId
+function* fetchPrecioByProductId(action) {
+  try {
+    const precio = yield call(getPrecioByProductId, action.payload); // Llama a la API con el productoId
+    yield put(actions.reducerGetPrecioByProductIdSuccess(precio)); // Llama a la acción de éxito
+  } catch (error) {
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    yield put(actions.reducerGetPrecioByProductIdFailure(errorMessage)); // Llama a la acción de fallo
+  }
+}
+
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -568,4 +601,6 @@ export function* Saga() {
   yield takeLatest(DELETE_DETALLE_VENTA, fetchDeleteDetalleVentaSaga);
   yield takeLatest(UPDATE_VENTA, fetchUpdateVentaSaga);
   yield takeLatest(SAVE_PRECIO, fetchSavePrecioSaga);
+  yield takeLatest(UPDATE_PRECIO, fetchUpdatePrecioSaga);
+  yield takeLatest(GET_PRECIO_BY_PRODUCT_ID, fetchPrecioByProductId);
 }

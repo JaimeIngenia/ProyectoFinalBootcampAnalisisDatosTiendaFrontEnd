@@ -4,6 +4,7 @@ import {
   IDetalleVentaSimple,
   VentaSimplifyEntity,
 } from 'app/api/detalleVenta/types';
+import { PrecioEntityUpdate } from 'app/api/precio/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -67,4 +68,7 @@ export type GeneralContextType = {
   loadingUpdateVenta: LoadingState;
   isMenuCollapsed: boolean;
   preciosSaveLoading: LoadingState;
+  loadingUpdatePrecio: LoadingState;
+  precioGetByProductId: PrecioEntityUpdate;
+  loadingPreciooGetByProductId: LoadingState;
 };

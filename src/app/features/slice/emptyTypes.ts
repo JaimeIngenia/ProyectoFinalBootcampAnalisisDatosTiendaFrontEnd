@@ -14,7 +14,10 @@ import {
   IDetalleVentaSimple,
 } from 'app/api/detalleVenta/types';
 import { VentaGetByIdEntity } from 'app/api/venta/types';
-import { precioGuardados_Empty } from 'app/api/precio/emptyTypes';
+import {
+  precioGuardados_Empty,
+  preciosUpdate_Empty,
+} from 'app/api/precio/emptyTypes';
 
 const defaultLoadingState: LoadingState = {
   state: ResponseState.Waiting,
@@ -125,6 +128,10 @@ export const GeneralStatesReduxSaga_empty = {
 
   preciosGuardados: precioGuardados_Empty,
 
+  precios: [],
+
+  precioByProductId: preciosUpdate_Empty,
+
   loadingStates: {
     rolesLoading: defaultLoadingState,
     categoriasLoading: defaultLoadingState,
@@ -156,5 +163,7 @@ export const GeneralStatesReduxSaga_empty = {
     detalleVentaDeleteLoading: defaultLoadingState,
     ventaUpdateLoading: defaultLoadingState,
     preciosSaveLoading: defaultLoadingState,
+    preciosUpdateLoading: defaultLoadingState,
+    preciosGetByProductIdLoading: defaultLoadingState,
   },
 };

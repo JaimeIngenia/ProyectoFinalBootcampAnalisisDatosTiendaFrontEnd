@@ -28,6 +28,7 @@ import {
 } from './utils/formValidation';
 import { v4 as uuidv4 } from 'uuid';
 import ModalFormPrecio from './features/modalFormPrecio';
+import { open } from 'node:fs/promises';
 
 export default function AgregarProducto() {
   // poner de primeras por si existe errores de no lectura
@@ -51,6 +52,9 @@ export default function AgregarProducto() {
     darkMode,
     isMenuCollapsed,
     preciosSaveLoading,
+    loadingUpdatePrecio,
+    precioGetByProductId,
+    loadingPreciooGetByProductId,
   } = useGeneralContext();
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -80,11 +84,9 @@ export default function AgregarProducto() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const [formData, setFormData] = useState({
-    // nota agregar el id **
     id: '',
     nombre: '',
     descripcion: '',
-    // precio: 0,
     categoriaId: '',
     imagen: '',
     stockActual: 0,
@@ -240,11 +242,9 @@ export default function AgregarProducto() {
       }
     } else {
       setFormData({
-        // nota agregar el id **
         id: '',
         nombre: '',
         descripcion: '',
-        // precio: 0,
         categoriaId: '',
         imagen: '',
         stockActual: 0,
@@ -263,11 +263,9 @@ export default function AgregarProducto() {
         categoria => categoria.id === productoGetById.categoria.id,
       );
       const productoConCategoriaId = {
-        // nota agregar el id **
         id: productoGetById.id,
         nombre: productoGetById.nombre,
         descripcion: productoGetById.descripcion,
-        // precio: productoGetById.precio,
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
         imagen: productoGetById.imagen,
         stockActual: productoGetById.stockActual ?? 0,
@@ -332,7 +330,8 @@ export default function AgregarProducto() {
         productData: productDataUpdated,
       },
     });
-    navigate(`/listaProductos`);
+    // navigate(`/listaProductos`);
+    openModal();
   };
 
   // Modal de precio
@@ -368,8 +367,6 @@ export default function AgregarProducto() {
       // Puedes mostrar un mensaje de error al usuario o manejarlo de otra manera
       return;
     }
-
-    debugger;
 
     // Generar un nuevo GUID para el id
     const precioData = {
@@ -518,15 +515,16 @@ export default function AgregarProducto() {
               >
                 <Spin spinning={false}>
                   <ModalFormPrecio
+                    id={id}
+                    productoIdState={productoIdState}
                     registerModalPrecioForm={registerModalPrecioForm}
                     modalPrecioFormRef={modalPrecioFormRef}
                     handleModalPrecioSubmit={handleModalPrecioSubmit}
                     modalPrecioFormData={modalPrecioFormData}
                     handleChangeModalPrecio={handleChangeModalPrecio}
                     isButtonModalPrecioDisabled={isButtonModalPrecioDisabled}
-                    // loadingSpinProductos={loadingSpinProductos}
-                    // productosListState={productosListState}
-                    // handleSelectProductoChange={handleSelectProductoChange}
+                    closeModal={closeModal}
+                    setModalPrecioFormData={setModalPrecioFormData}
                   />
                 </Spin>
               </Modal>

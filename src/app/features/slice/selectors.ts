@@ -278,3 +278,20 @@ export const precioSaveSelectorLoading = createSelector(
   [selectSlice],
   state => state.loadingStates.preciosSaveLoading,
 );
+
+// Update Precios
+export const precioUpdateLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.preciosUpdateLoading,
+);
+
+// Get Precio By ProductId
+export const precioGetByProductIdSelector = createSelector(
+  [selectSlice],
+  state => state.precioByProductId,
+);
+
+export const precioGetByProductIdLoadingSelector = createSelector(
+  [selectSlice],
+  state => state.loadingStates.preciosGetByProductIdLoading,
+);

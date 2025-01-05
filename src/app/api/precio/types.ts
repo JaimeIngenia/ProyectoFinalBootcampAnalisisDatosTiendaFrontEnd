@@ -11,3 +11,8 @@ export interface PrecioEntitySave {
   fechaInicio?: string;
   precioVenta?: number;
 }
+
+export interface PrecioEntityUpdate {
+  id?: string;
+  precioVenta?: number;
+}

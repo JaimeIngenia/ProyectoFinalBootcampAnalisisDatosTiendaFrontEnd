@@ -31,7 +31,10 @@ import {
   LoginSelector,
   logoutLoadingSelector,
   movimientoInventarioSaveSelectorLoading,
+  precioGetByProductIdLoadingSelector,
+  precioGetByProductIdSelector,
   precioSaveSelectorLoading,
+  precioUpdateLoadingSelector,
   productoSaveSelectorLoading,
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
@@ -117,6 +120,11 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
   );
   const loadingUpdateVenta = useSelector(ventaUpdateLoadingSelector);
   const preciosSaveLoading = useSelector(precioSaveSelectorLoading);
+  const loadingUpdatePrecio = useSelector(precioUpdateLoadingSelector);
+  const precioGetByProductId = useSelector(precioGetByProductIdSelector);
+  const loadingPreciooGetByProductId = useSelector(
+    precioGetByProductIdLoadingSelector,
+  );
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -203,6 +211,9 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingUpdateVenta,
         isMenuCollapsed,
         preciosSaveLoading,
+        loadingUpdatePrecio,
+        precioGetByProductId,
+        loadingPreciooGetByProductId,
       }}
     >
       {children}
