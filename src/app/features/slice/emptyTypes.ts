@@ -22,9 +22,10 @@ const defaultLoadingState: LoadingState = {
 };
 
 export const productosGuardados_Empty: ProductEntitySave = {
+  // nota agregar el id
   nombre: '',
   descripcion: '',
-  precio: 0,
+  // precio: 0,
   categoriaId: '',
 };
 export const usuariosGuardados_Empty: SaveUsuarioRequest = {

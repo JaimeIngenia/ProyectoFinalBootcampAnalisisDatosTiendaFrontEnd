@@ -72,9 +72,10 @@ export default function AgregarProducto() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const [formData, setFormData] = useState({
+    // nota agregar el id
     nombre: '',
     descripcion: '',
-    precio: 0,
+    // precio: 0,
     categoriaId: '',
     imagen: '',
   });
@@ -212,9 +213,10 @@ export default function AgregarProducto() {
       }
     } else {
       setFormData({
+        // nota agregar el id
         nombre: '',
         descripcion: '',
-        precio: 0,
+        // precio: 0,
         categoriaId: '',
         imagen: '',
       });
@@ -232,9 +234,10 @@ export default function AgregarProducto() {
         categoria => categoria.id === productoGetById.categoria.id,
       );
       const productoConCategoriaId = {
+        // nota agregar el id
         nombre: productoGetById.nombre,
         descripcion: productoGetById.descripcion,
-        precio: productoGetById.precio,
+        // precio: productoGetById.precio,
         categoriaId: categoriaEncontrada ? categoriaEncontrada.id : '',
         imagen: productoGetById.imagen,
       };
@@ -259,9 +262,10 @@ export default function AgregarProducto() {
         if (formRef.current) {
           formRef.current.resetFields();
           setFormData({
+            // nota agregar el id
             nombre: '',
             descripcion: '',
-            precio: 0,
+            // precio: 0,
             categoriaId: '',
             imagen: '',
           });

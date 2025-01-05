@@ -85,7 +85,7 @@ export default function MainForm({
         </Col>
 
         {/* Campo Precio */}
-        <Col xs={24} sm={12} md={12} lg={12}>
+        {/* <Col xs={24} sm={12} md={12} lg={12}>
           <Form.Item
             required
             label="Precio"
@@ -106,7 +106,7 @@ export default function MainForm({
               }
             />
           </Form.Item>
-        </Col>
+        </Col> */}
 
         {/* Select Categoría */}
         <Col xs={24} sm={12} md={12} lg={12}>

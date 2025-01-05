@@ -50,9 +50,9 @@ export function formValidation(values: ProductoFormValues) {
   }
 
   // Validación de "precio"
-  if (values.precio <= 0) {
-    _errors['precio'] = 'El precio debe ser mayor que 0';
-  }
+  // if (values.precio <= 0) {
+  //   _errors['precio'] = 'El precio debe ser mayor que 0';
+  // }
 
   // // Validación de "categoriaId"
   if (!values.categoriaId || values.categoriaId.length <= 0) {
