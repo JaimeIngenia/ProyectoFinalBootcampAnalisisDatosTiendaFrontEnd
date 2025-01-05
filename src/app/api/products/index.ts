@@ -18,7 +18,6 @@ export async function getAllProductos(): Promise<ProductEntityGetAll[]> {
 export async function saveProduct(
   productData: ProductEntitySave,
 ): Promise<ProductEntitySave> {
-  debugger;
   try {
     const response = await axios.post<ProductEntitySave>(
       'https://localhost:7029/api/Producto/SaveProducto',
@@ -26,7 +25,6 @@ export async function saveProduct(
     );
     return response.data;
   } catch (error) {
-    debugger;
     console.error('Error saving product:', error);
     throw error;
   }

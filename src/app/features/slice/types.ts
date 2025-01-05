@@ -4,6 +4,7 @@ import {
   IDetalleVentaSimple,
   VentaSimplifyEntity as VentasGetAllSimplifyEntity,
 } from 'app/api/detalleVenta/types';
+import { PrecioEntitySave } from 'app/api/precio/types';
 import {
   ProductEntityGetAll,
   ProductEntityGetById,
@@ -34,6 +35,7 @@ export interface GeneralStatesReduxSaga {
   ventaById: VentaGetByIdEntity;
   detallesVenta: DetalleVentaSpecialEntity[];
   isMenuCollapsed: boolean;
+  preciosGuardados: PrecioEntitySave;
 }
 
 // Define una interfaz para centralizar los estados de carga
@@ -67,6 +69,7 @@ export interface LoadingStates {
   detalleVentaUpdateLoading: LoadingState;
   detalleVentaDeleteLoading: LoadingState;
   ventaUpdateLoading: LoadingState;
+  preciosSaveLoading: LoadingState;
 }
 export interface LoadingState {
   state: ResponseState;

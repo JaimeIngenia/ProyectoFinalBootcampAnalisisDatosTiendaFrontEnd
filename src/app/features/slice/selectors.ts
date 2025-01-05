@@ -266,3 +266,15 @@ export const selectIsMenuCollapsedSelector = createSelector(
   [selectSlice],
   state => state.isMenuCollapsed,
 );
+
+// Precios Guardados
+
+export const precioSaveSelector = createSelector(
+  [selectSlice],
+  state => state.preciosGuardados,
+);
+
+export const precioSaveSelectorLoading = createSelector(
+  [selectSlice],
+  state => state.loadingStates.preciosSaveLoading,
+);

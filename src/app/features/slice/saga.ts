@@ -32,6 +32,7 @@ import {
   UPDATE_DETALLE_VENTA,
   DELETE_DETALLE_VENTA,
   UPDATE_VENTA,
+  SAVE_PRECIO,
 } from './sagaActions';
 import { getAllCategorias } from 'app/api/categorias';
 import {
@@ -87,6 +88,7 @@ import {
   DetalleVentaSpecialEntity,
   VentaSimplifyEntity,
 } from 'app/api/detalleVenta/types';
+import { savePrecio } from 'app/api/precio';
 
 function* fetchRolesSaga() {
   try {
@@ -522,6 +524,16 @@ function* fetchUpdateVentaSaga(action: any) {
   }
 }
 
+// Save Precio
+
+function* fetchSavePrecioSaga(action: any) {
+  try {
+    const savedPrecio = yield call(savePrecio, action.payload);
+    yield put(actions.reducerSavePrecioSuccess(savedPrecio));
+  } catch (error) {
+    yield put(actions.reducerSavePrecioFailure(error));
+  }
+}
 export function* Saga() {
   yield takeLatest(LOAD_ROLES_LIST, fetchRolesSaga);
   yield takeLatest(LOAD_CATEGORIAS_LIST, fetchCategoriasSaga);
@@ -555,4 +567,5 @@ export function* Saga() {
   yield takeLatest(UPDATE_DETALLE_VENTA, fetchUpdateDetalleVentaSaga);
   yield takeLatest(DELETE_DETALLE_VENTA, fetchDeleteDetalleVentaSaga);
   yield takeLatest(UPDATE_VENTA, fetchUpdateVentaSaga);
+  yield takeLatest(SAVE_PRECIO, fetchSavePrecioSaga);
 }

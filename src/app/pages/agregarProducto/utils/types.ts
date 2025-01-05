@@ -17,6 +17,5 @@ export interface ProductEntitySave {
   categoriaId?: string;
   imagen?: string;
   stockActual?: number; // Nuevo campo opcional
-  // stockActual?: number; // nota
   // porcentajeGanancia?: number; // nota
 }

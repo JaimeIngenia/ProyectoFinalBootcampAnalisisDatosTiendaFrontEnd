@@ -11,6 +11,7 @@ import {
 import { ProductoFormValues } from './types'; // Asegúrate de importar el tipo correctamente
 import { ClienteEntitySave, ClienteSelect } from 'app/api/clientes/types';
 import { DetalleVentaForm } from 'app/api/detalleVenta/types';
+import { PrecioFormValues } from 'app/api/precio/types';
 
 export function formValidation(values: ProductoFormValues) {
   const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
@@ -58,6 +59,21 @@ export function formValidation(values: ProductoFormValues) {
   if (!values.categoriaId || values.categoriaId.length <= 0) {
     _errors['categoriaId'] = 'Debes seleccionar una categoría válida';
   }
+
+  return _errors;
+}
+
+export function formModalPrecioValidation(values: PrecioFormValues) {
+  const _errors: { [key: string]: string } = {}; // Objeto para almacenar los errores
+
+  const maxLength = 150; // Asigna la longitud máxima para los campos
+  const minLength = 1; // Longitud mínima para nombre y descripción
+
+  // Validación de "precio"
+  // if ((values.precioVenta ?? 0) <= 0) {
+  //   _errors['precioVenta'] = 'El precio debe ser mayor que 0';
+  // }
+  debugger;
 
   return _errors;
 }

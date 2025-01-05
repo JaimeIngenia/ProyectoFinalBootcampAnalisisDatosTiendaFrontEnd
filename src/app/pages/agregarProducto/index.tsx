@@ -1,4 +1,4 @@
-import { ConfigProvider, FormInstance, message, Spin } from 'antd';
+import { ConfigProvider, Form, FormInstance, message, Modal, Spin } from 'antd';
 import { ProductEntityGetById } from 'app/api/products/types';
 import {
   ContainerImagesGeneral,
@@ -22,10 +22,16 @@ import agregarProductoDark from '../../../assets/agregarProducto.svg';
 import agregarProductoLight from '../../../assets/products/productosLight.svg';
 import MainForm from './features/mainForm/MainForm';
 import styles from './styles/AgregarProducto.module.css';
-import { formValidation } from './utils/formValidation';
+import {
+  formModalPrecioValidation,
+  formValidation,
+} from './utils/formValidation';
 import { v4 as uuidv4 } from 'uuid';
+import ModalFormPrecio from './features/modalFormPrecio';
 
 export default function AgregarProducto() {
+  // poner de primeras por si existe errores de no lectura
+  const [productoIdState, setProductoIdState] = useState('');
   // Hook para navegar entre rutas
   const navigate = useNavigate();
   // Obtén el ID de los parámetros de la URL
@@ -44,6 +50,7 @@ export default function AgregarProducto() {
     loadingUpdateProduct,
     darkMode,
     isMenuCollapsed,
+    preciosSaveLoading,
   } = useGeneralContext();
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -95,12 +102,15 @@ export default function AgregarProducto() {
       id: uuidv4(), // Generar un nuevo GUID
       ...formValues,
     };
+    // Actualizar el estado productoId con el nuevo id
+    setProductoIdState(productData.id);
 
     dispatch(actions.loadSaveProducts(ResponseState.InProgress)); // Cambiamos el estado a Started
     dispatch({
       type: 'SAVE_PRODUCTOS',
       payload: productData,
     });
+    openModal();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -293,7 +303,7 @@ export default function AgregarProducto() {
             stockActual: 0,
           });
         }
-        navigate(`/listaProductos`);
+        // navigate(`/listaProductos`);
       } else {
         message.error(
           `Error al guardar el producto: ${productosSaveLoading.message}`,
@@ -324,6 +334,129 @@ export default function AgregarProducto() {
     });
     navigate(`/listaProductos`);
   };
+
+  // Modal de precio
+
+  const openModal = () => setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const closeModal = () => setIsModalOpen(false);
+
+  // Forumario
+  const [registerModalPrecioForm] = Form.useForm(); // Formulario del modal
+  const modalPrecioFormRef = useRef<FormInstance>(null);
+  const [modalPrecioFormData, setModalPrecioFormData] = useState({
+    id: '',
+    productoId: '',
+    // fechaInicio: '',
+    fechaInicio: new Date().toISOString(), // Fecha actual
+    precioVenta: 0,
+  });
+
+  // Utils
+  const [isButtonModalPrecioDisabled, setIsButtonModalPrecioDisabled] =
+    useState(true);
+
+  // Funciones
+  const handleModalPrecioSubmit = () => {
+    if (!modalPrecioFormRef.current) return;
+
+    const registerData = modalPrecioFormRef.current.getFieldsValue();
+
+    // Verificar que productoId no esté vacío
+    if (!productoIdState) {
+      console.error('El productoId no está definido');
+      // Puedes mostrar un mensaje de error al usuario o manejarlo de otra manera
+      return;
+    }
+
+    debugger;
+
+    // Generar un nuevo GUID para el id
+    const precioData = {
+      id: uuidv4(),
+      productoId: productoIdState, // Pasar el productoId desde formData
+      fechaInicio: new Date().toISOString(), // Fecha actual
+      precioVenta: registerData.precioVenta, // Obtener el precioVenta del formulario
+    };
+
+    setModalPrecioFormData(precioData);
+    console.log('Datos de registro del precio:', precioData);
+    // Nota crear el dispatch
+    dispatch(actions.loadSavePrecio(ResponseState.InProgress)); // Cambiamos el estado a Started
+    dispatch({
+      type: 'SAVE_PRECIO',
+      payload: precioData,
+    });
+    closeModal();
+  };
+
+  const handleChangeModalPrecio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    modalPrecioFormRef.current?.setFieldsValue({
+      [name]: name === 'precio' ? Number(value) : value,
+    });
+
+    setModalPrecioFormData(prev => ({
+      ...prev,
+      [name]: name === 'precio' ? Number(value) : value,
+    }));
+
+    // Actualiza el valor en el formulario de Ant Design
+    modalPrecioFormRef.current?.setFieldsValue({ [name]: value });
+
+    // Actualiza el estado local para la validación en useEffect
+    setModalPrecioFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Validar solo el campo que ha cambiado
+    modalPrecioFormRef.current
+      ?.validateFields([name]) // Valida solo el campo actual
+      .then(() => {
+        // setIsButtonDisabled(false); // Habilitar el botón si no hay errores
+      })
+      .catch(() => {
+        // setIsButtonDisabled(true); // Deshabilitar el botón si hay errores
+      });
+  };
+
+  // UseEffects
+
+  useEffect(() => {
+    const errors = formModalPrecioValidation(modalPrecioFormData); // Ejecuta la validación completa
+
+    setIsButtonModalPrecioDisabled(Object.keys(errors).length > 0); // Habilita/deshabilita el botón en base a los errores
+    console.log('isButtonRegisterDisabled:', Object.keys(errors).length > 0);
+  }, [modalPrecioFormData]);
+
+  // UseEffect para save modal precio
+
+  useEffect(() => {
+    if (preciosSaveLoading.state === ResponseState.InProgress) {
+      message.loading('Guardando Precio...');
+    } else if (preciosSaveLoading.state === ResponseState.Finished) {
+      if (preciosSaveLoading.status) {
+        message.success('Precio guardado con éxito.');
+
+        if (modalPrecioFormRef.current) {
+          modalPrecioFormRef.current.resetFields();
+          setModalPrecioFormData({
+            id: '',
+            productoId: '',
+            fechaInicio: '',
+            precioVenta: 0,
+          });
+        }
+        navigate(`/listaProductos`);
+      } else {
+        message.error(
+          `Error al guardar el Precio: ${preciosSaveLoading.message}`,
+        );
+      }
+      dispatch(actions.loadSavePrecio(ResponseState.Waiting));
+    }
+  }, [preciosSaveLoading, dispatch]);
 
   return (
     <>
@@ -377,6 +510,26 @@ export default function AgregarProducto() {
                   handleSelectChange={handleSelectChange}
                 />
               </Spin>
+              <Modal
+                title="Agrega el precio del producto"
+                visible={isModalOpen}
+                onCancel={closeModal}
+                footer={null}
+              >
+                <Spin spinning={false}>
+                  <ModalFormPrecio
+                    registerModalPrecioForm={registerModalPrecioForm}
+                    modalPrecioFormRef={modalPrecioFormRef}
+                    handleModalPrecioSubmit={handleModalPrecioSubmit}
+                    modalPrecioFormData={modalPrecioFormData}
+                    handleChangeModalPrecio={handleChangeModalPrecio}
+                    isButtonModalPrecioDisabled={isButtonModalPrecioDisabled}
+                    // loadingSpinProductos={loadingSpinProductos}
+                    // productosListState={productosListState}
+                    // handleSelectProductoChange={handleSelectProductoChange}
+                  />
+                </Spin>
+              </Modal>
             </ConfigProvider>
           </div>
         </SubGeneralContainer>

@@ -31,6 +31,7 @@ import {
   LoginSelector,
   logoutLoadingSelector,
   movimientoInventarioSaveSelectorLoading,
+  precioSaveSelectorLoading,
   productoSaveSelectorLoading,
   productosGetByIdLoadingSelector,
   productosGetByIdSelector,
@@ -115,6 +116,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
     detalleVentaDeleteLoadingSelector,
   );
   const loadingUpdateVenta = useSelector(ventaUpdateLoadingSelector);
+  const preciosSaveLoading = useSelector(precioSaveSelectorLoading);
 
   // Estado y función para el modo oscuro
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -200,6 +202,7 @@ export const GeneralProvider = ({ children }: { children: ReactNode }) => {
         loadingDeleteDetalleVenta,
         loadingUpdateVenta,
         isMenuCollapsed,
+        preciosSaveLoading,
       }}
     >
       {children}

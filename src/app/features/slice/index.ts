@@ -23,6 +23,7 @@ import {
 } from 'app/api/detalleVenta/types';
 import { VentaGetByIdEntity } from 'app/api/venta/types';
 import { mapVentaGetByIdToSimplify } from '../utils/functions';
+import { PrecioEntitySave } from 'app/api/precio/types';
 
 export const initialState: GeneralStatesReduxSaga =
   GeneralStatesReduxSaga_empty;
@@ -775,6 +776,30 @@ const slice = createSlice({
     // Acción para colapsar el menú
     reducerCollapseMenu(state, action: PayloadAction<boolean>) {
       state.isMenuCollapsed = action.payload;
+    },
+
+    // Save Precio
+
+    reducerSavePrecioSuccess(state, action: PayloadAction<PrecioEntitySave>) {
+      state.preciosGuardados = action.payload;
+      state.loadingStates.preciosSaveLoading = {
+        state: ResponseState.Finished,
+        status: true,
+      };
+    },
+
+    reducerSavePrecioFailure(state, action: PayloadAction<any>) {
+      state.loadingStates.preciosSaveLoading = {
+        state: ResponseState.Finished,
+        status: false,
+        message: action.payload,
+      };
+    },
+
+    loadSavePrecio(state, actions: PayloadAction<ResponseState>) {
+      state.loadingStates.preciosSaveLoading = {
+        state: actions.payload,
+      };
     },
   },
 });
