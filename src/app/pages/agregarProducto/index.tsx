@@ -1,4 +1,12 @@
-import { ConfigProvider, Form, FormInstance, message, Modal, Spin } from 'antd';
+import {
+  ConfigProvider,
+  Form,
+  FormInstance,
+  message,
+  Modal,
+  notification,
+  Spin,
+} from 'antd';
 import { ProductEntityGetById } from 'app/api/products/types';
 import {
   ContainerImagesGeneral,
@@ -12,6 +20,7 @@ import { productoById_Empty } from 'app/features/slice/emptyTypes';
 import {
   GET_PRODUCT_BY_ID,
   LOAD_CATEGORIAS_LIST,
+  LOAD_PRODUCTOS_LIST,
   UPDATE_PRODUCT,
 } from 'app/features/slice/sagaActions';
 import { Entity, ResponseState } from 'app/features/slice/types';

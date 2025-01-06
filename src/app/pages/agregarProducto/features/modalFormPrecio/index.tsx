@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { Form, Input, Spin } from 'antd';
+import { Form, Input, notification, Spin } from 'antd';
 import { CustomButtonn, CustomSelect } from 'app/components/containers';
 import { useGeneralContext } from 'app/context/GeneralContext';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import { preciosUpdate_Empty } from 'app/api/precio/emptyTypes';
 import { ResponseState } from 'app/features/slice/types';
 import {
   GET_PRECIO_BY_PRODUCT_ID,
+  LOAD_PRODUCTOS_LIST,
   UPDATE_PRECIO,
 } from 'app/features/slice/sagaActions';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ export default function ModalFormPrecio({
     loadingUpdatePrecio,
     precioGetByProductId,
     loadingPreciooGetByProductId,
+    loadingUpdateProduct,
   } = useGeneralContext();
   //Genral flow redux
   const { actions } = useSlice();
@@ -79,6 +81,11 @@ export default function ModalFormPrecio({
     closeModal();
     navigate(`/listaProductos`);
   };
+  // -----------------
+  // animaciones update producto
+  // -----------------
+  const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
+    useState<boolean>(false);
 
   //UseEffects
   useEffect(() => {
@@ -140,6 +147,38 @@ export default function ModalFormPrecio({
       modalPrecioFormRef.current?.resetFields();
     }
   }, [id, precioByProductIdListState, a]);
+
+  //UseEffect de update products
+
+  useEffect(() => {
+    if (loadingUpdateProduct?.state === ResponseState.InProgress) {
+      setLoadingSpinUpdateProductos(true);
+    } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
+      setLoadingSpinUpdateProductos(false);
+      if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
+      if (loadingUpdateProduct?.status) {
+        // Jaime esto está raro
+        // dispatch(actions.loadProducts(ResponseState.InProgress));
+        // dispatch({
+        //   type: LOAD_PRODUCTOS_LIST,
+        // });
+        notification.success({
+          message: 'Éxito',
+          description: 'Actualización completada correctamente.',
+          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description:
+            loadingUpdateProduct?.message || 'Error en la Actualización.',
+          placement: 'bottomRight',
+        });
+      }
+
+      dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
+    }
+  }, [loadingUpdateProduct, dispatch]);
 
   return (
     <Form

@@ -251,6 +251,7 @@ export function ListaProductos() {
     themeColors,
     productosSaveLoading,
     isMenuCollapsed,
+    loadingUpdatePrecio,
   } = useGeneralContext();
 
   const { actions } = useSlice();
@@ -268,7 +269,9 @@ export function ListaProductos() {
     useState<boolean>(false);
   const [loadingSpinDeleteProductos, setLoadingSpinDeleteProductos] =
     useState<boolean>(false);
-  const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
+  // const [loadingSpinUpdateProductos, setLoadingSpinUpdateProductos] =
+  //   useState<boolean>(false);
+  const [loadingSpinUpdatePrecios, setLoadingSpinUpdatePrecios] =
     useState<boolean>(false);
 
   const [firstCharge, setFirstCharge] = useState<boolean>(true);
@@ -349,37 +352,110 @@ export function ListaProductos() {
     }
   }, [loadingDeleteProduct, dispatch]);
 
-  //UseEffect de update products
+  //UseEffect de update precios
+
+  const [isPriceUpdated, setIsPriceUpdated] = useState(false);
 
   useEffect(() => {
-    if (loadingUpdateProduct?.state === ResponseState.InProgress) {
-      setLoadingSpinUpdateProductos(true);
-    } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
-      setLoadingSpinUpdateProductos(false);
-      if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
-      if (loadingUpdateProduct?.status) {
-        // Jaime esto está raro
+    if (loadingUpdatePrecio?.state === ResponseState.InProgress) {
+      setIsPriceUpdated(true); // Marca que se está realizando un update
+    } else if (loadingUpdatePrecio?.state === ResponseState.Finished) {
+      setIsPriceUpdated(false); // Marca que el update ha terminado
+    }
+  }, [loadingUpdatePrecio]);
+
+  useEffect(() => {
+    if (
+      isPriceUpdated &&
+      loadingUpdatePrecio?.state === ResponseState.Finished
+    ) {
+      setLoadingSpinUpdatePrecios(false);
+
+      if (loadingUpdatePrecio?.status) {
+        // Actualización exitosa
         dispatch(actions.loadProducts(ResponseState.InProgress));
         dispatch({
           type: LOAD_PRODUCTOS_LIST,
         });
         notification.success({
           message: 'Éxito',
-          description: 'Actualización completada correctamente.',
-          placement: 'bottomRight', // Puedes cambiar la posición si deseas
+          description: 'Actualización del precio completada correctamente.',
+          placement: 'bottomRight',
         });
       } else {
+        // Actualización fallida
         notification.error({
           message: 'Error',
           description:
-            loadingDeleteProduct?.message || 'Error en la Actualización.',
+            loadingUpdatePrecio?.message || 'Error en la Actualización.',
           placement: 'bottomRight',
         });
       }
 
+      // Reinicia el estado de la operación
       dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
     }
-  }, [loadingUpdateProduct, dispatch]);
+  }, [isPriceUpdated, loadingUpdatePrecio, dispatch]);
+
+  // useEffect(() => {
+  //   if (loadingUpdatePrecio?.state === ResponseState.InProgress) {
+  //     setLoadingSpinUpdatePrecios(true);
+  //   } else if (loadingUpdatePrecio?.state === ResponseState.Finished) {
+  //     setLoadingSpinUpdatePrecios(false);
+  //     if (loadingUpdatePrecio) setLoadingSpinUpdatePrecios(false);
+  //     if (loadingUpdatePrecio?.status) {
+  //       // Jaime esto está raro
+  //       dispatch(actions.loadProducts(ResponseState.InProgress));
+  //       dispatch({
+  //         type: LOAD_PRODUCTOS_LIST,
+  //       });
+  //       notification.success({
+  //         message: 'Éxito',
+  //         description: 'Actualización del precio completada correctamente.',
+  //         placement: 'bottomRight', // Puedes cambiar la posición si deseas
+  //       });
+  //     } else {
+  //       notification.error({
+  //         message: 'Error',
+  //         description:
+  //           loadingDeleteProduct?.message || 'Error en la Actualización.',
+  //         placement: 'bottomRight',
+  //       });
+  //     }
+
+  //     dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
+  //   }
+  // }, [loadingUpdatePrecio, dispatch]);
+
+  // useEffect(() => {
+  //   if (loadingUpdateProduct?.state === ResponseState.InProgress) {
+  //     setLoadingSpinUpdateProductos(true);
+  //   } else if (loadingUpdateProduct?.state === ResponseState.Finished) {
+  //     setLoadingSpinUpdateProductos(false);
+  //     if (loadingUpdateProduct) setLoadingSpinUpdateProductos(false);
+  //     if (loadingUpdateProduct?.status) {
+  //       // Jaime esto está raro
+  //       dispatch(actions.loadProducts(ResponseState.InProgress));
+  //       dispatch({
+  //         type: LOAD_PRODUCTOS_LIST,
+  //       });
+  //       notification.success({
+  //         message: 'Éxito',
+  //         description: 'Actualización completada correctamente.',
+  //         placement: 'bottomRight', // Puedes cambiar la posición si deseas
+  //       });
+  //     } else {
+  //       notification.error({
+  //         message: 'Error',
+  //         description:
+  //           loadingDeleteProduct?.message || 'Error en la Actualización.',
+  //         placement: 'bottomRight',
+  //       });
+  //     }
+
+  //     dispatch(actions.loadUpdateProducts(ResponseState.Waiting));
+  //   }
+  // }, [loadingUpdateProduct, dispatch]);
 
   //Delete products
 
@@ -452,7 +528,7 @@ export function ListaProductos() {
             spinning={
               loadingSpinProductos ||
               loadingSpinDeleteProductos ||
-              loadingSpinUpdateProductos
+              loadingSpinUpdatePrecios
             }
           >
             <ConfigProvider
