@@ -67,9 +67,7 @@ export default function ModalFormPrecio({
     const precioDataUpdated = {
       ...formValues,
     };
-    const y = productoIdState;
-    const yw = precioGetByProductId.id;
-    debugger;
+
     dispatch(actions.loadUpdatePrecio(ResponseState.InProgress));
     dispatch({
       type: UPDATE_PRECIO,
@@ -128,18 +126,13 @@ export default function ModalFormPrecio({
   }, [precioGetByProductId, loadingPreciooGetByProductId, id, dispatch]);
 
   useEffect(() => {
-    debugger;
     if (id && precioByProductIdListState !== preciosUpdate_Empty) {
-      const a = precioGetByProductId.id;
-      debugger;
       const precioRellenado = {
         id: precioGetByProductId.id,
         precioVenta: precioGetByProductId.precioVenta,
       };
 
       modalPrecioFormRef.current?.setFieldsValue(precioRellenado);
-
-      debugger;
 
       setModalPrecioFormData(precioRellenado);
     } else {

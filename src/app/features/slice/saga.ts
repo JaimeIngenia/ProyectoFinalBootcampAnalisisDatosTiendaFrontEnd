@@ -344,6 +344,7 @@ function* fetchSaveClienteSaga(action: any) {
 // Movimiento Inventario
 
 function* saveMovimientoInventarioSaga(action: any) {
+  debugger;
   try {
     const savedMovimiento: MovimientoInventarioEntitySave = yield call(
       saveMovimientoInventario,
@@ -351,6 +352,7 @@ function* saveMovimientoInventarioSaga(action: any) {
     );
     yield put(actions.reducerSaveMovimientoInventarioSuccess(savedMovimiento));
   } catch (error) {
+    debugger;
     yield put(actions.reducerSaveMovimientoInventarioFailure(error));
   }
 }
